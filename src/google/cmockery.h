@@ -15,6 +15,17 @@
  */
 #ifndef CMOCKERY_H_
 #define CMOCKERY_H_
+#ifdef _WIN32
+#if _MSC_VER < 1500
+#ifdef __cplusplus
+extern "C" {
+#endif   // __cplusplus
+int __stdcall IsDebuggerPresent();
+#ifdef __cplusplus
+} /* extern "C" */
+#endif   // __cplusplus
+#endif  // _MSC_VER < 1500
+#endif  // _WIN32
 /*
  * These headers or their equivalents should be included prior to including
  * this header file.
