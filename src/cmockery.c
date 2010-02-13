@@ -1769,7 +1769,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
     if (number_of_test_states) {
         print_error("[  ERROR   ] Mismatched number of setup %d and "
                     "teardown %d functions\n", setups, teardowns);
-        total_failed = -1;
+        total_failed = (size_t)-1;
     }
 
     free(test_states);
