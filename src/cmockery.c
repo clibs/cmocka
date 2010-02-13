@@ -1597,7 +1597,7 @@ int _run_test(
     }
 
     if (function_type == UNIT_TEST_FUNCTION_TYPE_TEST) {
-        print_message("%s: Starting test\n", function_name);
+        print_message("[ RUN      ] %s\n", function_name);
     }
     initialize_testing(function_name);
     global_running_test = 1;
@@ -1614,12 +1614,12 @@ int _run_test(
         global_running_test = 0;
 
         if (function_type == UNIT_TEST_FUNCTION_TYPE_TEST) {
-            print_message("%s: Test completed successfully.\n", function_name);
+            print_message("[       OK ] %s\n", function_name);
         }
         rc = 0;
     } else {
         global_running_test = 0;
-        print_message("%s: Test failed.\n", function_name);
+        print_message("[  FAILED  ] %s\n", function_name);
     }
     teardown_testing(function_name);
 
@@ -1666,6 +1666,9 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
     const char** failed_names = malloc(number_of_tests *
                                        sizeof(*failed_names));
     void **current_state = NULL;
+
+    print_message("[==========] Running %d test(s).\n", number_of_tests);
+
     // Make sure LargestIntegralType is at least the size of a pointer.
     assert_true(sizeof(LargestIntegralType) >= sizeof(void*));
 
@@ -1744,20 +1747,22 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
         }
     }
 
+    print_message("[==========] %d test(s) run.\n", tests_executed);
+    print_error("[  PASSED  ] %d test(s).\n", tests_executed - total_failed);
+
     if (total_failed) {
         size_t i;
-        print_error("%d out of %d tests failed!\n", total_failed,
-                    tests_executed);
+        print_error("[  FAILED  ] %d test(s), listed below:\n", total_failed);
         for (i = 0; i < total_failed; i++) {
-            print_error("    %s\n", failed_names[i]);
+            print_error("[  FAILED  ] %s\n", failed_names[i]);
         }
     } else {
-        print_message("All %d tests passed\n", tests_executed);
+        print_error("\n %d FAILED TEST(S)\n", total_failed);
     }
 
     if (number_of_test_states) {
-        print_error("Mismatched number of setup %d and teardown %d "
-                    "functions\n", setups, teardowns);
+        print_error("[  ERROR   ] Mismatched number of setup %d and "
+                    "teardown %d functions\n", setups, teardowns);
         total_failed = -1;
     }
 
