@@ -1745,7 +1745,9 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
                 }
                 break;
             default:
+#ifndef _HPUX
                 assert_false("BUG: shouldn't be here!");
+#endif
                 break;
             }
         }
