@@ -1584,7 +1584,7 @@ void print_error(const char* const format, ...) {
 
 int _run_test(
         const char * const function_name,  const UnitTestFunction Function,
-        void ** const state, const UnitTestFunctionType function_type,
+        void ** const volatile state, const UnitTestFunctionType function_type,
         const void* const heap_check_point) {
     const ListNode * const volatile check_point = (const ListNode*)
         (heap_check_point ?

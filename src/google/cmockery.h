@@ -482,7 +482,7 @@ void _test_free(void* const ptr, const char* file, const int line);
 void _fail(const char * const file, const int line);
 int _run_test(
     const char * const function_name, const UnitTestFunction Function,
-    void ** const state, const UnitTestFunctionType function_type,
+    void ** const volatile state, const UnitTestFunctionType function_type,
     const void* const heap_check_point);
 int _run_tests(const UnitTest * const tests, const size_t number_of_tests);
 
