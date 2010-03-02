@@ -1394,7 +1394,7 @@ void _test_free(void* const ptr, const char* file, const int line) {
     unsigned int i;
     char *block = (char*)ptr;
     MallocBlockInfo *block_info;
-    _assert_true((int)ptr, "ptr", file, line);
+    _assert_true(cast_to_largest_integral_type(ptr), "ptr", file, line);
     block_info = (MallocBlockInfo*)(block - (MALLOC_GUARD_SIZE +
                                                sizeof(*block_info)));
     // Check the guard blocks.
