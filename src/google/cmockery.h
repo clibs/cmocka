@@ -62,6 +62,34 @@ int __stdcall IsDebuggerPresent();
 #define cast_to_largest_integral_type(value) \
     ((LargestIntegralType)((unsigned)(value)))
 
+/* Smallest integral type capable of holding a pointer. */
+#ifndef _UINTPTR_T
+#define _UINTPTR_T
+#ifdef _WIN32
+
+/* WIN32 is an ILP32 platform */
+typedef unsigned long uintptr_t;
+
+#else /* _WIN32 */
+
+/* what about 64-bit windows?
+ * what's the right preprocessor symbol?
+typedef unsigned long long uintptr_t */
+
+/* ILP32 and LP64 platforms */
+typedef unsigned long uintptr_t;
+
+#endif /* _WIN32 */
+#endif /* _UINTPTR_T */
+
+/* Perform an unsigned cast to uintptr_t. */
+#define cast_to_pointer_integral_type(value) \
+	((uintptr_t)(value))
+
+/* Perform a cast of a pointer to uintmax_t */
+#define cast_ptr_to_largest_integral_type(value) \
+cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
+
 // Retrieves a return value for the current function.
 #define mock() _mock(__func__, __FILE__, __LINE__)
 
@@ -189,6 +217,13 @@ int __stdcall IsDebuggerPresent();
 // Assert that the given expression is false.
 #define assert_false(c) _assert_true(!(cast_to_largest_integral_type(c)), #c, \
                                      __FILE__, __LINE__)
+
+// Assert that the given pointer is non-NULL.
+#define assert_non_null(c) _assert_true(cast_ptr_to_largest_integral_type(c), #c, \
+__FILE__, __LINE__)
+// Assert that the given pointer is NULL.
+#define assert_null(c) _assert_true(!(cast_ptr_to_largest_integral_type(c)), #c, \
+__FILE__, __LINE__)
 
 // Assert that the two given integers are equal, otherwise fail.
 #define assert_int_equal(a, b) \

@@ -280,7 +280,7 @@ static void exit_test(const int quit_application) {
 
 // Initialize a SourceLocation structure.
 static void initialize_source_location(SourceLocation * const location) {
-    assert_true(location);
+    assert_non_null(location);
     location->file = NULL;
     location->line = 0;
 }
@@ -288,7 +288,7 @@ static void initialize_source_location(SourceLocation * const location) {
 
 // Determine whether a source location is currently set.
 static int source_location_is_set(const SourceLocation * const location) {
-    assert_true(location);
+    assert_non_null(location);
     return location->file && location->line;
 }
 
@@ -297,7 +297,7 @@ static int source_location_is_set(const SourceLocation * const location) {
 static void set_source_location(
     SourceLocation * const location, const char * const file,
     const int line) {
-    assert_true(location);
+    assert_non_null(location);
     location->file = file;
     location->line = line;
 }
@@ -360,8 +360,8 @@ static ListNode* list_initialize(ListNode * const node) {
 static ListNode* list_add_value(ListNode * const head, const void *value,
                                      const int refcount) {
     ListNode * const new_node = (ListNode*)malloc(sizeof(ListNode));
-    assert_true(head);
-    assert_true(value);
+    assert_non_null(head);
+    assert_non_null(value);
     new_node->value = value;
     new_node->refcount = refcount;
     return list_add(head, new_node);
@@ -370,8 +370,8 @@ static ListNode* list_add_value(ListNode * const head, const void *value,
 
 // Add new_node to the end of the list.
 static ListNode* list_add(ListNode * const head, ListNode *new_node) {
-    assert_true(head);
-    assert_true(new_node);
+    assert_non_null(head);
+    assert_non_null(new_node);
     new_node->next = head;
     new_node->prev = head->prev;
     head->prev->next = new_node;
@@ -384,7 +384,7 @@ static ListNode* list_add(ListNode * const head, ListNode *new_node) {
 static ListNode* list_remove(
         ListNode * const node, const CleanupListValue cleanup_value,
         void * const cleanup_value_data) {
-    assert_true(node);
+    assert_non_null(node);
     node->prev->next = node->next;
     node->next->prev = node->prev;
     if (cleanup_value) {
@@ -398,7 +398,7 @@ static ListNode* list_remove(
 static void list_remove_free(
         ListNode * const node, const CleanupListValue cleanup_value,
         void * const cleanup_value_data) {
-    assert_true(node);
+    assert_non_null(node);
     free(list_remove(node, cleanup_value, cleanup_value_data));
 }
 
@@ -412,7 +412,7 @@ static void list_remove_free(
 static ListNode* list_free(
         ListNode * const head, const CleanupListValue cleanup_value,
         void * const cleanup_value_data) {
-    assert_true(head);
+    assert_non_null(head);
     while (!list_empty(head)) {
         list_remove_free(head->next, cleanup_value, cleanup_value_data);
     }
@@ -422,7 +422,7 @@ static ListNode* list_free(
 
 // Determine whether a list is empty.
 static int list_empty(const ListNode * const head) {
-    assert_true(head);
+    assert_non_null(head);
     return head->next == head;
 }
 
@@ -433,7 +433,7 @@ static int list_empty(const ListNode * const head) {
 static int list_find(ListNode * const head, const void *value,
                      const EqualityFunction equal_func, ListNode **output) {
     ListNode *current;
-    assert_true(head);
+    assert_non_null(head);
     for (current = head->next; current != head; current = current->next) {
         if (equal_func(current->value, value)) {
             *output = current;
@@ -446,7 +446,7 @@ static int list_find(ListNode * const head, const void *value,
 // Returns the first node of a list
 static int list_first(ListNode * const head, ListNode **output) {
     ListNode *target_node;
-    assert_true(head);
+    assert_non_null(head);
     if (list_empty(head)) {
         return 0;
     }
@@ -459,7 +459,7 @@ static int list_first(ListNode * const head, ListNode **output) {
 // Deallocate a value referenced by a list.
 static void free_value(const void *value, void *cleanup_value_data) {
 	(void)cleanup_value_data;
-    assert_true(value);
+    assert_non_null(value);
     free((void*)value);
 }
 
@@ -469,10 +469,10 @@ static void free_symbol_map_value(const void *value,
                                   void *cleanup_value_data) {
     SymbolMapValue * const map_value = (SymbolMapValue*)value;
     const LargestIntegralType children = cast_ptr_to_largest_integral_type(cleanup_value_data);
-    assert_true(value);
+    assert_non_null(value);
     list_free(&map_value->symbol_values_list_head,
               children ? free_symbol_map_value : free_value,
-              (void*)(children - 1));
+              (void *) ((uintptr_t)children - 1));
     free(map_value);
 }
 
@@ -495,8 +495,8 @@ static void add_symbol_value(ListNode * const symbol_map_head,
     const char* symbol_name;
     ListNode *target_node;
     SymbolMapValue *target_map_value;
-    assert_true(symbol_map_head);
-    assert_true(symbol_names);
+    assert_non_null(symbol_map_head);
+    assert_non_null(symbol_names);
     assert_true(number_of_symbol_names);
     symbol_name = symbol_names[0];
 
@@ -533,18 +533,18 @@ static int get_symbol_value(
         const size_t number_of_symbol_names, void **output) {
     const char* symbol_name;
     ListNode *target_node;
-    assert_true(head);
-    assert_true(symbol_names);
+    assert_non_null(head);
+    assert_non_null(symbol_names);
     assert_true(number_of_symbol_names);
-    assert_true(output);
+    assert_non_null(output);
     symbol_name = symbol_names[0];
 
     if (list_find(head, symbol_name, symbol_names_match, &target_node)) {
         SymbolMapValue *map_value;
         ListNode *child_list;
         int return_value = 0;
-        assert_true(target_node);
-        assert_true(target_node->value);
+        assert_non_null(target_node);
+        assert_non_null(target_node->value);
 
         map_value = (SymbolMapValue*)target_node->value;
         child_list = &map_value->symbol_values_list_head;
@@ -581,14 +581,14 @@ static int get_symbol_value(
 static void remove_always_return_values(ListNode * const map_head,
                                         const size_t number_of_symbol_names) {
     ListNode *current;
-    assert_true(map_head);
+    assert_non_null(map_head);
     assert_true(number_of_symbol_names);
     current = map_head->next;
     while (current != map_head) {
         SymbolMapValue * const value = (SymbolMapValue*)current->value;
         ListNode * const next = current->next;
         ListNode *child_list;
-        assert_true(value);
+        assert_non_null(value);
         child_list = &value->symbol_values_list_head;
 
         if (!list_empty(child_list)) {
@@ -619,7 +619,7 @@ static int check_for_leftover_values(
         const size_t number_of_symbol_names) {
     const ListNode *current;
     int symbols_with_leftover_values = 0;
-    assert_true(map_head);
+    assert_non_null(map_head);
     assert_true(number_of_symbol_names);
 
     for (current = map_head->next; current != map_head;
@@ -627,7 +627,7 @@ static int check_for_leftover_values(
         const SymbolMapValue * const value =
             (SymbolMapValue*)current->value;
         const ListNode *child_list;
-        assert_true(value);
+        assert_non_null(value);
         child_list = &value->symbol_values_list_head;
 
         if (!list_empty(child_list)) {
@@ -758,7 +758,7 @@ static int value_in_set_display_error(
         const LargestIntegralType value,
         const CheckIntegerSet * const check_integer_set, const int invert) {
     int succeeded = invert;
-    assert_true(check_integer_set);
+    assert_non_null(check_integer_set);
     {
         const LargestIntegralType * const set = check_integer_set->set;
         const size_t size_of_set = check_integer_set->size_of_set;
@@ -917,7 +917,7 @@ static void expect_set(
     LargestIntegralType * const set = (LargestIntegralType*)(
         check_integer_set + 1);
     declare_initialize_value_pointer_pointer(check_data, check_integer_set);
-    assert_true(values);
+    assert_non_null(values);
     assert_true(number_of_values);
     memcpy(set, values, number_of_values * sizeof(values[0]));
     check_integer_set->set = set;
@@ -955,7 +955,7 @@ static int check_in_range(const LargestIntegralType value,
     CheckIntegerRange * const check_integer_range =
         cast_largest_integral_type_to_pointer(CheckIntegerRange*,
                                               check_value_data);
-    assert_true(check_integer_range);
+    assert_non_null(check_integer_range);
     return integer_in_range_display_error(value, check_integer_range->minimum,
                                           check_integer_range->maximum);
 }
@@ -967,7 +967,7 @@ static int check_not_in_range(const LargestIntegralType value,
     CheckIntegerRange * const check_integer_range =
         cast_largest_integral_type_to_pointer(CheckIntegerRange*,
                                               check_value_data);
-    assert_true(check_integer_range);
+    assert_non_null(check_integer_range);
     return integer_not_in_range_display_error(
         value, check_integer_range->minimum, check_integer_range->maximum);
 }
@@ -1094,7 +1094,7 @@ static int check_memory(const LargestIntegralType value,
                         const LargestIntegralType check_value_data) {
     CheckMemoryData * const check = cast_largest_integral_type_to_pointer(
         CheckMemoryData*, check_value_data);
-    assert_true(check);
+    assert_non_null(check);
     return memory_equal_display_error(
         cast_largest_integral_type_to_pointer(const char*, value),
         (const char*)check->memory, check->size);
@@ -1112,7 +1112,7 @@ static void expect_memory_setup(
 	    (CheckMemoryData*)malloc(sizeof(*check_data) + size);
     void * const mem = (void*)(check_data + 1);
     declare_initialize_value_pointer_pointer(check_data_pointer, check_data);
-    assert_true(memory);
+    assert_non_null(memory);
     assert_true(size);
     memcpy(mem, memory, size);
     check_data->memory = mem;
@@ -1138,7 +1138,7 @@ static int check_not_memory(const LargestIntegralType value,
                             const LargestIntegralType check_value_data) {
     CheckMemoryData * const check = cast_largest_integral_type_to_pointer(
         CheckMemoryData*, check_value_data);
-    assert_true(check);
+    assert_non_null(check);
     return memory_not_equal_display_error(
         cast_largest_integral_type_to_pointer(const char*, value),
 	(const char*)check->memory,
@@ -1354,7 +1354,7 @@ void* _test_malloc(const size_t size, const char* file, const int line) {
     const size_t allocate_size = size + (MALLOC_GUARD_SIZE * 2) +
         sizeof(*block_info) + MALLOC_ALIGNMENT;
     char* const block = (char*)malloc(allocate_size);
-    assert_true(block);
+    assert_non_null(block);
 
     // Calculate the returned address.
     ptr = (char*)(((size_t)block + MALLOC_GUARD_SIZE + sizeof(*block_info) +
@@ -1394,7 +1394,7 @@ void _test_free(void* const ptr, const char* file, const int line) {
     unsigned int i;
     char *block = (char*)ptr;
     MallocBlockInfo *block_info;
-    _assert_true(cast_to_largest_integral_type(ptr), "ptr", file, line);
+    _assert_true(cast_ptr_to_largest_integral_type(ptr), "ptr", file, line);
     block_info = (MallocBlockInfo*)(block - (MALLOC_GUARD_SIZE +
                                                sizeof(*block_info)));
     // Check the guard blocks.
@@ -1439,13 +1439,13 @@ static int display_allocated_blocks(const ListNode * const check_point) {
     const ListNode * const head = get_allocated_blocks_list();
     const ListNode *node;
     int allocated_blocks = 0;
-    assert_true(check_point);
-    assert_true(check_point->next);
+    assert_non_null(check_point);
+    assert_non_null(check_point->next);
 
     for (node = check_point->next; node != head; node = node->next) {
         const MallocBlockInfo * const block_info =
 		(const MallocBlockInfo*)node->value;
-        assert_true(block_info);
+        assert_non_null(block_info);
 
         if (!allocated_blocks) {
             print_error("Blocks allocated...\n");
@@ -1463,10 +1463,10 @@ static int display_allocated_blocks(const ListNode * const check_point) {
 static void free_allocated_blocks(const ListNode * const check_point) {
     const ListNode * const head = get_allocated_blocks_list();
     const ListNode *node;
-    assert_true(check_point);
+    assert_non_null(check_point);
 
     node = check_point->next;
-    assert_true(node);
+    assert_non_null(node);
 
     while (node != head) {
         MallocBlockInfo * const block_info = (MallocBlockInfo*)node->value;
@@ -1759,7 +1759,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
                 break;
             default:
 #ifndef _HPUX
-                assert_false("BUG: shouldn't be here!");
+                assert_null("BUG: shouldn't be here!");
 #endif
                 break;
             }
