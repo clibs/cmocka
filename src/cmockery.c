@@ -468,7 +468,7 @@ static void free_value(const void *value, void *cleanup_value_data) {
 static void free_symbol_map_value(const void *value,
                                   void *cleanup_value_data) {
     SymbolMapValue * const map_value = (SymbolMapValue*)value;
-    const unsigned int children = (unsigned int)cleanup_value_data;
+    const LargestIntegralType children = cast_ptr_to_largest_integral_type(cleanup_value_data);
     assert_true(value);
     list_free(&map_value->symbol_values_list_head,
               children ? free_symbol_map_value : free_value,
