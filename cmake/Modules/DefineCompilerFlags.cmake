@@ -64,5 +64,5 @@ endif (UNIX AND NOT WIN32)
 
 if (MSVC)
     # Suppress warning about "deprecated" functions
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -nologo -D_CRT_SECURE_NO_WARNINGS -D_WIN32_WINNT=0x501")
 endif (MSVC)
