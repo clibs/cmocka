@@ -35,6 +35,8 @@ include_directories(
     ${CMOCKERY_PRIVATE_INCLUDE_DIRS}
 )
 
+add_definitions(-DHAVE_CONFIG_H=1)
+
 add_library(${CMOCKERY_SHARED_LIBRARY} SHARED ${cmockery_SRCS})
 
 target_link_libraries(${CMOCKERY_SHARED_LIBRARY} ${CMOCKERY_LINK_LIBRARIES})
@@ -82,3 +84,4 @@ if (WITH_STATIC_LIB)
 endif (WITH_STATIC_LIB)
 
 add_subdirectory(google)
+add_subdirectory(example)
