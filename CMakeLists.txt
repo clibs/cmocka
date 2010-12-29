@@ -32,7 +32,7 @@ include(DefineCMakeDefaults)
 include(DefinePlatformDefaults)
 include(DefineCompilerFlags)
 include(DefineInstallationPaths)
-#include(DefineOptions.cmake)
+include(DefineOptions.cmake)
 #include(CPackConfig.cmake)
 
 # disallow in-source build
