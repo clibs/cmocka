@@ -30,6 +30,13 @@ set(cmockery_SRCS
     cmockery.c
 )
 
+if (WIN32)
+    set(cmockery_SRCS
+        ${cmockery_SRCS}
+        cmockery.def
+    )
+endif (WIN32)
+
 include_directories(
     ${CMOCKERY_PUBLIC_INCLUDE_DIRS}
     ${CMOCKERY_PRIVATE_INCLUDE_DIRS}
