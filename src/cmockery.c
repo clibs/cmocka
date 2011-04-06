@@ -200,6 +200,7 @@ static int global_running_test = 0;
 // mock_assert() can optionally jump back to expect_assert_failure().
 jmp_buf global_expect_assert_env;
 int global_expecting_assert = 0;
+const char *global_last_failed_assert = NULL;
 
 // Keeps a map of the values that functions will have to return to provide
 // mocked interfaces.
@@ -1222,7 +1223,8 @@ void mock_assert(const int result, const char* const expression,
                  const char* const file, const int line) {
     if (!result) {
         if (global_expecting_assert) {
-            longjmp(global_expect_assert_env, (int)expression);
+            global_last_failed_assert = expression;
+            longjmp(global_expect_assert_env, result);
         } else {
             print_error("ASSERT: %s\n", expression);
             _fail(file, line);
