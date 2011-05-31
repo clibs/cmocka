@@ -16,32 +16,33 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
+
 #ifdef HAVE_MALLOC_H
 #include <malloc.h>
 #endif
+
 #include <setjmp.h>
-#ifndef _WIN32
-#include <signal.h>
-#endif // !_WIN32
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #ifdef _WIN32
 #include <windows.h>
-#endif // _WIN32
-#include <cmockery.h>
 
-#ifdef _WIN32
 #define vsnprintf _vsnprintf
-#endif // _WIN32
 
-/* Backwards compatibility with headers shipped with Visual Studio 2005 and
- * earlier. */
-#ifdef _WIN32
+/*
+ * Backwards compatibility with headers shipped with Visual Studio 2005 and
+ * earlier.
+ */
 WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
-#endif // _WIN32
+#else /* _WIN32 */
+#include <signal.h>
+#endif /* _WIN32 */
+
+#include <cmockery.h>
 
 // Size of guard bytes around dynamically allocated blocks.
 #define MALLOC_GUARD_SIZE 16
