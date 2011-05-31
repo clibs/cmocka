@@ -20,8 +20,13 @@
 #define snprintf _snprintf
 #endif // _WIN32
 
+DatabaseConnection* connect_to_customer_database(void);
+unsigned int get_customer_id_by_name(
+        DatabaseConnection * const connection,
+        const char * const customer_name);
+
 // Connect to the database containing customer information.
-DatabaseConnection* connect_to_customer_database() {
+DatabaseConnection* connect_to_customer_database(void) {
     return connect_to_database("customers.abcd.org", 321);
 }
 
