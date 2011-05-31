@@ -19,17 +19,7 @@
 #include <string.h>
 #include <cmockery.h>
 
-/* This is duplicated here from the module setup_teardown.c to reduce the
- * number of files used in this test. */
-typedef struct KeyValue {
-    unsigned int key;
-    const char* value;
-} KeyValue;
-
-void set_key_values(KeyValue * const new_key_values,
-                    const unsigned int new_number_of_key_values);
-extern KeyValue* find_item_by_value(const char * const value);
-extern void sort_items_by_key();
+#include "key_value.h"
 
 static KeyValue key_values[] = {
     { 10, "this" },
@@ -38,29 +28,29 @@ static KeyValue key_values[] = {
     { 13, "is" },
 };
 
-void create_key_values(void **state) {
+static void create_key_values(void **state) {
     KeyValue * const items = (KeyValue*)test_malloc(sizeof(key_values));
     memcpy(items, key_values, sizeof(key_values));
     *state = (void*)items;
     set_key_values(items, sizeof(key_values) / sizeof(key_values[0]));
 }
 
-void destroy_key_values(void **state) {
+static void destroy_key_values(void **state) {
     test_free(*state);
     set_key_values(NULL, 0);
 }
 
-void test_find_item_by_value(void **state) {
+static void test_find_item_by_value(void **state) {
     unsigned int i;
     for (i = 0; i < sizeof(key_values) / sizeof(key_values[0]); i++) {
         KeyValue * const found  = find_item_by_value(key_values[i].value);
-        assert_true(found);
+        assert_true(found != NULL);
         assert_int_equal(found->key, key_values[i].key);
         assert_string_equal(found->value, key_values[i].value);
     }
 }
 
-void test_sort_items_by_key(void **state) {
+static void test_sort_items_by_key(void **state) {
     unsigned int i;
     KeyValue * const kv = *state;
     sort_items_by_key();
@@ -69,7 +59,7 @@ void test_sort_items_by_key(void **state) {
     }
 }
 
-int main(int argc, char* argv[]) {
+int main(void) {
     const UnitTest tests[] = {
         unit_test_setup_teardown(test_find_item_by_value, create_key_values,
                                  destroy_key_values),
