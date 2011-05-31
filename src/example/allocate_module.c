@@ -32,18 +32,22 @@ extern void _test_free(void* const ptr, const char* file, const int line);
 #define free(ptr) _test_free(ptr, __FILE__, __LINE__)
 #endif // UNIT_TESTING
 
-void leak_memory() {
+void leak_memory(void);
+void buffer_overflow(void);
+void buffer_underflow(void);
+
+void leak_memory(void) {
     int * const temporary = (int*)malloc(sizeof(int));
     *temporary = 0;
 }
 
-void buffer_overflow() {
+void buffer_overflow(void) {
     char * const memory = (char*)malloc(sizeof(int));
     memory[sizeof(int)] = '!';
     free(memory);
 }
 
-void buffer_underflow() {
+void buffer_underflow(void) {
     char * const memory = (char*)malloc(sizeof(int));
     memory[-1] = '!';
     free(memory);
