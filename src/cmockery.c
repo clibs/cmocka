@@ -313,7 +313,7 @@ void initialize_testing(const char *test_name) {
 }
 
 
-void fail_if_leftover_values(const char *test_name) {
+static void fail_if_leftover_values(const char *test_name) {
     int error_occurred = 0;
 	(void)test_name;
     remove_always_return_values(&global_function_result_map_head, 1);
