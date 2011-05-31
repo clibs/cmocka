@@ -57,12 +57,13 @@ extern int example_main(int argc, char *argv[]);
 int example_test_fprintf(FILE* const file, const char *format, ...);
 int example_test_printf(const char *format, ...);
 
+char temporary_buffer[256];
+
 /* A mock fprintf function that checks the value of strings printed to the
  * standard error stream. */
 int example_test_fprintf(FILE* const file, const char *format, ...) {
 	int return_value;
 	va_list args;
-	char temporary_buffer[256];
 	assert_true(file == stderr);
 	va_start(args, format);
 	return_value = vsnprintf(temporary_buffer, sizeof(temporary_buffer),
@@ -77,7 +78,6 @@ int example_test_fprintf(FILE* const file, const char *format, ...) {
 int example_test_printf(const char *format, ...) {
 	int return_value;
 	va_list args;
-	char temporary_buffer[256];
 	va_start(args, format);
 	return_value = vsnprintf(temporary_buffer, sizeof(temporary_buffer),
 	                         format, args);
