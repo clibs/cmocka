@@ -54,6 +54,9 @@ extern int perform_operation(
         int ** const intermediate_values, int * const error_occurred);
 extern int example_main(int argc, char *argv[]);
 
+int example_test_fprintf(FILE* const file, const char *format, ...);
+int example_test_printf(const char *format, ...);
+
 /* A mock fprintf function that checks the value of strings printed to the
  * standard error stream. */
 int example_test_fprintf(FILE* const file, const char *format, ...) {
@@ -84,7 +87,7 @@ int example_test_printf(const char *format, ...) {
 }
 
 // A mock binary operator function.
-int binary_operator(int a, int b) {
+static int binary_operator(int a, int b) {
 	check_expected(a);
 	check_expected(b);
 	return (int)mock();
@@ -92,43 +95,43 @@ int binary_operator(int a, int b) {
 
 
 // Ensure add() adds two integers correctly.
-void test_add(void **state) {
+static void test_add(void **state) {
 	assert_int_equal(add(3, 3), 6);
 	assert_int_equal(add(3, -3), 0);
 }
 
 // Ensure subtract() subtracts two integers correctly.
-void test_subtract(void **state) {
+static void test_subtract(void **state) {
 	assert_int_equal(subtract(3, 3), 0);
 	assert_int_equal(subtract(3, -3), 6);
 }
 
 // Ensure multiple() mulitplies two integers correctly.
-void test_multiply(void **state) {
+static void test_multiply(void **state) {
 	assert_int_equal(multiply(3, 3), 9);
 	assert_int_equal(multiply(3, 0), 0);
 }
 
 // Ensure divide() divides one integer by another correctly.
-void test_divide(void **state) {
+static void test_divide(void **state) {
 	assert_int_equal(divide(10, 2), 5);
 	assert_int_equal(divide(2, 10), 0);
 }
 
 // Ensure divide() asserts when trying to divide by zero.
-void test_divide_by_zero(void **state) {
+static void test_divide_by_zero(void **state) {
 	expect_assert_failure(divide(100, 0));
 }
 
 /* Ensure find_operator_function_by_string() asserts when a NULL pointer is
  * specified as the table to search. */
-void test_find_operator_function_by_string_null_functions(void **state) {
+static void test_find_operator_function_by_string_null_functions(void **state) {
 	expect_assert_failure(find_operator_function_by_string(1, NULL, "test"));
 }
 
 /* Ensure find_operator_function_by_string() asserts when a NULL pointer is
  * specified as the string to search for. */
-void test_find_operator_function_by_string_null_string(void **state) {
+static void test_find_operator_function_by_string_null_string(void **state) {
 	const OperatorFunction operator_functions[] = {
 		{"+", binary_operator},
 	};
@@ -138,13 +141,13 @@ void test_find_operator_function_by_string_null_string(void **state) {
 
 /* Ensure find_operator_function_by_string() returns NULL when a NULL pointer
  * is specified as the table to search when the table size is 0. */
-void test_find_operator_function_by_string_valid_null_functions(void **state) {
+static void test_find_operator_function_by_string_valid_null_functions(void **state) {
   assert_int_equal(find_operator_function_by_string(0, NULL, "test"), NULL);
 }
 
 /* Ensure find_operator_function_by_string() returns NULL when searching for
  * an operator string that isn't in the specified table. */
-void test_find_operator_function_by_string_not_found(void **state) {
+static void test_find_operator_function_by_string_not_found(void **state) {
 	const OperatorFunction operator_functions[] = {
 		{"+", binary_operator},
 		{"-", binary_operator},
@@ -157,7 +160,7 @@ void test_find_operator_function_by_string_not_found(void **state) {
 
 /* Ensure find_operator_function_by_string() returns the correct function when
  * searching for an operator string that is in the specified table. */
-void test_find_operator_function_by_string_found(void **state) {
+static void test_find_operator_function_by_string_found(void **state) {
 	const OperatorFunction operator_functions[] = {
 		{"+", (BinaryOperator)0x12345678},
 		{"-", (BinaryOperator)0xDEADBEEF},
@@ -169,7 +172,7 @@ void test_find_operator_function_by_string_found(void **state) {
 }
 
 // Ensure perform_operation() asserts when a NULL arguments array is specified.
-void test_perform_operation_null_args(void **state) {
+static void test_perform_operation_null_args(void **state) {
 	const OperatorFunction operator_functions[] = {
 		{"+", binary_operator},
 	};
@@ -184,7 +187,7 @@ void test_perform_operation_null_args(void **state) {
 
 /* Ensure perform_operation() asserts when a NULL operator_functions array is
  * specified. */
-void test_perform_operation_null_operator_functions(void **state) {
+static void test_perform_operation_null_operator_functions(void **state) {
 	char *args[] = {
 		"1", "+", "2", "*", "4"
 	};
@@ -198,7 +201,7 @@ void test_perform_operation_null_operator_functions(void **state) {
 
 /* Ensure perform_operation() asserts when a NULL pointer is specified for
  * number_of_intermediate_values. */
-void test_perform_operation_null_number_of_intermediate_values(void **state) {
+static void test_perform_operation_null_number_of_intermediate_values(void **state) {
 	const OperatorFunction operator_functions[] = {
 		{"+", binary_operator},
 	};
@@ -214,7 +217,7 @@ void test_perform_operation_null_number_of_intermediate_values(void **state) {
 
 /* Ensure perform_operation() asserts when a NULL pointer is specified for
  * intermediate_values. */
-void test_perform_operation_null_intermediate_values(void **state) {
+static void test_perform_operation_null_intermediate_values(void **state) {
 	const OperatorFunction operator_functions[] = {
 		{"+", binary_operator},
 	};
@@ -242,7 +245,7 @@ void test_perform_operation_no_arguments(void **state) {
 
 /* Ensure perform_operation() returns an error if the first argument isn't
  * an integer string. */
-void test_perform_operation_first_arg_not_integer(void **state) {
+static void test_perform_operation_first_arg_not_integer(void **state) {
 	const OperatorFunction operator_functions[] = {
 		{"+", binary_operator},
 	};
@@ -265,7 +268,7 @@ void test_perform_operation_first_arg_not_integer(void **state) {
 
 /* Ensure perform_operation() returns an error when parsing an unknown
  * operator. */
-void test_perform_operation_unknown_operator(void **state) {
+static void test_perform_operation_unknown_operator(void **state) {
 	const OperatorFunction operator_functions[] = {
 		{"+", binary_operator},
 	};
@@ -288,7 +291,7 @@ void test_perform_operation_unknown_operator(void **state) {
 
 /* Ensure perform_operation() returns an error when nothing follows an
  * operator. */
-void test_perform_operation_missing_argument(void **state) {
+static void test_perform_operation_missing_argument(void **state) {
 	const OperatorFunction operator_functions[] = {
 		{"+", binary_operator},
 	};
@@ -311,7 +314,7 @@ void test_perform_operation_missing_argument(void **state) {
 
 /* Ensure perform_operation() returns an error when an integer doesn't follow
  * an operator. */
-void test_perform_operation_no_integer_after_operator(void **state) {
+static void test_perform_operation_no_integer_after_operator(void **state) {
 	const OperatorFunction operator_functions[] = {
 		{"+", binary_operator},
 	};
@@ -334,7 +337,7 @@ void test_perform_operation_no_integer_after_operator(void **state) {
 
 
 // Ensure perform_operation() succeeds given valid input parameters.
-void test_perform_operation(void **state) {
+static void test_perform_operation(void **state) {
 	const OperatorFunction operator_functions[] = {
 		{"+", binary_operator},
 		{"*", binary_operator},
@@ -371,7 +374,7 @@ void test_perform_operation(void **state) {
 
 
 // Ensure main() in example.c succeeds given no arguments.
-void test_example_main_no_args(void **state) {
+static void test_example_main_no_args(void **state) {
 	char *args[] = {
 		"example",
 	};
@@ -381,7 +384,7 @@ void test_example_main_no_args(void **state) {
 
 
 // Ensure main() in example.c succeeds given valid input arguments.
-void test_example_main(void **state) {
+static void test_example_main(void **state) {
 	char *args[] = {
 		"example", "1", "+", "3", "*", "10",
 	};

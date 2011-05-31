@@ -35,6 +35,7 @@
 #ifdef printf
 #undef printf
 #endif // printf
+extern int example_test_printf(const char *format, ...);
 #define printf example_test_printf
 
 extern void print_message(const char *format, ...);
@@ -71,6 +72,7 @@ void* _test_calloc(const size_t number_of_elements, const size_t size,
                    const char* file, const int line);
 void _test_free(void* const ptr, const char* file, const int line);
 
+int example_main(int argc, char *argv[]);
 /* main is defined in the unit test so redefine name of the the main function
  * here. */
 #define main example_main
@@ -91,6 +93,18 @@ typedef struct OperatorFunction {
     BinaryOperator function;
 } OperatorFunction;
 
+
+BinaryOperator find_operator_function_by_string(
+        const size_t number_of_operator_functions,
+        const OperatorFunction * const operator_functions,
+        const char* const operator_string);
+
+int perform_operation(
+        int number_of_arguments, char *arguments[],
+        const size_t number_of_operator_functions,
+        const OperatorFunction * const operator_functions,
+        int * const number_of_intermediate_values,
+        int ** const intermediate_values, int * const error_occurred);
 
 static int add(int a, int b);
 static int subtract(int a, int b);
@@ -126,13 +140,13 @@ static int divide(int a, int b) {
  * associated with the specified operator_string.  This function returns the
  * function associated with operator_string if successful, NULL otherwise.
  */
-static BinaryOperator find_operator_function_by_string(
+BinaryOperator find_operator_function_by_string(
         const size_t number_of_operator_functions,
         const OperatorFunction * const operator_functions,
         const char* const operator_string) {
     size_t i;
     assert(!number_of_operator_functions || operator_functions);
-    assert(operator_string);
+    assert(operator_string != NULL);
 
     for (i = 0; i < number_of_operator_functions; i++) {
         const OperatorFunction *const operator_function =
@@ -158,7 +172,7 @@ static BinaryOperator find_operator_function_by_string(
  * If an error occurs while performing the operation error_occurred is set to
  * 1, the operation is aborted and 0 is returned.
  */
-static int perform_operation(
+int perform_operation(
         int number_of_arguments, char *arguments[],
         const size_t number_of_operator_functions,
         const OperatorFunction * const operator_functions,
@@ -166,12 +180,12 @@ static int perform_operation(
         int ** const intermediate_values, int * const error_occurred) {
     char *end_of_integer;
     int value;
-    unsigned int i;
+    int i;
     assert(!number_of_arguments || arguments);
     assert(!number_of_operator_functions || operator_functions);
-    assert(error_occurred);
-    assert(number_of_intermediate_values);
-    assert(intermediate_values);
+    assert(error_occurred != NULL);
+    assert(number_of_intermediate_values != NULL);
+    assert(intermediate_values != NULL);
 
     *error_occurred = 0;
     *number_of_intermediate_values = 0;
@@ -254,8 +268,8 @@ int main(int argc, char *argv[]) {
 
     // If no errors occurred display the result.
     if (!return_value && argc > 1) {
-        unsigned int i;
-        unsigned int intermediate_value_index = 0;
+        int i;
+        int intermediate_value_index = 0;
         printf("%s\n", argv[1]);
         for (i = 2; i < argc; i += 2) {
             assert(intermediate_value_index < number_of_intermediate_values);
