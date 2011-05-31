@@ -19,12 +19,14 @@
 #include <cmockery.h>
 
 // A test case that does nothing and succeeds.
-void null_test_success(void **state) {
+static void null_test_success(void **state) {
+    (void) state;
 }
 
-int main(int argc, char* argv[]) {
+int main(void) {
     const UnitTest tests[] = {
         unit_test(null_test_success),
     };
+
     return run_tests(tests);
 }
