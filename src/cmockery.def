@@ -32,7 +32,6 @@ EXPORTS
     _test_free
     _test_malloc
     _will_return
-    fail_if_leftover_values
     global_expect_assert_env
     global_expecting_assert
     mock_assert
