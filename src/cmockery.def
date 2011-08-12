@@ -34,6 +34,7 @@ EXPORTS
     _will_return
     global_expect_assert_env
     global_expecting_assert
+    global_last_failed_assert
     mock_assert
     print_error
     print_message
