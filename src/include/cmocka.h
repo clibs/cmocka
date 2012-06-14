@@ -19,13 +19,13 @@
 #if _MSC_VER < 1500
 #ifdef __cplusplus
 extern "C" {
-#endif   // __cplusplus
+#endif   /* __cplusplus */
 int __stdcall IsDebuggerPresent();
 #ifdef __cplusplus
 } /* extern "C" */
-#endif   // __cplusplus
-#endif  // _MSC_VER < 1500
-#endif  // _WIN32
+#endif   /* __cplusplus */
+#endif  /* _MSC_VER < 1500 */
+#endif  /* _WIN32 */
 /*
  * These headers or their equivalents should be included prior to including
  * this header file.
@@ -38,27 +38,29 @@ int __stdcall IsDebuggerPresent();
  * library functions and types.
  */
 
-// For those who are used to __func__ from gcc.
+/* For those who are used to __func__ from gcc. */
 #ifndef __func__
 #define __func__ __FUNCTION__
 #endif
 
-/* Largest integral type.  This type should be large enough to hold any
- * pointer or integer supported by the compiler. */
+/*
+ * Largest integral type.  This type should be large enough to hold any
+ * pointer or integer supported by the compiler.
+ */
 #ifndef LargestIntegralType
 #define LargestIntegralType unsigned long long
-#endif // LargestIntegralType
+#endif /* LargestIntegralType */
 
-// Printf format used to display LargestIntegralType.
+/* Printf format used to display LargestIntegralType. */
 #ifndef LargestIntegralTypePrintfFormat
 #ifdef _WIN32
 #define LargestIntegralTypePrintfFormat "%I64x"
 #else
 #define LargestIntegralTypePrintfFormat "%llx"
-#endif // _WIN32
-#endif // LargestIntegralTypePrintfFormat
+#endif /* _WIN32 */
+#endif /* LargestIntegralTypePrintfFormat */
 
-// Perform an unsigned cast to LargestIntegralType.
+/* Perform an unsigned cast to LargestIntegralType. */
 #define cast_to_largest_integral_type(value) \
     ((LargestIntegralType)((unsigned)(value)))
 
@@ -84,16 +86,17 @@ typedef unsigned long uintptr_t;
 
 /* Perform an unsigned cast to uintptr_t. */
 #define cast_to_pointer_integral_type(value) \
-	((uintptr_t)(value))
+    ((uintptr_t)(value))
 
 /* Perform a cast of a pointer to uintmax_t */
 #define cast_ptr_to_largest_integral_type(value) \
 cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
 
-// Retrieves a return value for the current function.
+/* Retrieves a return value for the current function. */
 #define mock() _mock(__func__, __FILE__, __LINE__)
 
-/* Stores a value to be returned by the specified function later.
+/*
+ * Stores a value to be returned by the specified function later.
  * The count parameter returns the number of times the value should be returned
  * by mock().  If count is set to -1 the value will always be returned.
  */
@@ -104,7 +107,8 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
     _will_return(#function, __FILE__, __LINE__, \
                  cast_to_largest_integral_type(value), count)
 
-/* Add a custom parameter checking function.  If the event parameter is NULL
+/*
+ * Add a custom parameter checking function.  If the event parameter is NULL
  * the event structure is allocated internally by this function.  If event
  * parameter is provided it must be allocated on the heap and doesn't need to
  * be deallocated by the caller.
@@ -113,7 +117,8 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
     _expect_check(#function, #parameter, __FILE__, __LINE__, check_function, \
                   cast_to_largest_integral_type(check_data), NULL, 0)
 
-/* Add an event to check a parameter, using check_expected(), against a set of
+/*
+ * Add an event to check a parameter, using check_expected(), against a set of
  * values. See will_return() for a description of the count parameter.
  */
 #define expect_in_set(function, parameter, value_array) \
@@ -129,7 +134,8 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
         sizeof(value_array) / sizeof((value_array)[0]), count)
 
 
-/* Add an event to check a parameter, using check_expected(), against a
+/*
+ * Add an event to check a parameter, using check_expected(), against a
  * signed range.  Where range is minimum <= value <= maximum.
  * See will_return() for a description of the count parameter.
  */
@@ -139,7 +145,8 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
     _expect_in_range(#function, #parameter, __FILE__, __LINE__, minimum, \
                      maximum, count)
 
-/* Add an event to check a parameter, using check_expected(), against a
+/*
+ * Add an event to check a parameter, using check_expected(), against a
  * signed range.  Where range is value < minimum or value > maximum.
  * See will_return() for a description of the count parameter.
  */
@@ -150,7 +157,8 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
     _expect_not_in_range(#function, #parameter, __FILE__, __LINE__, \
                          minimum, maximum, count)
 
-/* Add an event to check whether a parameter, using check_expected(), is or
+/*
+ * Add an event to check whether a parameter, using check_expected(), is or
  * isn't a value.  See will_return() for a description of the count parameter.
  */
 #define expect_value(function, parameter, value) \
@@ -164,7 +172,8 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
     _expect_not_value(#function, #parameter, __FILE__, __LINE__, \
                       cast_to_largest_integral_type(value), count)
 
-/* Add an event to check whether a parameter, using check_expected(),
+/*
+ * Add an event to check whether a parameter, using check_expected(),
  * is or isn't a string.  See will_return() for a description of the count
  * parameter.
  */
@@ -179,7 +188,8 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
     _expect_not_string(#function, #parameter, __FILE__, __LINE__, \
                        (const char*)(string), count)
 
-/* Add an event to check whether a parameter, using check_expected() does or
+/*
+ * Add an event to check whether a parameter, using check_expected() does or
  * doesn't match an area of memory.  See will_return() for a description of
  * the count parameter.
  */
@@ -195,7 +205,8 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
                        (const void*)(memory), size, count)
 
 
-/* Add an event to allow any value for a parameter checked using
+/*
+ * Add an event to allow any value for a parameter checked using
  * check_expected().  See will_return() for a description of the count
  * parameter.
  */
@@ -204,92 +215,94 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
 #define expect_any_count(function, parameter, count) \
     _expect_any(#function, #parameter, __FILE__, __LINE__, count)
 
-/* Determine whether a function parameter is correct.  This ensures the next
+/*
+ * Determine whether a function parameter is correct.  This ensures the next
  * value queued by one of the expect_*() macros matches the specified variable.
  */
 #define check_expected(parameter) \
     _check_expected(__func__, #parameter, __FILE__, __LINE__, \
                     cast_to_largest_integral_type(parameter))
 
-// Assert that the given expression is true.
+/* Assert that the given expression is true. */
 #define assert_true(c) _assert_true(cast_to_largest_integral_type(c), #c, \
                                     __FILE__, __LINE__)
-// Assert that the given expression is false.
+/* Assert that the given expression is false. */
 #define assert_false(c) _assert_true(!(cast_to_largest_integral_type(c)), #c, \
                                      __FILE__, __LINE__)
 
-// Assert that the given pointer is non-NULL.
+/* Assert that the given pointer is non-NULL. */
 #define assert_non_null(c) _assert_true(cast_ptr_to_largest_integral_type(c), #c, \
 __FILE__, __LINE__)
-// Assert that the given pointer is NULL.
+/* Assert that the given pointer is NULL. */
 #define assert_null(c) _assert_true(!(cast_ptr_to_largest_integral_type(c)), #c, \
 __FILE__, __LINE__)
 
-// Assert that the two given integers are equal, otherwise fail.
+/* Assert that the two given integers are equal, otherwise fail. */
 #define assert_int_equal(a, b) \
     _assert_int_equal(cast_to_largest_integral_type(a), \
                       cast_to_largest_integral_type(b), \
                       __FILE__, __LINE__)
-// Assert that the two given integers are not equal, otherwise fail.
+/* Assert that the two given integers are not equal, otherwise fail. */
 #define assert_int_not_equal(a, b) \
     _assert_int_not_equal(cast_to_largest_integral_type(a), \
                           cast_to_largest_integral_type(b), \
                           __FILE__, __LINE__)
 
-// Assert that the two given strings are equal, otherwise fail.
+/* Assert that the two given strings are equal, otherwise fail. */
 #define assert_string_equal(a, b) \
     _assert_string_equal((const char*)(a), (const char*)(b), __FILE__, \
                          __LINE__)
-// Assert that the two given strings are not equal, otherwise fail.
+/* Assert that the two given strings are not equal, otherwise fail. */
 #define assert_string_not_equal(a, b) \
     _assert_string_not_equal((const char*)(a), (const char*)(b), __FILE__, \
                              __LINE__)
 
-// Assert that the two given areas of memory are equal, otherwise fail.
+/* Assert that the two given areas of memory are equal, otherwise fail. */
 #define assert_memory_equal(a, b, size) \
     _assert_memory_equal((const char*)(a), (const char*)(b), size, __FILE__, \
                          __LINE__)
-// Assert that the two given areas of memory are not equal, otherwise fail.
+/* Assert that the two given areas of memory are not equal, otherwise fail. */
 #define assert_memory_not_equal(a, b, size) \
     _assert_memory_not_equal((const char*)(a), (const char*)(b), size, \
                              __FILE__, __LINE__)
 
-// Assert that the specified value is >= minimum and <= maximum.
+/* Assert that the specified value is >= minimum and <= maximum. */
 #define assert_in_range(value, minimum, maximum) \
     _assert_in_range( \
         cast_to_largest_integral_type(value), \
         cast_to_largest_integral_type(minimum), \
         cast_to_largest_integral_type(maximum), __FILE__, __LINE__)
 
-// Assert that the specified value is < minumum or > maximum
+/* Assert that the specified value is < minumum or > maximum */
 #define assert_not_in_range(value, minimum, maximum) \
     _assert_not_in_range( \
         cast_to_largest_integral_type(value), \
         cast_to_largest_integral_type(minimum), \
         cast_to_largest_integral_type(maximum), __FILE__, __LINE__)
 
-// Assert that the specified value is within a set.
+/* Assert that the specified value is within a set. */
 #define assert_in_set(value, values, number_of_values) \
     _assert_in_set(value, values, number_of_values, __FILE__, __LINE__)
-// Assert that the specified value is not within a set.
+/* Assert that the specified value is not within a set. */
 #define assert_not_in_set(value, values, number_of_values) \
     _assert_not_in_set(value, values, number_of_values, __FILE__, __LINE__)
 
 
-// Forces the test to fail immediately and quit.
+/* Forces the test to fail immediately and quit. */
 #define fail() _fail(__FILE__, __LINE__)
 
-// Generic method to kick off testing
+/* Generic method to kick off testing */
 #define run_test(f) _run_test(#f, f, NULL, UNIT_TEST_FUNCTION_TYPE_TEST, NULL)
 
-// Initializes a UnitTest structure.
+/* Initializes a UnitTest structure. */
 #define unit_test(f) { #f, f, UNIT_TEST_FUNCTION_TYPE_TEST }
 #define unit_test_setup(test, setup) \
     { #test "_" #setup, setup, UNIT_TEST_FUNCTION_TYPE_SETUP }
 #define unit_test_teardown(test, teardown) \
     { #test "_" #teardown, teardown, UNIT_TEST_FUNCTION_TYPE_TEARDOWN }
 
-/* Initialize an array of UnitTest structures with a setup function for a test
+/*
+ * Initialize an array of UnitTest structures with a setup function for a test
  * and a teardown function.  Either setup or teardown can be NULL.
  */
 #define unit_test_setup_teardown(test, setup, teardown) \
@@ -314,17 +327,17 @@ __FILE__, __LINE__)
  */
 #define run_tests(tests) _run_tests(tests, sizeof(tests) / sizeof(tests)[0])
 
-// Dynamic allocators
+/* Dynamic allocators */
 #define test_malloc(size) _test_malloc(size, __FILE__, __LINE__)
 #define test_calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)
 #define test_free(ptr) _test_free(ptr, __FILE__, __LINE__)
 
-// Redirect malloc, calloc and free to the unit test allocators.
+/* Redirect malloc, calloc and free to the unit test allocators. */
 #if UNIT_TESTING
 #define malloc test_malloc
 #define calloc test_calloc
 #define free test_free
-#endif // UNIT_TESTING
+#endif /* UNIT_TESTING */
 
 /*
  * Ensure mock_assert() is called.  If mock_assert() is called the assert
@@ -359,21 +372,22 @@ __FILE__, __LINE__)
     } \
   }
 
-// Function prototype for setup, test and teardown functions.
+/* Function prototype for setup, test and teardown functions. */
 typedef void (*UnitTestFunction)(void **state);
 
-// Function that determines whether a function parameter value is correct.
+/* Function that determines whether a function parameter value is correct. */
 typedef int (*CheckParameterValue)(const LargestIntegralType value,
                                    const LargestIntegralType check_value_data);
 
-// Type of the unit test function.
+/* Type of the unit test function. */
 typedef enum UnitTestFunctionType {
     UNIT_TEST_FUNCTION_TYPE_TEST = 0,
     UNIT_TEST_FUNCTION_TYPE_SETUP,
     UNIT_TEST_FUNCTION_TYPE_TEARDOWN,
 } UnitTestFunctionType;
 
-/* Stores a unit test function with its name and type.
+/*
+ * Stores a unit test function with its name and type.
  * NOTE: Every setup function must be paired with a teardown function.  It's
  * possible to specify NULL function pointers.
  */
@@ -384,13 +398,13 @@ typedef struct UnitTest {
 } UnitTest;
 
 
-// Location within some source code.
+/* Location within some source code. */
 typedef struct SourceLocation {
     const char* file;
     int line;
 } SourceLocation;
 
-// Event that's called to check a parameter value.
+/* Event that's called to check a parameter value. */
 typedef struct CheckParameterEvent {
     SourceLocation location;
     const char *parameter_name;
@@ -398,12 +412,12 @@ typedef struct CheckParameterEvent {
     LargestIntegralType check_value_data;
 } CheckParameterEvent;
 
-// Used by expect_assert_failure() and mock_assert().
+/* Used by expect_assert_failure() and mock_assert(). */
 extern int global_expecting_assert;
 extern jmp_buf global_expect_assert_env;
 extern const char * global_last_failed_assert;
 
-// Retrieves a value for the given function, as set by "will_return".
+/* Retrieves a value for the given function, as set by "will_return". */
 LargestIntegralType _mock(const char * const function, const char* const file,
                           const int line);
 
@@ -469,9 +483,11 @@ void _check_expected(
     const char * const function_name, const char * const parameter_name,
     const char* file, const int line, const LargestIntegralType value);
 
-// Can be used to replace assert in tested code so that in conjuction with
-// check_assert() it's possible to determine whether an assert condition has
-// failed without stopping a test.
+/*
+ * Can be used to replace assert in tested code so that in conjuction with
+ * check_assert() it's possible to determine whether an assert condition has
+ * failed without stopping a test.
+ */
 void mock_assert(const int result, const char* const expression,
                  const char * const file, const int line);
 
@@ -522,10 +538,10 @@ int _run_test(
     const void* const heap_check_point);
 int _run_tests(const UnitTest * const tests, const size_t number_of_tests);
 
-// Standard output and error print methods.
+/* Standard output and error print methods. */
 void print_message(const char* const format, ...);
 void print_error(const char* const format, ...);
 void vprint_message(const char* const format, va_list args);
 void vprint_error(const char* const format, va_list args);
 
-#endif // CMOCKA_H_
+#endif /* CMOCKA_H_ */
