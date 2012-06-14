@@ -16,7 +16,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <setjmp.h>
-#include <cmockery.h>
+#include <cmocka.h>
 #include <database.h>
 
 extern DatabaseConnection* connect_to_customer_database();

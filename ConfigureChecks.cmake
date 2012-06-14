@@ -87,7 +87,7 @@ if (WIN32)
     check_function_exists(_snprintf_s HAVE__SNPRINTF_S)
 endif (WIN32)
 
-set(CMOCKERY_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} CACHE INTERNAL "cmockery required system libraries")
+set(CMOCKA_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} CACHE INTERNAL "cmocka required system libraries")
 
 # OPTIONS
 

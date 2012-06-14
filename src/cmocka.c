@@ -42,7 +42,7 @@ WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 #include <signal.h>
 #endif /* _WIN32 */
 
-#include <cmockery.h>
+#include <cmocka.h>
 
 // Size of guard bytes around dynamically allocated blocks.
 #define MALLOC_GUARD_SIZE 16

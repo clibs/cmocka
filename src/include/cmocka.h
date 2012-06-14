@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef CMOCKERY_H_
-#define CMOCKERY_H_
+#ifndef CMOCKA_H_
+#define CMOCKA_H_
 #ifdef _WIN32
 #if _MSC_VER < 1500
 #ifdef __cplusplus
@@ -528,4 +528,4 @@ void print_error(const char* const format, ...);
 void vprint_message(const char* const format, va_list args);
 void vprint_error(const char* const format, va_list args);
 
-#endif // CMOCKERY_H_
+#endif // CMOCKA_H_

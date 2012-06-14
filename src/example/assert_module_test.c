@@ -16,7 +16,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <setjmp.h>
-#include <cmockery.h>
+#include <cmocka.h>
 
 extern void increment_value(int * const value);
 

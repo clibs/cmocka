@@ -1,10 +1,14 @@
-For information about how to use the cmockery unit testing framework see
+CMOCKA
+=======
+
+cmocka is a fork for Google's cmockery unit testing framework to fix bugs and
+support it in future.
+See https://code.google.com/p/cmockery/
+
+For information about how to use the cmocka unit testing framework see
 doc/index.html.
 
 COMPILING
 ---------
-To compile the cmockery library and example applications run ./configure
-followed by make.  On Windows from the command line run vsvars.bat then cd into
-the windows subdirectory of this project and run nmake.
-
-This code has been tested on Linux (Ubuntu) and Windows using VC++7 and VC++8.
+To compile the cmocka library and example applications run cmake /path/to/source
+followed by make. On Windows you can use the cmake gui.

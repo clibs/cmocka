@@ -1,10 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html><head>
-<title>Cmockery</title>
+<title>cmocka</title>
 </head>
 <body>
-<h1>Cmockery Unit Testing Framework</h1>
-<p>Cmockery is a lightweight library that is used to author C unit tests.</p>
+<h1>cmocka Unit Testing Framework</h1>
+<p>cmocka is a lightweight library that is used to author C unit tests.</p>
 
 <ul>Contents
   <li><a href="#Motivation">Motivation</a></li>
@@ -37,18 +37,18 @@ assumption many frameworks require the inclusion of standard C library headers
 in the code module being tested which may collide with the custom or
 incomplete implementation of the C library utilized by the code under test.</p>
 
-<p>Cmockery only requires a test application is linked with the standard C
+<p>cmocka only requires a test application is linked with the standard C
 library which minimizes conflicts with standard C library headers.  Also,
-Cmockery tries avoid the use of some of the newer features of C compilers.</p>
+cmocka tries avoid the use of some of the newer features of C compilers.</p>
 
-<p>This results in Cmockery being a relatively small library that can be used
+<p>This results in cmocka being a relatively small library that can be used
 to test a variety of exotic code.  If a developer wishes to simply test an
 application with the latest compiler then other unit testing frameworks maybe
 preferable.</p>
 
 <a name="Overview"><h2>Overview</h2></a>
-<p>Cmockery tests are compiled into stand-alone executables and linked with
-the Cmockery library, the standard C library and module being tested.  Any
+<p>cmocka tests are compiled into stand-alone executables and linked with
+the cmocka library, the standard C library and module being tested.  Any
 symbols external to the module being tested should be mocked - replaced with 
 functions that return values determined by the test - within the test
 application.  Even though significant differences may exist between the target
@@ -59,12 +59,12 @@ with the target execution environment.</p>
 
 <p>It may not be possible to compile a module into a test application without
 some modification, therefore the preprocessor symbol <b>UNIT_TESTING</b> should
-be defined when Cmockery unit test applications are compiled so code within the
+be defined when cmocka unit test applications are compiled so code within the
 module can be conditionally compiled for tests.</p>
 
 <a name="Test_Execution"><h2>Test Execution</h2></a>
-<p>Cmockery unit test cases are functions with the signature
-<b>void function(void **state)</b>.  Cmockery test applications initialize a
+<p>cmocka unit test cases are functions with the signature
+<b>void function(void **state)</b>.  cmocka test applications initialize a
 table with test case function pointers using <b>unit_test*()</b> macros.  This
 table is then passed to the <b>run_tests()</b> macro to execute the tests.
 
@@ -79,7 +79,7 @@ the test succeeded.</p>
 #include &lt;stdarg.h&gt;
 #include &lt;stddef.h&gt;
 #include &lt;setjmp.h&gt;
-#include &lt;cmockery.h&gt;
+#include &lt;cmocka.h&gt;
 
 // A test case that does nothing and succeeds.
 void null_test_success(void **state) {
@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
 <p>Before a test function is executed by <b>run_tests()</b>,
 exception / signal handlers are overridden with a handler that simply
 displays an error and exits a test function if an exception occurs.  If an
-exception occurs outside of a test function, for example in Cmockery itself,
+exception occurs outside of a test function, for example in cmocka itself,
 the application aborts execution and returns an error code.</p>
 
 <a name="Failure_Conditions"><h2>Failure Conditions</h2></a>
@@ -105,8 +105,8 @@ the application aborts execution and returns an error code.</p>
 <b>run_tests()</b>, the test function is aborted and the application's
 execution resumes with the next test function.
 
-Test failures are ultimately signalled via the Cmockery function <b>fail()</b>.
-The following events will result in the Cmockery library signalling a test
+Test failures are ultimately signalled via the cmocka function <b>fail()</b>.
+The following events will result in the cmocka library signalling a test
 failure...
 
 <ul>
@@ -123,7 +123,7 @@ failure...
 
 <a name="Assertions"><h2>Assertions</h2></a>
 <p>Runtime assert macros like the standard C library's <b>assert()</b> should
-be redefined in modules being tested to use Cmockery's <b>mock_assert()</b>
+be redefined in modules being tested to use cmocka's <b>mock_assert()</b>
 function.  Normally <b>mock_assert()</b> signals a
 <a href="#Failure_Conditions">test failure</a>.  If a function is called using
 the <b>expect_assert_failure()</b> macro, any calls to <b>mock_assert()</b>
@@ -161,7 +161,7 @@ void decrement_value(int * const value) {
 #include &lt;stdarg.h&gt;
 #include &lt;stddef.h&gt;
 #include &lt;setjmp.h&gt;
-#include &lt;cmockery.h&gt;
+#include &lt;cmocka.h&gt;
 
 extern void increment_value(int * const value);
 
@@ -194,13 +194,13 @@ int main(int argc, char *argv[]) {
 
 <h3><a name="Assert_Macros">Assert Macros</a></h3>
 
-<p>Cmockery provides an assortment of assert macros that tests applications
+<p>cmocka provides an assortment of assert macros that tests applications
 should use use in preference to the C standard library's assert macro.  On an
-assertion failure a Cmockery assert macro will write the failure to the
+assertion failure a cmocka assert macro will write the failure to the
 standard error stream and signal a test failure.  Due to limitations of the
-C language the general C standard library assert() and Cmockery's
+C language the general C standard library assert() and cmocka's
 assert_true() and assert_false() macros can only display the expression that
-caused the assert failure.  Cmockery's type specific assert macros,
+caused the assert failure.  cmocka's type specific assert macros,
 assert_{type}_equal() and assert_{type}_not_equal(), display the data that
 caused the assertion failure which increases data visibility aiding
 debugging of failing test cases.</p>
@@ -236,7 +236,7 @@ unsigned int string_to_status_code(const char* const status_code_string) {
 #include &lt;stdarg.h&gt;
 #include &lt;stddef.h&gt;
 #include &lt;setjmp.h&gt;
-#include &lt;cmockery.h&gt;
+#include &lt;cmocka.h&gt;
 
 extern const char* get_status_code_string(const unsigned int status_code);
 extern unsigned int string_to_status_code(
@@ -267,20 +267,20 @@ int main(int argc, char *argv[]) {
 <a name="Dynamic_Memory_Allocation"><h2>Dynamic Memory Allocation</h2></a>
 
 <p>To test for memory leaks, buffer overflows and underflows a module being
-tested by Cmockery should replace calls to <b>malloc()</b>, <b>calloc()</b> and
+tested by cmocka should replace calls to <b>malloc()</b>, <b>calloc()</b> and
 <b>free()</b> to <b>test_malloc()</b>, <b>test_calloc()</b> and
 <b>test_free()</b> respectively.  Each time a block is deallocated using
 <b>test_free()</b> it is checked for corruption, if a corrupt block is found
 a <a href="#Failure_Conditions">test failure</a> is signalled.  All blocks
 allocated using the <b>test_*()</b> allocation functions are tracked by the
-Cmockery library.  When a test completes if any allocated blocks (memory leaks)
+cmocka library.  When a test completes if any allocated blocks (memory leaks)
 remain they are reported and a test failure is signalled.</p>
-<p>For simplicity Cmockery currently executes all tests in one process.
+<p>For simplicity cmocka currently executes all tests in one process.
 Therefore all test cases in a test application share a single address space
 which means memory corruption from a single test case could potentially cause
 the test application to exit prematurely.</p>
 
-<h4>Using Cmockery's Allocators</h4>
+<h4>Using cmocka's Allocators</h4>
 <a href="../src/example/allocate_module.c">allocate_module.c</a>
 <listing>
 #include &lt;malloc.h&gt;
@@ -318,7 +318,7 @@ void buffer_underflow() {
 #include &lt;stdarg.h&gt;
 #include &lt;stddef.h&gt;
 #include &lt;setjmp.h&gt;
-#include &lt;cmockery.h&gt;
+#include &lt;cmocka.h&gt;
 
 extern void leak_memory();
 extern void buffer_overflow();
@@ -361,7 +361,7 @@ a mock function defined in the unit test.</p>
 
 <a name="Return_Values"><h3>Return Values</h3></a>
 
-<p>In order to simplify the implementation of mock functions Cmockery provides
+<p>In order to simplify the implementation of mock functions cmocka provides
 functionality which stores return values for mock functions in each test
 case using <b>will_return()</b>.  These values are then returned by each mock 
 function using calls to <b>mock()</b>.
@@ -435,7 +435,7 @@ unsigned int get_customer_id_by_name(
 #include &lt;stdarg.h&gt;
 #include &lt;stddef.h&gt;
 #include &lt;setjmp.h&gt;
-#include &lt;cmockery.h&gt;
+#include &lt;cmocka.h&gt;
 #include &lt;database.h&gt;
 
 
@@ -493,7 +493,7 @@ int main(int argc, char* argv[]) {
 </listing>
 
 <a name="Checking_Parameters"><h3>Checking Parameters</h3></a>
-<p>In addition to storing the return values of mock functions, Cmockery
+<p>In addition to storing the return values of mock functions, cmocka
 provides functionality to store expected values for mock function parameters
 using the expect_*() functions provided.  A mock function parameter can then
 be validated using the check_expected() macro.
@@ -519,7 +519,7 @@ DatabaseConnection* connect_to_product_database() {
 #include &lt;stdarg.h&gt;
 #include &lt;stddef.h&gt;
 #include &lt;setjmp.h&gt;
-#include &lt;cmockery.h&gt;
+#include &lt;cmocka.h&gt;
 #include &lt;database.h&gt;
 
 extern DatabaseConnection* connect_to_product_database();
@@ -571,7 +571,7 @@ int main(int argc, char* argv[]) {
 
 <a name="Test_State"><h2>Test State</h2></a>
 
-<p>Cmockery allows the specification of multiple setup and tear down functions
+<p>cmocka allows the specification of multiple setup and tear down functions
 for each test case.  Setup functions, specified by the <b>unit_test_setup()</b>
 or <b>unit_test_setup_teardown()</b> macros allow common initialization to be
 shared between multiple test cases.  In addition, tear down functions,
@@ -628,7 +628,7 @@ void sort_items_by_key() {
 #include &lt;stddef.h&gt;
 #include &lt;setjmp.h&gt;
 #include &lt;string.h&gt;
-#include &lt;cmockery.h&gt;
+#include &lt;cmocka.h&gt;
 
 /* This is duplicated here from the module setup_teardown.c to reduce the
  * number of files used in this test. */
@@ -697,7 +697,7 @@ int main(int argc, char* argv[]) {
 <a href="../src/example/calculator.c">calculator.c</a> application
 and test application that full exercises the calculator application
 <a href="../src/example/calculator_test.c">calculator_test.c</a>
-are provided as an example of Cmockery's features discussed in this document.
+are provided as an example of cmocka's features discussed in this document.
 </p>
 
 <hr>

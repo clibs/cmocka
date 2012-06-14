@@ -16,7 +16,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <setjmp.h>
-#include <cmockery.h>
+#include <cmocka.h>
 
 extern void leak_memory();
 extern void buffer_overflow();

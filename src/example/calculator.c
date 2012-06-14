@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-// A calculator example used to demonstrate the cmockery testing library.
+// A calculator example used to demonstrate the cmocka testing library.
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -49,7 +49,7 @@ extern void print_message(const char *format, ...);
 
 extern int example_test_fprintf(FILE * const file, const char *format, ...);
 
-// Redirect assert to mock_assert() so assertions can be caught by cmockery.
+// Redirect assert to mock_assert() so assertions can be caught by cmocka.
 #ifdef assert
 #undef assert
 #endif // assert
@@ -58,7 +58,7 @@ extern int example_test_fprintf(FILE * const file, const char *format, ...);
 void mock_assert(const int result, const char* expression, const char *file,
                  const int line);
 
-/* Redirect calloc and free to test_calloc() and test_free() so cmockery can
+/* Redirect calloc and free to test_calloc() and test_free() so cmocka can
  * check for memory leaks. */
 #ifdef calloc
 #undef calloc

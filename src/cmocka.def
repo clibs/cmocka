@@ -1,4 +1,4 @@
-LIBRARY cmockery
+LIBRARY cmocka
 EXPORTS
     _assert_in_range
     _assert_in_set

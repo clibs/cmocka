@@ -17,7 +17,7 @@
 #include <stddef.h>
 #include <setjmp.h>
 #include <string.h>
-#include <cmockery.h>
+#include <cmocka.h>
 
 #include "key_value.h"
 
