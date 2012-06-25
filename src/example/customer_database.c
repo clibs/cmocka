@@ -45,5 +45,5 @@ unsigned int get_customer_id_by_name(
     if (number_of_results != 1) {
         return -1;
     }
-    return (unsigned int)results[0];
+    return (unsigned int)(size_t) results[0];
 }
