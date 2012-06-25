@@ -42,6 +42,9 @@ static void destroy_key_values(void **state) {
 
 static void test_find_item_by_value(void **state) {
     unsigned int i;
+
+    (void) state; /* unused */
+
     for (i = 0; i < sizeof(key_values) / sizeof(key_values[0]); i++) {
         KeyValue * const found  = find_item_by_value(key_values[i].value);
         assert_true(found != NULL);
