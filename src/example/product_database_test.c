@@ -28,32 +28,38 @@ DatabaseConnection* connect_to_database(const char * const url,
                                         const unsigned int port) {
     check_expected(url);
     check_expected(port);
-    return (DatabaseConnection*)((unsigned)mock());
+    return (DatabaseConnection*)((size_t)mock());
 }
 
 static void test_connect_to_product_database(void **state) {
+    (void) state; /* unused */
+
     expect_string(connect_to_database, url, "products.abcd.org");
     expect_value(connect_to_database, port, 322);
     will_return(connect_to_database, 0xDA7ABA53);
-    assert_int_equal((int)connect_to_product_database(), 0xDA7ABA53);
+    assert_int_equal((int)(size_t)connect_to_product_database(), 0xDA7ABA53);
 }
 
 /* This test will fail since the expected URL is different to the URL that is
  * passed to connect_to_database() by connect_to_product_database(). */
 static void test_connect_to_product_database_bad_url(void **state) {
+    (void) state; /* unused */
+
     expect_string(connect_to_database, url, "products.abcd.com");
     expect_value(connect_to_database, port, 322);
     will_return(connect_to_database, 0xDA7ABA53);
-    assert_int_equal((int)connect_to_product_database(), 0xDA7ABA53);
+    assert_int_equal((int)(size_t)connect_to_product_database(), 0xDA7ABA53);
 }
 
 /* This test will fail since the mock connect_to_database() will attempt to
  * retrieve a value for the parameter port which isn't specified by this
  * test function. */
 static void test_connect_to_product_database_missing_parameter(void **state) {
+    (void) state; /* unused */
+
     expect_string(connect_to_database, url, "products.abcd.org");
     will_return(connect_to_database, 0xDA7ABA53);
-    assert_int_equal((int)connect_to_product_database(), 0xDA7ABA53);
+    assert_int_equal((int)(size_t)connect_to_product_database(), 0xDA7ABA53);
 }
 
 int main(void) {
