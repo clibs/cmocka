@@ -550,7 +550,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests);
 /* Standard output and error print methods. */
 void print_message(const char* const format, ...) PRINTF_ATTRIBUTE(1, 2);
 void print_error(const char* const format, ...) PRINTF_ATTRIBUTE(1, 2);
-void vprint_message(const char* const format, va_list args);
-void vprint_error(const char* const format, va_list args);
+void vprint_message(const char* const format, va_list args) PRINTF_ATTRIBUTE(1, 0);
+void vprint_error(const char* const format, va_list args) PRINTF_ATTRIBUTE(1, 0);
 
 #endif /* CMOCKA_H_ */
