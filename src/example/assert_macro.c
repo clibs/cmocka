@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include <string.h>
+#include "assert_macro.h"
 
 static const char* status_code_strings[] = {
     "Address not found",
@@ -23,7 +25,7 @@ static const char* status_code_strings[] = {
 
 const char* get_status_code_string(const unsigned int status_code) {
     return status_code_strings[status_code];
-};
+}
 
 unsigned int string_to_status_code(const char* const status_code_string) {
     unsigned int i;
