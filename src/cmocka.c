@@ -52,6 +52,7 @@ WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 #include <signal.h>
 #endif /* _WIN32 */
 
+#include <cmocka_private.h>
 #include <cmocka.h>
 
 // Size of guard bytes around dynamically allocated blocks.
@@ -1075,7 +1076,8 @@ void _expect_string(
         const char* const function, const char* const parameter,
         const char* const file, const int line, const char* string,
         const int count) {
-    declare_initialize_value_pointer_pointer(string_pointer, (char*)string);
+    declare_initialize_value_pointer_pointer(string_pointer,
+                                             discard_const(string));
     _expect_check(function, parameter, file, line, check_string,
                   string_pointer.value, NULL, count);
 }
@@ -1096,7 +1098,8 @@ void _expect_not_string(
         const char* const function, const char* const parameter,
         const char* const file, const int line, const char* string,
         const int count) {
-    declare_initialize_value_pointer_pointer(string_pointer, (char*)string);
+    declare_initialize_value_pointer_pointer(string_pointer,
+                                             discard_const(string));
     _expect_check(function, parameter, file, line, check_not_string,
                   string_pointer.value, NULL, count);
 }
@@ -1406,7 +1409,8 @@ void* _test_calloc(const size_t number_of_elements, const size_t size,
 #undef free
 void _test_free(void* const ptr, const char* file, const int line) {
     unsigned int i;
-    char *block = (char*)ptr;
+    char *block = discard_const_p(char, ptr);
+
     MallocBlockInfo *block_info;
     _assert_true(cast_ptr_to_largest_integral_type(ptr), "ptr", file, line);
     block_info = (MallocBlockInfo*)(block - (MALLOC_GUARD_SIZE +
@@ -1434,7 +1438,7 @@ void _test_free(void* const ptr, const char* file, const int line) {
     }
     list_remove(&block_info->node, NULL, NULL);
 
-    block = (char*)block_info->block;
+    block = discard_const_p(char, block_info->block);
     memset(block, MALLOC_FREE_PATTERN, block_info->allocated_size);
     free(block);
 }
@@ -1485,7 +1489,7 @@ static void free_allocated_blocks(const ListNode * const check_point) {
     while (node != head) {
         MallocBlockInfo * const block_info = (MallocBlockInfo*)node->value;
         node = node->next;
-        free((char*)block_info + sizeof(*block_info) + MALLOC_GUARD_SIZE);
+        free(discard_const_p(char, block_info) + sizeof(*block_info) + MALLOC_GUARD_SIZE);
     }
 }
 
