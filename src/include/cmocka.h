@@ -15,6 +15,7 @@
  */
 #ifndef CMOCKA_H_
 #define CMOCKA_H_
+
 #ifdef _WIN32
 #if _MSC_VER < 1500
 #ifdef __cplusplus
@@ -26,6 +27,7 @@ int __stdcall IsDebuggerPresent();
 #endif   /* __cplusplus */
 #endif  /* _MSC_VER < 1500 */
 #endif  /* _WIN32 */
+
 /*
  * These headers or their equivalents should be included prior to including
  * this header file.
@@ -42,6 +44,13 @@ int __stdcall IsDebuggerPresent();
 #ifndef __func__
 #define __func__ __FUNCTION__
 #endif
+
+/* GCC have printf type attribute check.  */
+#ifdef __GNUC__
+#define PRINTF_ATTRIBUTE(a,b) __attribute__ ((__format__ (__printf__, a, b)))
+#else
+#define PRINTF_ATTRIBUTE(a,b)
+#endif /* __GNUC__ */
 
 /*
  * Largest integral type.  This type should be large enough to hold any
@@ -539,8 +548,8 @@ int _run_test(
 int _run_tests(const UnitTest * const tests, const size_t number_of_tests);
 
 /* Standard output and error print methods. */
-void print_message(const char* const format, ...);
-void print_error(const char* const format, ...);
+void print_message(const char* const format, ...) PRINTF_ATTRIBUTE(1, 2);
+void print_error(const char* const format, ...) PRINTF_ATTRIBUTE(1, 2);
 void vprint_message(const char* const format, va_list args);
 void vprint_error(const char* const format, va_list args);
 
