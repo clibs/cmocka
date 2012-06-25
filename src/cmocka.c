@@ -38,7 +38,17 @@
  * earlier.
  */
 WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
+
+#ifndef PRIdS
+#define PRIdS "Id"
+#endif
+
 #else /* _WIN32 */
+
+#ifndef PRIdS
+#define PRIdS "zd"
+#endif
+
 #include <signal.h>
 #endif /* _WIN32 */
 
@@ -852,7 +862,8 @@ static int memory_equal_display_error(const char* const a, const char* const b,
         const char l = a[i];
         const char r = b[i];
         if (l != r) {
-            print_error("difference at offset %d 0x%02x 0x%02x\n", i, l, r);
+            print_error("difference at offset %" PRIdS " 0x%02x 0x%02x\n",
+                        i, l, r);
             differences ++;
         }
     }
@@ -880,7 +891,7 @@ static int memory_not_equal_display_error(
         }
     }
     if (same == size) {
-        print_error("%u bytes of %p and %p the same\n", same,
+        print_error("%"PRIdS "bytes of %p and %p the same\n", same,
                     a, b);
         return 0;
     }
@@ -1687,7 +1698,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
                                        sizeof(*failed_names));
     void **current_state = NULL;
 
-    print_message("[==========] Running %d test(s).\n", number_of_tests);
+    print_message("[==========] Running %"PRIdS "test(s).\n", number_of_tests);
 
     // Make sure LargestIntegralType is at least the size of a pointer.
     assert_true(sizeof(LargestIntegralType) >= sizeof(void*));
@@ -1769,22 +1780,22 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
         }
     }
 
-    print_message("[==========] %d test(s) run.\n", tests_executed);
-    print_error("[  PASSED  ] %d test(s).\n", tests_executed - total_failed);
+    print_message("[==========] %"PRIdS "test(s) run.\n", tests_executed);
+    print_error("[  PASSED  ] %"PRIdS " test(s).\n", tests_executed - total_failed);
 
     if (total_failed) {
         size_t i;
-        print_error("[  FAILED  ] %d test(s), listed below:\n", total_failed);
+        print_error("[  FAILED  ] %"PRIdS " test(s), listed below:\n", total_failed);
         for (i = 0; i < total_failed; i++) {
             print_error("[  FAILED  ] %s\n", failed_names[i]);
         }
     } else {
-        print_error("\n %d FAILED TEST(S)\n", total_failed);
+        print_error("\n %"PRIdS " FAILED TEST(S)\n", total_failed);
     }
 
     if (number_of_test_states) {
-        print_error("[  ERROR   ] Mismatched number of setup %d and "
-                    "teardown %d functions\n", setups, teardowns);
+        print_error("[  ERROR   ] Mismatched number of setup %"PRIdS " and "
+                    "teardown %"PRIdS " functions\n", setups, teardowns);
         total_failed = (size_t)-1;
     }
 
