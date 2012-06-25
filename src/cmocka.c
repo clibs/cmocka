@@ -55,7 +55,7 @@ WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 #define MALLOC_ALIGNMENT sizeof(size_t)
 
 // Printf formatting for source code locations.
-#define SOURCE_LOCATION_FORMAT "%s:%d"
+#define SOURCE_LOCATION_FORMAT "%s:%u"
 
 // Calculates the number of elements in an array.
 #define ARRAY_LENGTH(x) (sizeof(x) / sizeof((x)[0]))
@@ -776,9 +776,9 @@ static int value_in_set_display_error(
         if (succeeded) {
             return 1;
         }
-        print_error("%d is %sin the set (", value, invert ? "" : "not ");
+        print_error("%llu is %sin the set (", value, invert ? "" : "not ");
         for (i = 0; i < size_of_set; i++) {
-            print_error("%d, ", set[i]);
+            print_error("%llu, ", set[i]);
         }
         print_error(")\n");
     }
@@ -795,7 +795,7 @@ static int integer_in_range_display_error(
     if (value >= range_min && value <= range_max) {
         return 1;
     }
-    print_error("%d is not within the range %d-%d\n", value, range_min,
+    print_error("%llu is not within the range %llu-%llu\n", value, range_min,
                 range_max);
     return 0;
 }
@@ -810,7 +810,7 @@ static int integer_not_in_range_display_error(
     if (value < range_min || value > range_max) {
         return 1;
     }
-    print_error("%d is within the range %d-%d\n", value, range_min,
+    print_error("%llu is within the range %llu-%llu\n", value, range_min,
                 range_max);
     return 0;
 }
@@ -857,7 +857,7 @@ static int memory_equal_display_error(const char* const a, const char* const b,
         }
     }
     if (differences) {
-        print_error("%d bytes of 0x%08x and 0x%08x differ\n", differences,
+        print_error("%d bytes of %p and %p differ\n", differences,
                     a, b);
         return 0;
     }
@@ -880,7 +880,7 @@ static int memory_not_equal_display_error(
         }
     }
     if (same == size) {
-        print_error("%u bytes of 0x%08x and 0x%08x the same\n", same,
+        print_error("%u bytes of %p and %p the same\n", same,
                     a, b);
         return 0;
     }
@@ -1411,11 +1411,11 @@ void _test_free(void* const ptr, const char* file, const int line) {
                 const char diff = guard[j] - MALLOC_GUARD_PATTERN;
                 if (diff) {
                     print_error(
-                        "Guard block of 0x%08x size=%d allocated by "
-                        SOURCE_LOCATION_FORMAT " at 0x%08x is corrupt\n",
-                        (size_t)ptr, block_info->size,
+                        "Guard block of %p size=%lu allocated by "
+                        SOURCE_LOCATION_FORMAT " at %p is corrupt\n",
+                        ptr, block_info->size,
                         block_info->location.file, block_info->location.line,
-                        (size_t)&guard[j]);
+                        &guard[j]);
                     _fail(file, line);
                 }
             }
@@ -1453,7 +1453,7 @@ static int display_allocated_blocks(const ListNode * const check_point) {
         if (!allocated_blocks) {
             print_error("Blocks allocated...\n");
         }
-        print_error("  0x%08x : " SOURCE_LOCATION_FORMAT "\n",
+        print_error("  %p : " SOURCE_LOCATION_FORMAT "\n",
                     block_info->block, block_info->location.file,
                     block_info->location.line);
         allocated_blocks ++;
