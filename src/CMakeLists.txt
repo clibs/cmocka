@@ -91,4 +91,6 @@ if (WITH_STATIC_LIB)
 endif (WITH_STATIC_LIB)
 
 add_subdirectory(include)
-add_subdirectory(example)
+if (UNIT_TESTING)
+    add_subdirectory(example)
+endif (UNIT_TESTING)
