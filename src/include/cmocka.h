@@ -81,14 +81,22 @@ int __stdcall IsDebuggerPresent();
 /* WIN32 is an ILP32 platform */
 typedef unsigned long uintptr_t;
 
-#else /* _WIN32 */
-
 /* what about 64-bit windows?
  * what's the right preprocessor symbol?
 typedef unsigned long long uintptr_t */
 
+#else /* _WIN32 */
+
 /* ILP32 and LP64 platforms */
-typedef unsigned long uintptr_t;
+#ifdef __WORDSIZE
+# if __WORDSIZE == 64
+typedef unsigned long int uintptr_t;
+# else
+typedef unsigned int uintptr_t;
+# endif /* __WORDSIZE == 64 */
+#else /* __WORDSIZE */
+typedef unsigned long int uintptr_t;
+#endif /* __WORDSIZE */
 
 #endif /* _WIN32 */
 #endif /* _UINTPTR_T */
