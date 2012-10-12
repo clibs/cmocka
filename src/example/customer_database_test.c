@@ -48,7 +48,7 @@ static void test_connect_to_customer_database(void **state) {
 
     will_return(connect_to_database, 0x0DA7ABA53);
 
-    assert_int_equal((int)(size_t)connect_to_customer_database(), 0x0DA7ABA53);
+    assert_int_equal((size_t)connect_to_customer_database(), 0x0DA7ABA53);
 }
 
 /* This test fails as the mock function connect_to_database() will have no
