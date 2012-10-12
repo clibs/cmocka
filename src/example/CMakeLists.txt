@@ -20,6 +20,9 @@ add_executable(assert_macro_test assert_macro.c assert_macro_test.c)
 target_link_libraries(assert_macro_test ${CMOCKA_SHARED_LIBRARY})
 add_test(assert_macro_test ${CMAKE_CURRENT_BINARY_DIR}/assert_macro_test)
 
+add_executable(assert_module_test assert_module.c assert_module_test.c)
+target_link_libraries(assert_module_test ${CMOCKA_SHARED_LIBRARY})
+
 add_executable(customer_database_test customer_database.c customer_database_test.c)
 target_link_libraries(customer_database_test ${CMOCKA_SHARED_LIBRARY})
 add_test(customer_database_test ${CMAKE_CURRENT_BINARY_DIR}/customer_database_test)
