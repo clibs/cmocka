@@ -71,7 +71,7 @@ int __stdcall IsDebuggerPresent();
 
 /* Perform an unsigned cast to LargestIntegralType. */
 #define cast_to_largest_integral_type(value) \
-    ((LargestIntegralType)((unsigned)(size_t)(value)))
+    ((LargestIntegralType)((size_t)(value)))
 
 /* Smallest integral type capable of holding a pointer. */
 #ifndef _UINTPTR_T
