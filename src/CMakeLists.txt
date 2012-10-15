@@ -90,6 +90,3 @@ if (WITH_STATIC_LIB)
     )
 endif (WITH_STATIC_LIB)
 
-if (UNIT_TESTING)
-    add_subdirectory(example)
-endif (UNIT_TESTING)
