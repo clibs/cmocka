@@ -1,7 +1,7 @@
 project(cmocka-library C)
 
 set(CMOCKA_PUBLIC_INCLUDE_DIRS
-    ${CMAKE_SOURCE_DIR}/src/include
+    ${CMAKE_SOURCE_DIR}/include
     CACHE INTERNAL "cmocka public include directories"
 )
 
@@ -90,7 +90,6 @@ if (WITH_STATIC_LIB)
     )
 endif (WITH_STATIC_LIB)
 
-add_subdirectory(include)
 if (UNIT_TESTING)
     add_subdirectory(example)
 endif (UNIT_TESTING)
