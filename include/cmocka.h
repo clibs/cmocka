@@ -52,6 +52,14 @@ int __stdcall IsDebuggerPresent();
 #define PRINTF_ATTRIBUTE(a,b)
 #endif /* __GNUC__ */
 
+/**
+ * @defgroup cmocka The CMocka API
+ *
+ * TODO Describe cmocka.
+ *
+ * @{
+ */
+
 /*
  * Largest integral type.  This type should be large enough to hold any
  * pointer or integer supported by the compiler.
@@ -566,5 +574,7 @@ void print_message(const char* const format, ...) PRINTF_ATTRIBUTE(1, 2);
 void print_error(const char* const format, ...) PRINTF_ATTRIBUTE(1, 2);
 void vprint_message(const char* const format, va_list args) PRINTF_ATTRIBUTE(1, 0);
 void vprint_error(const char* const format, va_list args) PRINTF_ATTRIBUTE(1, 0);
+
+/** @} */
 
 #endif /* CMOCKA_H_ */

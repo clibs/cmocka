@@ -1,0 +1,15 @@
+/**
+
+@mainpage
+
+This is the online reference for developing with the CMocka library. It
+documents the CMocka C API.
+
+@section main-features Features
+
+The CMocka library provides:
+
+ - An easy to use framework to write unit tests.
+ - Support for mock objects.
+
+*/

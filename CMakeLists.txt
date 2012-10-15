@@ -48,7 +48,7 @@ include(ConfigureChecks.cmake)
 configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 # check subdirectories
-#add_subdirectory(doc)
+add_subdirectory(doc)
 add_subdirectory(src)
 if (UNIT_TESTING)
     add_subdirectory(example)
