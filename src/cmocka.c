@@ -1515,10 +1515,10 @@ void _fail(const char * const file, const int line) {
 
 #ifndef _WIN32
 static void exception_handler(int sig) {
-#ifdef _HPUX
-    print_error("%d\n", sig);
-#else
+#ifdef HAVE_STRSIGNAL
     print_error("%s\n", strsignal(sig));
+#else
+    print_error("%d\n", sig);
 #endif
     exit_test(1);
 }
