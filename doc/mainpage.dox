@@ -42,4 +42,33 @@ The CMocka library provides:
 
 TODO Explain mock objects.
 
+@section main-test A CMocka test
+
+CMocka unit test cases are functions with the signature void function(void **state).
+CMocka test applications initialize a table with test case function pointers
+using unit_test() macros. This table is then passed to the run_tests() macro to
+execute the tests. run_tests() sets up the appropriate exception / signal
+handlers and other data structures prior to running each test function. When a
+unit test is complete run_tests() performs various checks to determine whether
+the test succeeded.
+
+@code
+#include <stdarg.h>
+#include <stddef.h>
+#include <setjmp.h>
+#include <cmockery.h>
+
+/* A test case that does nothing and succeeds. */
+void null_test_success(void **state) {
+}
+
+int main(void) {
+    const UnitTest tests[] = {
+        unit_test(null_test_success),
+    };
+
+    return run_tests(tests);
+}
+@endcode
+
 */
