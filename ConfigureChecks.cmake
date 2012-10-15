@@ -40,6 +40,11 @@ if(CMAKE_COMPILER_IS_GNUCC AND NOT MINGW)
     endif (NOT GNUCC_VERSION EQUAL 34)
 endif(CMAKE_COMPILER_IS_GNUCC AND NOT MINGW)
 
+# DEFINITIONS
+if (SOLARIS)
+    add_definitions(-D__EXTENSIONS__)
+endif (SOLARIS)
+
 # HEADER FILES
 check_include_file(assert.h HAVE_ASSERT_H)
 check_include_file(dlfcn.h HAVE_DLFCN_H)
