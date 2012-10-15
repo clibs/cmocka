@@ -167,9 +167,27 @@ void will_return(#function, void *value);
     _will_return(#function, __FILE__, __LINE__, \
                  cast_to_largest_integral_type(value), 1)
 #endif
+
+#ifdef DOXYGEN
+/**
+ * @brief Store a value to be returned by mock() later.
+ *
+ * @param[in]  #function  The function which should return the given value.
+ *
+ * @param[in]  value The value to be returned by mock().
+ *
+ * @param[in]  count The parameter returns the number of times the value should
+ *                   be returned by mock(). If count is set to -1 the value will
+ *                   always be returned.
+ *
+ * @see mock()
+ */
+void will_return_count(#function, void *value, int count);
+#else
 #define will_return_count(function, value, count) \
     _will_return(#function, __FILE__, __LINE__, \
                  cast_to_largest_integral_type(value), count)
+#endif
 
 /*
  * Add a custom parameter checking function.  If the event parameter is NULL
