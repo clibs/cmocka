@@ -1428,7 +1428,7 @@ void _test_free(void* const ptr, const char* file, const int line) {
                     print_error(
                         "Guard block of %p size=%lu allocated by "
                         SOURCE_LOCATION_FORMAT " at %p is corrupt\n",
-                        ptr, block_info->size,
+                        ptr, (unsigned long)block_info->size,
                         block_info->location.file, block_info->location.line,
                         &guard[j]);
                     _fail(file, line);
