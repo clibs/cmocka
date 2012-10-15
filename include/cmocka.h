@@ -136,14 +136,37 @@ void *mock(void);
 #define mock() _mock(__func__, __FILE__, __LINE__)
 #endif
 
-/*
- * Stores a value to be returned by the specified function later.
- * The count parameter returns the number of times the value should be returned
- * by mock().  If count is set to -1 the value will always be returned.
+#ifdef DOXYGEN
+/**
+ * @brief Store a value to be returned by mock() later.
+ *
+ * @param[in]  #function  The function which should return the given value.
+ *
+ * @param[in]  value The value to be returned by mock().
+ *
+ * @code
+ * int return_integer(void)
+ * {
+ *      return (int)mock();
+ * }
+ *
+ * static void test_integer_return(void **state)
+ * {
+ *      will_return(return_integer, 42);
+ *
+ *      assert_int_equal(my_function_calling_return_integer(), 42);
+ * }
+ * @endcode
+ *
+ * @see mock()
+ * @see will_return_count()
  */
+void will_return(#function, void *value);
+#else
 #define will_return(function, value) \
     _will_return(#function, __FILE__, __LINE__, \
                  cast_to_largest_integral_type(value), 1)
+#endif
 #define will_return_count(function, value, count) \
     _will_return(#function, __FILE__, __LINE__, \
                  cast_to_largest_integral_type(value), count)
