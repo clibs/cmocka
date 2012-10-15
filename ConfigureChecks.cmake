@@ -47,7 +47,6 @@ endif (SOLARIS)
 
 # HEADER FILES
 check_include_file(assert.h HAVE_ASSERT_H)
-check_include_file(dlfcn.h HAVE_DLFCN_H)
 check_include_file(inttypes.h HAVE_INTTYPES_H)
 check_include_file(malloc.h HAVE_MALLOC_H)
 check_include_file(memory.h HAVE_MEMORY_H)
@@ -66,9 +65,6 @@ check_include_file(unistd.h HAVE_UNISTD_H)
 
 
 # FUNCTIONS
-
-check_function_exists(strncpy HAVE_STRNCPY)
-
 check_function_exists(calloc HAVE_CALLOC)
 check_function_exists(exit HAVE_EXIT)
 check_function_exists(fprintf HAVE_FPRINTF)
@@ -83,7 +79,6 @@ check_function_exists(signal HAVE_SIGNAL)
 check_function_exists(strsignal HAVE_STRSIGNAL)
 check_function_exists(sprintf HAVE_SNPRINTF)
 check_function_exists(strcmp HAVE_STRCMP)
-check_function_exists(strcpy HAVE_STRCPY)
 check_function_exists(vsnprintf HAVE_VSNPRINTF)
 
 if (WIN32)
