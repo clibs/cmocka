@@ -123,6 +123,18 @@ typedef unsigned int uintptr_t;
 #define cast_ptr_to_largest_integral_type(value) \
 cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
 
+/**
+ * @defgroup cmocka_mock Mock Objects
+ * @ingroup cmocka.
+ *
+ * Mock objects mock objects are simulated objects that mimic the behavior of
+ * real objects. Instead of calling the real objects, the tested object calls a
+ * mock object that merely asserts that the correct methods were called, with
+ * the expected parameters, in the correct order.
+ *
+ * @{
+ */
+
 #ifdef DOXYGEN
 /**
  * @brief Retrieve a return value of the current function.
@@ -188,6 +200,8 @@ void will_return_count(#function, void *value, int count);
     _will_return(#function, __FILE__, __LINE__, \
                  cast_to_largest_integral_type(value), count)
 #endif
+
+/** @} */
 
 /*
  * Add a custom parameter checking function.  If the event parameter is NULL
