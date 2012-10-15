@@ -123,8 +123,18 @@ typedef unsigned int uintptr_t;
 #define cast_ptr_to_largest_integral_type(value) \
 cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
 
-/* Retrieves a return value for the current function. */
+#ifdef DOXYGEN
+/**
+ * @brief Retrieve a return value of the current function.
+ *
+ * @return The value which was stored to return by this function.
+ *
+ * @see will_return()
+ */
+void *mock(void);
+#else
 #define mock() _mock(__func__, __FILE__, __LINE__)
+#endif
 
 /*
  * Stores a value to be returned by the specified function later.
