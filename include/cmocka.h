@@ -384,8 +384,23 @@ __FILE__, __LINE__)
     _assert_not_in_set(value, values, number_of_values, __FILE__, __LINE__)
 
 
-/* Forces the test to fail immediately and quit. */
+/**
+ * @defgroup cmocka_exec Running Tests
+ * @ingroup cmocka
+ *
+ * This is the way tests are executed with CMocka.
+ *
+ * @{
+ */
+
+#ifdef DOXYGEN
+/**
+ * @brief Forces the test to fail immediately and quit.
+ */
+void fail(void);
+#else
 #define fail() _fail(__FILE__, __LINE__)
+#endif
 
 /* Generic method to kick off testing */
 #define run_test(f) _run_test(#f, f, NULL, UNIT_TEST_FUNCTION_TYPE_TEST, NULL)
@@ -422,6 +437,8 @@ __FILE__, __LINE__)
  * }
  */
 #define run_tests(tests) _run_tests(tests, sizeof(tests) / sizeof(tests)[0])
+
+/** @} */
 
 /* Dynamic allocators */
 #define test_malloc(size) _test_malloc(size, __FILE__, __LINE__)
