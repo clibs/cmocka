@@ -402,8 +402,28 @@ void fail(void);
 #define fail() _fail(__FILE__, __LINE__)
 #endif
 
-/* Generic method to kick off testing */
+#ifdef DOXYGEN
+/**
+ * @brief Generic method to run a single test.
+ *
+ * @param[in]  #function The function to test.
+ *
+ * @return 0 on success, 1 if an error occured.
+ *
+ * @code
+ * // A test case that does nothing and succeeds.
+ * void null_test_success(void **state) {
+ * }
+ *
+ * int main(void) {
+ *      return run_test(null_test_success);
+ * }
+ * @endcode
+ */
+int run_test(#function);
+#else
 #define run_test(f) _run_test(#f, f, NULL, UNIT_TEST_FUNCTION_TYPE_TEST, NULL)
+#endif
 
 /* Initializes a UnitTest structure. */
 #define unit_test(f) { #f, f, UNIT_TEST_FUNCTION_TYPE_TEST }
