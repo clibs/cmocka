@@ -1784,7 +1784,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
         }
     }
 
-    print_message("[==========] %"PRIdS "test(s) run.\n", tests_executed);
+    print_message("[==========] %"PRIdS " test(s) run.\n", tests_executed);
     print_error("[  PASSED  ] %"PRIdS " test(s).\n", tests_executed - total_failed);
 
     if (total_failed) {
