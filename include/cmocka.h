@@ -425,14 +425,18 @@ int run_test(#function);
 #define run_test(f) _run_test(#f, f, NULL, UNIT_TEST_FUNCTION_TYPE_TEST, NULL)
 #endif
 
-/* Initializes a UnitTest structure. */
+/** Initializes a UnitTest structure. */
 #define unit_test(f) { #f, f, UNIT_TEST_FUNCTION_TYPE_TEST }
+
+/** Initializes a UnitTest structure with a setup function. */
 #define unit_test_setup(test, setup) \
     { #test "_" #setup, setup, UNIT_TEST_FUNCTION_TYPE_SETUP }
+
+/** Initializes a UnitTest structure with a teardown function. */
 #define unit_test_teardown(test, teardown) \
     { #test "_" #teardown, teardown, UNIT_TEST_FUNCTION_TYPE_TEARDOWN }
 
-/*
+/**
  * Initialize an array of UnitTest structures with a setup function for a test
  * and a teardown function.  Either setup or teardown can be NULL.
  */
