@@ -460,7 +460,56 @@ int run_test(#function);
  *     return run_tests(tests);
  * }
  */
+#ifdef DOXYGEN
+/**
+ * @brief Run tests specified by an array of UnitTest structures.
+ *
+ * @param[in]  tests[] The array of unit tests to execute.
+ *
+ * @return 0 on success, 1 if an error occured.
+ *
+ * @code
+ * static void setup(void **state) {
+ *      int *answer = malloc(sizeof(int));
+ *      assert_non_null(answer);
+ *
+ *      *answer = 42;
+ *
+ *      *state = answer;
+ * }
+ *
+ * static void teardown(void **state) {
+ *      free(*state);
+ * }
+ *
+ * static void null_test_success(void **state) {
+ *     (void) state;
+ * }
+ *
+ * static void int_test_success(void **state) {
+ *      int *answer = *state;
+ *      assert_int_equal(*answer, 42);
+ * }
+ *
+ * int main(void) {
+ *     const UnitTest tests[] = {
+ *         unit_test(null_test_success),
+ *         unit_test_setup_teardown(int_test_success, setup, teardown),
+ *     };
+ *
+ *     return run_tests(tests);
+ * }
+ * @endcode
+ *
+ * @see unit_test
+ * @see unit_test_setup
+ * @see unit_test_teardown
+ * @see unit_test_setup_teardown
+ */
+int run_tests(tests[]);
+#else
 #define run_tests(tests) _run_tests(tests, sizeof(tests) / sizeof(tests)[0])
+#endif
 
 /** @} */
 
