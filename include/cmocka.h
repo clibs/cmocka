@@ -506,7 +506,7 @@ int run_test(#function);
  * @see unit_test_teardown
  * @see unit_test_setup_teardown
  */
-int run_tests(tests[]);
+int run_tests(const UnitTest tests[]);
 #else
 #define run_tests(tests) _run_tests(tests, sizeof(tests) / sizeof(tests)[0])
 #endif
