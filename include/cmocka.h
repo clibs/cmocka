@@ -366,9 +366,23 @@ void assert_false(scalar expression);
                                      __FILE__, __LINE__)
 #endif
 
-/* Assert that the given pointer is non-NULL. */
+#ifdef DOXYGEN
+/**
+ * @brief Assert that the given pointer is non-NULL.
+ *
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if the pointer is non-NULL.
+ *
+ * @param[in]  pointer  The pointer to evaluate.
+ *
+ * @see assert_null()
+ */
+void assert_non_null(void *pointer);
+#else
 #define assert_non_null(c) _assert_true(cast_ptr_to_largest_integral_type(c), #c, \
-__FILE__, __LINE__)
+                                        __FILE__, __LINE__)
+#endif
+
 /* Assert that the given pointer is NULL. */
 #define assert_null(c) _assert_true(!(cast_ptr_to_largest_integral_type(c)), #c, \
 __FILE__, __LINE__)
