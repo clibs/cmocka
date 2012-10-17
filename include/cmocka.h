@@ -333,8 +333,9 @@ void will_return_count(#function, void *value, int count);
 /**
  * @brief Assert that the given expression is true.
  *
- * The prints an error message to standard error and terminates the test by
- * calling fail() if expression is false (i.e., compares equal to zero)
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if expression is false (i.e., compares equal to
+ * zero).
  *
  * @param[in]  expression  The expression to evaluate.
  *
@@ -347,9 +348,23 @@ void assert_true(scalar expression);
                                     __FILE__, __LINE__)
 #endif
 
-/* Assert that the given expression is false. */
+#ifdef DOXYGEN
+/**
+ * @brief Assert that the given expression is false.
+ *
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if expression is true.
+ *
+ * @param[in]  expression  The expression to evaluate.
+ *
+ * @see assert_int_equal()
+ * @see assert_string_equal()
+ */
+void assert_false(scalar expression);
+#else
 #define assert_false(c) _assert_true(!(cast_to_largest_integral_type(c)), #c, \
                                      __FILE__, __LINE__)
+#endif
 
 /* Assert that the given pointer is non-NULL. */
 #define assert_non_null(c) _assert_true(cast_ptr_to_largest_integral_type(c), #c, \
