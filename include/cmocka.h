@@ -125,7 +125,7 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
 
 /**
  * @defgroup cmocka_mock Mock Objects
- * @ingroup cmocka.
+ * @ingroup cmocka
  *
  * Mock objects mock objects are simulated objects that mimic the behavior of
  * real objects. Instead of calling the real objects, the tested object calls a
@@ -319,9 +319,34 @@ void will_return_count(#function, void *value, int count);
     _check_expected(__func__, #parameter, __FILE__, __LINE__, \
                     cast_to_largest_integral_type(parameter))
 
-/* Assert that the given expression is true. */
+/**
+ * @defgroup cmocka_asserts Assert Macros
+ * @ingroup cmocka
+ *
+ * This is a set of useful assert macros like the standard C libary's
+ * assert(3) macro.
+ *
+ * @{
+ */
+
+#ifdef DOXYGEN
+/**
+ * @brief Assert that the given expression is true.
+ *
+ * The prints an error message to standard error and terminates the test by
+ * calling fail() if expression is false (i.e., compares equal to zero)
+ *
+ * @param[in]  expression  The expression to evaluate.
+ *
+ * @see assert_int_equal()
+ * @see assert_string_equal()
+ */
+void assert_true(scalar expression);
+#else
 #define assert_true(c) _assert_true(cast_to_largest_integral_type(c), #c, \
                                     __FILE__, __LINE__)
+#endif
+
 /* Assert that the given expression is false. */
 #define assert_false(c) _assert_true(!(cast_to_largest_integral_type(c)), #c, \
                                      __FILE__, __LINE__)
@@ -383,6 +408,7 @@ __FILE__, __LINE__)
 #define assert_not_in_set(value, values, number_of_values) \
     _assert_not_in_set(value, values, number_of_values, __FILE__, __LINE__)
 
+/** @} */
 
 /**
  * @defgroup cmocka_exec Running Tests
