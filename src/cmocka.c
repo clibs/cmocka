@@ -1702,7 +1702,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
                                        sizeof(*failed_names));
     void **current_state = NULL;
 
-    print_message("[==========] Running %"PRIdS "test(s).\n", number_of_tests);
+    print_message("[==========] Running %"PRIdS " test(s).\n", number_of_tests);
 
     // Make sure LargestIntegralType is at least the size of a pointer.
     assert_true(sizeof(LargestIntegralType) >= sizeof(void*));
