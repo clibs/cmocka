@@ -20,9 +20,9 @@
 #include <stdio.h>
 
 #ifdef _WIN32
-// Compatibility with the Windows standard C library.
+/* Compatibility with the Windows standard C library. */
 #define vsnprintf _vsnprintf
-#endif // _WIN32
+#endif /* _WIN32 */
 
 #define array_length(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -86,7 +86,7 @@ int example_test_printf(const char *format, ...) {
 	return return_value;
 }
 
-// A mock binary operator function.
+/* A mock binary operator function. */
 static int binary_operator(int a, int b) {
 	check_expected(a);
 	check_expected(b);
@@ -94,7 +94,7 @@ static int binary_operator(int a, int b) {
 }
 
 
-// Ensure add() adds two integers correctly.
+/* Ensure add() adds two integers correctly. */
 static void test_add(void **state) {
         (void) state; /* unused */
 
@@ -102,7 +102,7 @@ static void test_add(void **state) {
 	assert_int_equal(add(3, -3), 0);
 }
 
-// Ensure subtract() subtracts two integers correctly.
+/* Ensure subtract() subtracts two integers correctly. */
 static void test_subtract(void **state) {
         (void) state; /* unused */
 
@@ -110,7 +110,7 @@ static void test_subtract(void **state) {
 	assert_int_equal(subtract(3, -3), 6);
 }
 
-// Ensure multiple() mulitplies two integers correctly.
+/* Ensure multiple() mulitplies two integers correctly. */
 static void test_multiply(void **state) {
         (void) state; /* unused */
 
@@ -118,7 +118,7 @@ static void test_multiply(void **state) {
 	assert_int_equal(multiply(3, 0), 0);
 }
 
-// Ensure divide() divides one integer by another correctly.
+/* Ensure divide() divides one integer by another correctly. */
 static void test_divide(void **state) {
         (void) state; /* unused */
 
@@ -126,7 +126,7 @@ static void test_divide(void **state) {
 	assert_int_equal(divide(2, 10), 0);
 }
 
-// Ensure divide() asserts when trying to divide by zero.
+/* Ensure divide() asserts when trying to divide by zero. */
 static void test_divide_by_zero(void **state) {
         (void) state; /* unused */
 
@@ -194,7 +194,7 @@ static void test_find_operator_function_by_string_found(void **state) {
 	    0xDEADBEEF);
 }
 
-// Ensure perform_operation() asserts when a NULL arguments array is specified.
+/* Ensure perform_operation() asserts when a NULL arguments array is specified. */
 static void test_perform_operation_null_args(void **state) {
 	const OperatorFunction operator_functions[] = {
 		{"+", binary_operator},
@@ -267,7 +267,7 @@ static void test_perform_operation_null_intermediate_values(void **state) {
 	    &error_occurred));
 }
 
-// Ensure perform_operation() returns 0 when no arguments are specified.
+/* Ensure perform_operation() returns 0 when no arguments are specified. */
 static void test_perform_operation_no_arguments(void **state) {
 	int number_of_intermediate_values;
 	int *intermediate_values;
@@ -382,7 +382,7 @@ static void test_perform_operation_no_integer_after_operator(void **state) {
 }
 
 
-// Ensure perform_operation() succeeds given valid input parameters.
+/* Ensure perform_operation() succeeds given valid input parameters. */
 static void test_perform_operation(void **state) {
 	const OperatorFunction operator_functions[] = {
 		{"+", binary_operator},
@@ -397,13 +397,13 @@ static void test_perform_operation(void **state) {
 
         (void) state; /* unused */
 
-	// Setup return values of mock operator functions.
-	// Addition.
+	/* Setup return values of mock operator functions. */
+	/* Addition. */
 	expect_value(binary_operator, a, 1);
 	expect_value(binary_operator, b, 3);
 	will_return(binary_operator, 4);
 
-	// Multiplication.
+	/* Multiplication. */
 	expect_value(binary_operator, a, 4);
 	expect_value(binary_operator, b, 10);
 	will_return(binary_operator, 40);
@@ -421,7 +421,7 @@ static void test_perform_operation(void **state) {
 }
 
 
-// Ensure main() in example.c succeeds given no arguments.
+/* Ensure main() in example.c succeeds given no arguments. */
 static void test_example_main_no_args(void **state) {
 	const char *args[] = {
 		"example",
@@ -434,7 +434,7 @@ static void test_example_main_no_args(void **state) {
 
 
 
-// Ensure main() in example.c succeeds given valid input arguments.
+/* Ensure main() in example.c succeeds given valid input arguments. */
 static void test_example_main(void **state) {
 	const char *args[] = {
 		"example", "1", "+", "3", "*", "10",

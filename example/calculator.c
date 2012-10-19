@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-// A calculator example used to demonstrate the cmocka testing library.
+/* A calculator example used to demonstrate the cmocka testing library. */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -27,14 +27,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-// If this is being built for a unit test.
+/* If this is being built for a unit test. */
 #if UNIT_TESTING
 
 /* Redirect printf to a function in the test application so it's possible to
  * test the standard output. */
 #ifdef printf
 #undef printf
-#endif // printf
+#endif /* printf */
 extern int example_test_printf(const char *format, ...);
 #define printf example_test_printf
 
@@ -44,15 +44,15 @@ extern void print_message(const char *format, ...);
  * test error messages. */
 #ifdef fprintf
 #undef fprintf
-#endif // fprintf
+#endif /* fprintf */
 #define fprintf example_test_fprintf
 
 extern int example_test_fprintf(FILE * const file, const char *format, ...);
 
-// Redirect assert to mock_assert() so assertions can be caught by cmocka.
+/* Redirect assert to mock_assert() so assertions can be caught by cmocka. */
 #ifdef assert
 #undef assert
-#endif // assert
+#endif /* assert */
 #define assert(expression) \
     mock_assert((int)(expression), #expression, __FILE__, __LINE__)
 void mock_assert(const int result, const char* expression, const char *file,
@@ -62,11 +62,11 @@ void mock_assert(const int result, const char* expression, const char *file,
  * check for memory leaks. */
 #ifdef calloc
 #undef calloc
-#endif // calloc
+#endif /* calloc */
 #define calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)
 #ifdef free
 #undef free
-#endif // free
+#endif /* free */
 #define free(ptr) _test_free(ptr, __FILE__, __LINE__)
 void* _test_calloc(const size_t number_of_elements, const size_t size,
                    const char* file, const int line);
@@ -81,13 +81,13 @@ int example_main(int argc, char *argv[]);
  * so redefine static to nothing. */
 #define static
 
-#endif // UNIT_TESTING
+#endif /* UNIT_TESTING */
 
 
-// A binary arithmetic integer operation (add, subtract etc.)
+/* A binary arithmetic integer operation (add, subtract etc.) */
 typedef int (*BinaryOperator)(int a, int b);
 
-// Structure which maps operator strings to functions.
+/* Structure which maps operator strings to functions. */
 typedef struct OperatorFunction {
     const char* operator;
     BinaryOperator function;
@@ -111,7 +111,7 @@ static int subtract(int a, int b);
 static int multiply(int a, int b);
 static int divide(int a, int b);
 
-// Associate operator strings to functions.
+/* Associate operator strings to functions. */
 static OperatorFunction operator_function_map[] = {
     {"+", add},
     {"-", subtract},
@@ -132,7 +132,7 @@ static int multiply(int a, int b) {
 }
 
 static int divide(int a, int b) {
-    assert(b);  // Check for divide by zero.
+    assert(b);  /* Check for divide by zero. */
     return a / b;
 }
 
@@ -193,17 +193,17 @@ int perform_operation(
     if (!number_of_arguments)
         return 0;
 
-    // Parse the first value.
+    /* Parse the first value. */
     value = (int)strtol(arguments[0], &end_of_integer, 10);
     if (end_of_integer == arguments[0]) {
-        // If an error occurred while parsing the integer.
+        /* If an error occurred while parsing the integer. */
         fprintf(stderr, "Unable to parse integer from argument %s\n",
                 arguments[0]);
         *error_occurred = 1;
         return 0;
     }
 
-    // Allocate an array for the output values.
+    /* Allocate an array for the output values. */
     *intermediate_values = calloc(((number_of_arguments - 1) / 2),
                                   sizeof(**intermediate_values));
 
@@ -234,7 +234,7 @@ int perform_operation(
 
         other_value = (int)strtol(arguments[i], &end_of_integer, 10);
         if (end_of_integer == arguments[i]) {
-            // If an error occurred while parsing the integer.
+            /* If an error occurred while parsing the integer. */
             fprintf(stderr, "Unable to parse integer %s of argument %d\n",
                     arguments[i], i);
             *error_occurred = 1;
@@ -242,7 +242,7 @@ int perform_operation(
         }
         i ++;
 
-        // Perform the operation and store the intermediate value.
+        /* Perform the operation and store the intermediate value. */
         *intermediate_value = function(value, other_value);
         value = *intermediate_value;
     }
@@ -259,14 +259,14 @@ int main(int argc, char *argv[]) {
     int return_value;
     int number_of_intermediate_values;
     int *intermediate_values;
-    // Peform the operation.
+    /* Peform the operation. */
     const int result = perform_operation(
         argc - 1, &argv[1],
         sizeof(operator_function_map) / sizeof(operator_function_map[0]),
         operator_function_map, &number_of_intermediate_values,
         &intermediate_values, &return_value);
 
-    // If no errors occurred display the result.
+    /* If no errors occurred display the result. */
     if (!return_value && argc > 1) {
         int i;
         int intermediate_value_index = 0;
