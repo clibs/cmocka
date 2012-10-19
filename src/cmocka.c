@@ -358,7 +358,7 @@ static void fail_if_leftover_values(const char *test_name) {
 }
 
 
-void teardown_testing(const char *test_name) {
+static void teardown_testing(const char *test_name) {
 	(void)test_name;
     list_free(&global_function_result_map_head, free_symbol_map_value,
               (void*)0);
