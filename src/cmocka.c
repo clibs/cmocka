@@ -55,47 +55,51 @@ WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 #include <cmocka_private.h>
 #include <cmocka.h>
 
-// Size of guard bytes around dynamically allocated blocks.
+/* Size of guard bytes around dynamically allocated blocks. */
 #define MALLOC_GUARD_SIZE 16
-// Pattern used to initialize guard blocks.
+/* Pattern used to initialize guard blocks. */
 #define MALLOC_GUARD_PATTERN 0xEF
-// Pattern used to initialize memory allocated with test_malloc().
+/* Pattern used to initialize memory allocated with test_malloc(). */
 #define MALLOC_ALLOC_PATTERN 0xBA
 #define MALLOC_FREE_PATTERN 0xCD
-// Alignment of allocated blocks.  NOTE: This must be base2.
+/* Alignment of allocated blocks.  NOTE: This must be base2. */
 #define MALLOC_ALIGNMENT sizeof(size_t)
 
-// Printf formatting for source code locations.
+/* Printf formatting for source code locations. */
 #define SOURCE_LOCATION_FORMAT "%s:%u"
 
-// Calculates the number of elements in an array.
+/* Calculates the number of elements in an array. */
 #define ARRAY_LENGTH(x) (sizeof(x) / sizeof((x)[0]))
 
-// Declare and initialize the pointer member of ValuePointer variable name
-// with ptr.
+/*
+ * Declare and initialize the pointer member of ValuePointer variable name
+ * with ptr.
+ */
 #define declare_initialize_value_pointer_pointer(name, ptr) \
     ValuePointer name ; \
     name.value = 0; \
     name.pointer = (void*)(ptr)
 
-// Declare and initialize the value member of ValuePointer variable name
-// with val.
+/*
+ * Declare and initialize the value member of ValuePointer variable name
+ * with val.
+ */
 #define declare_initialize_value_pointer_value(name, val) \
     ValuePointer name ; \
     name.value = val
 
-// Cast a LargestIntegralType to pointer_type via a ValuePointer.
+/* Cast a LargestIntegralType to pointer_type via a ValuePointer. */
 #define cast_largest_integral_type_to_pointer( \
     pointer_type, largest_integral_type) \
     ((pointer_type)((ValuePointer*)&(largest_integral_type))->pointer)
 
-// Used to cast LargetIntegralType to void* and vice versa.
+/* Used to cast LargetIntegralType to void* and vice versa. */
 typedef union ValuePointer {
     LargestIntegralType value;
     void *pointer;
 } ValuePointer;
 
-// Doubly linked list node.
+/* Doubly linked list node. */
 typedef struct ListNode {
     const void *value;
     int refcount;
@@ -103,32 +107,33 @@ typedef struct ListNode {
     struct ListNode *prev;
 } ListNode;
 
-// Debug information for malloc().
+/* Debug information for malloc(). */
 typedef struct MallocBlockInfo {
-    void* block;              // Address of the block returned by malloc().
-    size_t allocated_size;    // Total size of the allocated block.
-    size_t size;              // Request block size.
-    SourceLocation location;  // Where the block was allocated.
-    ListNode node;            // Node within list of all allocated blocks.
+    void* block;              /* Address of the block returned by malloc(). */
+    size_t allocated_size;    /* Total size of the allocated block. */
+    size_t size;              /* Request block size. */
+    SourceLocation location;  /* Where the block was allocated. */
+    ListNode node;            /* Node within list of all allocated blocks. */
 } MallocBlockInfo;
 
-// State of each test.
+/* State of each test. */
 typedef struct TestState {
-    const ListNode *check_point; // Check point of the test if there's a
-                                 // setup function.
-    void *state;                 // State associated with the test.
+    const ListNode *check_point; /* Check point of the test if there's a */
+                                 /* setup function. */
+    void *state;                 /* State associated with the test. */
 } TestState;
 
-// Determines whether two values are the same.
+/* Determines whether two values are the same. */
 typedef int (*EqualityFunction)(const void *left, const void *right);
 
-// Value of a symbol and the place it was declared.
+/* Value of a symbol and the place it was declared. */
 typedef struct SymbolValue {
     SourceLocation location;
     LargestIntegralType value;
 } SymbolValue;
 
-/* Contains a list of values for a symbol.
+/*
+ * Contains a list of values for a symbol.
  * NOTE: Each structure referenced by symbol_values_list_head must have a
  * SourceLocation as its' first member.
  */
@@ -137,17 +142,17 @@ typedef struct SymbolMapValue {
     ListNode symbol_values_list_head;
 } SymbolMapValue;
 
-// Used by list_free() to deallocate values referenced by list nodes.
+/* Used by list_free() to deallocate values referenced by list nodes. */
 typedef void (*CleanupListValue)(const void *value, void *cleanup_value_data);
 
-// Structure used to check the range of integer types.
+/* Structure used to check the range of integer types.a */
 typedef struct CheckIntegerRange {
     CheckParameterEvent event;
     LargestIntegralType minimum;
     LargestIntegralType maximum;
 } CheckIntegerRange;
 
-// Structure used to check whether an integer value is in a set.
+/* Structure used to check whether an integer value is in a set. */
 typedef struct CheckIntegerSet {
     CheckParameterEvent event;
     const LargestIntegralType *set;
@@ -195,41 +200,46 @@ static void remove_always_return_values(ListNode * const map_head,
 static int check_for_leftover_values(
     const ListNode * const map_head, const char * const error_message,
     const size_t number_of_symbol_names);
-// This must be called at the beginning of a test to initialize some data
-// structures.
+/*
+ * This must be called at the beginning of a test to initialize some data
+ * structures.
+ */
 static void initialize_testing(const char *test_name);
-// This must be called at the end of a test to free() allocated structures.
+
+/* This must be called at the end of a test to free() allocated structures. */
 static void teardown_testing(const char *test_name);
 
 
-// Keeps track of the calling context returned by setenv() so that the fail()
-// method can jump out of a test.
+/*
+ * Keeps track of the calling context returned by setenv() so that the fail()
+ * method can jump out of a test.
+ */
 static jmp_buf global_run_test_env;
 static int global_running_test = 0;
 
-// Keeps track of the calling context returned by setenv() so that
-// mock_assert() can optionally jump back to expect_assert_failure().
+/* Keeps track of the calling context returned by setenv() so that */
+/* mock_assert() can optionally jump back to expect_assert_failure(). */
 jmp_buf global_expect_assert_env;
 int global_expecting_assert = 0;
 const char *global_last_failed_assert = NULL;
 
-// Keeps a map of the values that functions will have to return to provide
-// mocked interfaces.
+/* Keeps a map of the values that functions will have to return to provide */
+/* mocked interfaces. */
 static ListNode global_function_result_map_head;
-// Location of the last mock value returned was declared.
+/* Location of the last mock value returned was declared. */
 static SourceLocation global_last_mock_value_location;
 
 /* Keeps a map of the values that functions expect as parameters to their
  * mocked interfaces. */
 static ListNode global_function_parameter_map_head;
-// Location of last parameter value checked was declared.
+/* Location of last parameter value checked was declared. */
 static SourceLocation global_last_parameter_location;
 
-// List of all currently allocated blocks.
+/* List of all currently allocated blocks. */
 static ListNode global_allocated_blocks;
 
 #ifndef _WIN32
-// Signals caught by exception_handler().
+/* Signals caught by exception_handler(). */
 static const int exception_signals[] = {
     SIGFPE,
     SIGILL,
@@ -238,17 +248,17 @@ static const int exception_signals[] = {
     SIGSYS,
 };
 
-// Default signal functions that should be restored after a test is complete.
+/* Default signal functions that should be restored after a test is complete. */
 typedef void (*SignalFunction)(int signal);
 static SignalFunction default_signal_functions[
     ARRAY_LENGTH(exception_signals)];
 
-#else // _WIN32
+#else /* _WIN32 */
 
-// The default exception filter.
+/* The default exception filter. */
 static LPTOP_LEVEL_EXCEPTION_FILTER previous_exception_filter;
 
-// Fatal exceptions.
+/* Fatal exceptions. */
 typedef struct ExceptionCodeInfo {
     DWORD code;
     const char* description;
@@ -278,10 +288,10 @@ static const ExceptionCodeInfo exception_codes[] = {
     EXCEPTION_CODE_INFO(EXCEPTION_PRIV_INSTRUCTION),
     EXCEPTION_CODE_INFO(EXCEPTION_STACK_OVERFLOW),
 };
-#endif // !_WIN32
+#endif /* !_WIN32 */
 
 
-// Exit the currently executing test.
+/* Exit the currently executing test. */
 static void exit_test(const int quit_application) {
     if (global_running_test) {
         longjmp(global_run_test_env, 1);
@@ -291,7 +301,7 @@ static void exit_test(const int quit_application) {
 }
 
 
-// Initialize a SourceLocation structure.
+/* Initialize a SourceLocation structure. */
 static void initialize_source_location(SourceLocation * const location) {
     assert_non_null(location);
     location->file = NULL;
@@ -299,14 +309,14 @@ static void initialize_source_location(SourceLocation * const location) {
 }
 
 
-// Determine whether a source location is currently set.
+/* Determine whether a source location is currently set. */
 static int source_location_is_set(const SourceLocation * const location) {
     assert_non_null(location);
     return location->file && location->line;
 }
 
 
-// Set a source location.
+/* Set a source location. */
 static void set_source_location(
     SourceLocation * const location, const char * const file,
     const int line) {
@@ -316,7 +326,7 @@ static void set_source_location(
 }
 
 
-// Create function results and expected parameter lists.
+/* Create function results and expected parameter lists. */
 void initialize_testing(const char *test_name) {
 	(void)test_name;
     list_initialize(&global_function_result_map_head);
@@ -358,7 +368,7 @@ void teardown_testing(const char *test_name) {
     initialize_source_location(&global_last_parameter_location);
 }
 
-// Initialize a list node.
+/* Initialize a list node. */
 static ListNode* list_initialize(ListNode * const node) {
     node->value = NULL;
     node->next = node;
@@ -368,8 +378,10 @@ static ListNode* list_initialize(ListNode * const node) {
 }
 
 
-/* Adds a value at the tail of a given list.
- * The node referencing the value is allocated from the heap. */
+/*
+ * Adds a value at the tail of a given list.
+ * The node referencing the value is allocated from the heap.
+ */
 static ListNode* list_add_value(ListNode * const head, const void *value,
                                      const int refcount) {
     ListNode * const new_node = (ListNode*)malloc(sizeof(ListNode));
@@ -381,7 +393,7 @@ static ListNode* list_add_value(ListNode * const head, const void *value,
 }
 
 
-// Add new_node to the end of the list.
+/* Add new_node to the end of the list. */
 static ListNode* list_add(ListNode * const head, ListNode *new_node) {
     assert_non_null(head);
     assert_non_null(new_node);
@@ -393,7 +405,7 @@ static ListNode* list_add(ListNode * const head, ListNode *new_node) {
 }
 
 
-// Remove a node from a list.
+/* Remove a node from a list. */
 static ListNode* list_remove(
         ListNode * const node, const CleanupListValue cleanup_value,
         void * const cleanup_value_data) {
@@ -416,11 +428,11 @@ static void list_remove_free(
 }
 
 
-/* Frees memory kept by a linked list
- * The cleanup_value function is called for every "value" field of nodes in the
- * list, except for the head.  In addition to each list value,
- * cleanup_value_data is passed to each call to cleanup_value.  The head
- * of the list is not deallocated.
+/*
+ * Frees memory kept by a linked list The cleanup_value function is called for
+ * every "value" field of nodes in the list, except for the head.  In addition
+ * to each list value, cleanup_value_data is passed to each call to
+ * cleanup_value.  The head of the list is not deallocated.
  */
 static ListNode* list_free(
         ListNode * const head, const CleanupListValue cleanup_value,
@@ -433,14 +445,15 @@ static ListNode* list_free(
 }
 
 
-// Determine whether a list is empty.
+/* Determine whether a list is empty. */
 static int list_empty(const ListNode * const head) {
     assert_non_null(head);
     return head->next == head;
 }
 
 
-/* Find a value in the list using the equal_func to compare each node with the
+/*
+ * Find a value in the list using the equal_func to compare each node with the
  * value.
  */
 static int list_find(ListNode * const head, const void *value,
@@ -456,7 +469,7 @@ static int list_find(ListNode * const head, const void *value,
     return 0;
 }
 
-// Returns the first node of a list
+/* Returns the first node of a list */
 static int list_first(ListNode * const head, ListNode **output) {
     ListNode *target_node;
     assert_non_null(head);
@@ -469,7 +482,7 @@ static int list_first(ListNode * const head, ListNode **output) {
 }
 
 
-// Deallocate a value referenced by a list.
+/* Deallocate a value referenced by a list. */
 static void free_value(const void *value, void *cleanup_value_data) {
 	(void)cleanup_value_data;
     assert_non_null(value);
@@ -477,7 +490,7 @@ static void free_value(const void *value, void *cleanup_value_data) {
 }
 
 
-// Releases memory associated to a symbol_map_value.
+/* Releases memory associated to a symbol_map_value. */
 static void free_symbol_map_value(const void *value,
                                   void *cleanup_value_data) {
     SymbolMapValue * const map_value = (SymbolMapValue*)value;
@@ -490,16 +503,19 @@ static void free_symbol_map_value(const void *value,
 }
 
 
-/* Determine whether a symbol name referenced by a symbol_map_value
- * matches the specified function name. */
+/*
+ * Determine whether a symbol name referenced by a symbol_map_value matches the
+ * specified function name.
+ */
 static int symbol_names_match(const void *map_value, const void *symbol) {
     return !strcmp(((SymbolMapValue*)map_value)->symbol_name,
                    (const char*)symbol);
 }
 
 
-/* Adds a value to the queue of values associated with the given
- * hierarchy of symbols.  It's assumed value is allocated from the heap.
+/*
+ * Adds a value to the queue of values associated with the given hierarchy of
+ * symbols.  It's assumed value is allocated from the heap.
  */
 static void add_symbol_value(ListNode * const symbol_map_head,
                              const char * const symbol_names[],
@@ -535,11 +551,11 @@ static void add_symbol_value(ListNode * const symbol_map_head,
 }
 
 
-/* Gets the next value associated with the given hierarchy of symbols.
+/*
+ * Gets the next value associated with the given hierarchy of symbols.
  * The value is returned as an output parameter with the function returning the
- * node's old refcount value if a value is found, 0 otherwise.
- * This means that a return value of 1 indicates the node was just removed from
- * the list.
+ * node's old refcount value if a value is found, 0 otherwise.  This means that
+ * a return value of 1 indicates the node was just removed from the list.
  */
 static int get_symbol_value(
         ListNode * const head, const char * const symbol_names[],
@@ -587,7 +603,8 @@ static int get_symbol_value(
 }
 
 
-/* Traverse down a tree of symbol values and remove the first symbol value
+/*
+ * Traverse down a tree of symbol values and remove the first symbol value
  * in each branch that has a refcount < -1 (i.e should always be returned
  * and has been returned at least once).
  */
@@ -607,7 +624,7 @@ static void remove_always_return_values(ListNode * const map_head,
         if (!list_empty(child_list)) {
             if (number_of_symbol_names == 1) {
                 ListNode * const child_node = child_list->next;
-                // If this item has been returned more than once, free it.
+                /* If this item has been returned more than once, free it. */
                 if (child_node->refcount < -1) {
                     list_remove_free(child_node, free_value, NULL);
                 }
@@ -624,7 +641,8 @@ static void remove_always_return_values(ListNode * const map_head,
     }
 }
 
-/* Checks if there are any leftover values set up by the test that were never
+/*
+ * Checks if there are any leftover values set up by the test that were never
  * retrieved through execution, and fail the test if that is the case.
  */
 static int check_for_leftover_values(
@@ -668,7 +686,7 @@ static int check_for_leftover_values(
 }
 
 
-// Get the next return value for the specified mock function.
+/* Get the next return value for the specified mock function. */
 LargestIntegralType _mock(const char * const function, const char* const file,
                           const int line) {
     void *result;
@@ -700,7 +718,7 @@ LargestIntegralType _mock(const char * const function, const char* const file,
 }
 
 
-// Add a return value for the specified mock function name.
+/* Add a return value for the specified mock function name. */
 void _will_return(const char * const function_name, const char * const file,
                   const int line, const LargestIntegralType value,
                   const int count) {
@@ -714,7 +732,8 @@ void _will_return(const char * const function_name, const char * const file,
 }
 
 
-/* Add a custom parameter checking function.  If the event parameter is NULL
+/*
+ * Add a custom parameter checking function.  If the event parameter is NULL
  * the event structure is allocated internally by this function.  If event
  * parameter is provided it must be allocated on the heap and doesn't need to
  * be deallocated by the caller.
@@ -749,7 +768,8 @@ static int values_equal_display_error(const LargestIntegralType left,
     return equal;
 }
 
-/* Returns 1 if the specified values are not equal.  If the values are equal
+/*
+ * Returns 1 if the specified values are not equal.  If the values are equal
  * an error is displayed and 0 is returned. */
 static int values_not_equal_display_error(const LargestIntegralType left,
                                           const LargestIntegralType right) {
@@ -762,11 +782,13 @@ static int values_not_equal_display_error(const LargestIntegralType left,
 }
 
 
-/* Determine whether value is contained within check_integer_set.
+/*
+ * Determine whether value is contained within check_integer_set.
  * If invert is 0 and the value is in the set 1 is returned, otherwise 0 is
  * returned and an error is displayed.  If invert is 1 and the value is not
  * in the set 1 is returned, otherwise 0 is returned and an error is
- * displayed. */
+ * displayed.
+ */
 static int value_in_set_display_error(
         const LargestIntegralType value,
         const CheckIntegerSet * const check_integer_set, const int invert) {
@@ -778,8 +800,8 @@ static int value_in_set_display_error(
         size_t i;
         for (i = 0; i < size_of_set; i++) {
             if (set[i] == value) {
-                // If invert = 0 and item is found, succeeded = 1.
-                // If invert = 1 and item is found, succeeded = 0.
+                /* If invert = 0 and item is found, succeeded = 1. */
+                /* If invert = 1 and item is found, succeeded = 0. */
                 succeeded = !succeeded;
                 break;
             }
@@ -797,9 +819,11 @@ static int value_in_set_display_error(
 }
 
 
-/* Determine whether a value is within the specified range.  If the value is
+/*
+ * Determine whether a value is within the specified range.  If the value is
  * within the specified range 1 is returned.  If the value isn't within the
- * specified range an error is displayed and 0 is returned. */
+ * specified range an error is displayed and 0 is returned.
+ */
 static int integer_in_range_display_error(
         const LargestIntegralType value, const LargestIntegralType range_min,
         const LargestIntegralType range_max) {
@@ -812,9 +836,11 @@ static int integer_in_range_display_error(
 }
 
 
-/* Determine whether a value is within the specified range.  If the value
+/*
+ * Determine whether a value is within the specified range.  If the value
  * is not within the range 1 is returned.  If the value is within the
- * specified range an error is displayed and zero is returned. */
+ * specified range an error is displayed and zero is returned.
+ */
 static int integer_not_in_range_display_error(
         const LargestIntegralType value, const LargestIntegralType range_min,
         const LargestIntegralType range_max) {
@@ -827,9 +853,11 @@ static int integer_not_in_range_display_error(
 }
 
 
-/* Determine whether the specified strings are equal.  If the strings are equal
+/*
+ * Determine whether the specified strings are equal.  If the strings are equal
  * 1 is returned.  If they're not equal an error is displayed and 0 is
- * returned. */
+ * returned.
+ */
 static int string_equal_display_error(
         const char * const left, const char * const right) {
     if (strcmp(left, right) == 0) {
@@ -840,9 +868,11 @@ static int string_equal_display_error(
 }
 
 
-/* Determine whether the specified strings are equal.  If the strings are not
+/*
+ * Determine whether the specified strings are equal.  If the strings are not
  * equal 1 is returned.  If they're not equal an error is displayed and 0 is
- * returned */
+ * returned
+ */
 static int string_not_equal_display_error(
         const char * const left, const char * const right) {
     if (strcmp(left, right) != 0) {
@@ -853,8 +883,10 @@ static int string_not_equal_display_error(
 }
 
 
-/* Determine whether the specified areas of memory are equal.  If they're equal
- * 1 is returned otherwise an error is displayed and 0 is returned. */
+/*
+ * Determine whether the specified areas of memory are equal.  If they're equal
+ * 1 is returned otherwise an error is displayed and 0 is returned.
+ */
 static int memory_equal_display_error(const char* const a, const char* const b,
                                       const size_t size) {
     int differences = 0;
@@ -877,9 +909,11 @@ static int memory_equal_display_error(const char* const a, const char* const b,
 }
 
 
-/* Determine whether the specified areas of memory are not equal.  If they're
+/*
+ * Determine whether the specified areas of memory are not equal.  If they're
  * not equal 1 is returned otherwise an error is displayed and 0 is
- * returned. */
+ * returned.
+ */
 static int memory_not_equal_display_error(
         const char* const a, const char* const b, const size_t size) {
     size_t same = 0;
@@ -900,7 +934,7 @@ static int memory_not_equal_display_error(
 }
 
 
-// CheckParameterValue callback to check whether a value is within a set.
+/* CheckParameterValue callback to check whether a value is within a set. */
 static int check_in_set(const LargestIntegralType value,
                         const LargestIntegralType check_value_data) {
     return value_in_set_display_error(value,
@@ -909,7 +943,7 @@ static int check_in_set(const LargestIntegralType value,
 }
 
 
-// CheckParameterValue callback to check whether a value isn't within a set.
+/* CheckParameterValue callback to check whether a value isn't within a set. */
 static int check_not_in_set(const LargestIntegralType value,
                             const LargestIntegralType check_value_data) {
     return value_in_set_display_error(value,
@@ -941,7 +975,7 @@ static void expect_set(
 }
 
 
-// Add an event to check whether a value is in a set.
+/* Add an event to check whether a value is in a set. */
 void _expect_in_set(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
@@ -952,7 +986,7 @@ void _expect_in_set(
 }
 
 
-// Add an event to check whether a value isn't in a set.
+/* Add an event to check whether a value isn't in a set. */
 void _expect_not_in_set(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
@@ -963,7 +997,7 @@ void _expect_not_in_set(
 }
 
 
-// CheckParameterValue callback to check whether a value is within a range.
+/* CheckParameterValue callback to check whether a value is within a range. */
 static int check_in_range(const LargestIntegralType value,
                           const LargestIntegralType check_value_data) {
     CheckIntegerRange * const check_integer_range =
@@ -975,7 +1009,7 @@ static int check_in_range(const LargestIntegralType value,
 }
 
 
-// CheckParameterValue callback to check whether a value is not within a range.
+/* CheckParameterValue callback to check whether a value is not within a range. */
 static int check_not_in_range(const LargestIntegralType value,
                               const LargestIntegralType check_value_data) {
     CheckIntegerRange * const check_integer_range =
@@ -1004,7 +1038,7 @@ static void expect_range(
 }
 
 
-// Add an event to determine whether a parameter is within a range.
+/* Add an event to determine whether a parameter is within a range. */
 void _expect_in_range(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
@@ -1015,7 +1049,7 @@ void _expect_in_range(
 }
 
 
-// Add an event to determine whether a parameter is not within a range.
+/* Add an event to determine whether a parameter is not within a range. */
 void _expect_not_in_range(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
@@ -1034,7 +1068,7 @@ static int check_value(const LargestIntegralType value,
 }
 
 
-// Add an event to check a parameter equals an expected value.
+/* Add an event to check a parameter equals an expected value. */
 void _expect_value(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
@@ -1052,7 +1086,7 @@ static int check_not_value(const LargestIntegralType value,
 }
 
 
-// Add an event to check a parameter is not equal to an expected value.
+/* Add an event to check a parameter is not equal to an expected value. */
 void _expect_not_value(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
@@ -1062,7 +1096,7 @@ void _expect_not_value(
 }
 
 
-// CheckParameterValue callback to check whether a parameter equals a string.
+/* CheckParameterValue callback to check whether a parameter equals a string. */
 static int check_string(const LargestIntegralType value,
                         const LargestIntegralType check_value_data) {
     return string_equal_display_error(
@@ -1071,7 +1105,7 @@ static int check_string(const LargestIntegralType value,
 }
 
 
-// Add an event to check whether a parameter is equal to a string.
+/* Add an event to check whether a parameter is equal to a string. */
 void _expect_string(
         const char* const function, const char* const parameter,
         const char* const file, const int line, const char* string,
@@ -1093,7 +1127,7 @@ static int check_not_string(const LargestIntegralType value,
 }
 
 
-// Add an event to check whether a parameter is not equal to a string.
+/* Add an event to check whether a parameter is not equal to a string. */
 void _expect_not_string(
         const char* const function, const char* const parameter,
         const char* const file, const int line, const char* string,
@@ -1138,7 +1172,7 @@ static void expect_memory_setup(
 }
 
 
-// Add an event to check whether a parameter matches an area of memory.
+/* Add an event to check whether a parameter matches an area of memory. */
 void _expect_memory(
         const char* const function, const char* const parameter,
         const char* const file, const int line, const void* const memory,
@@ -1162,7 +1196,7 @@ static int check_not_memory(const LargestIntegralType value,
 }
 
 
-// Add an event to check whether a parameter doesn't match an area of memory.
+/* Add an event to check whether a parameter doesn't match an area of memory. */
 void _expect_not_memory(
         const char* const function, const char* const parameter,
         const char* const file, const int line, const void* const memory,
@@ -1172,7 +1206,7 @@ void _expect_not_memory(
 }
 
 
-// CheckParameterValue callback that always returns 1.
+/* CheckParameterValue callback that always returns 1. */
 static int check_any(const LargestIntegralType value,
                      const LargestIntegralType check_value_data) {
 	(void)value;
@@ -1181,7 +1215,7 @@ static int check_any(const LargestIntegralType value,
 }
 
 
-// Add an event to allow any value for a parameter.
+/* Add an event to allow any value for a parameter. */
 void _expect_any(
         const char* const function, const char* const parameter,
         const char* const file, const int line, const int count) {
@@ -1232,7 +1266,7 @@ void _check_expected(
 }
 
 
-// Replacement for assert.
+/* Replacement for assert. */
 void mock_assert(const int result, const char* const expression,
                  const char* const file, const int line) {
     if (!result) {
@@ -1352,9 +1386,9 @@ void _assert_not_in_set(const LargestIntegralType value,
 }
 
 
-// Get the list of allocated blocks.
+/* Get the list of allocated blocks. */
 static ListNode* get_allocated_blocks_list() {
-    // If it initialized, initialize the list of allocated blocks.
+    /* If it initialized, initialize the list of allocated blocks. */
     if (!global_allocated_blocks.value) {
         list_initialize(&global_allocated_blocks);
         global_allocated_blocks.value = (void*)1;
@@ -1362,7 +1396,7 @@ static ListNode* get_allocated_blocks_list() {
     return &global_allocated_blocks;
 }
 
-// Use the real malloc in this function.
+/* Use the real malloc in this function. */
 #undef malloc
 void* _test_malloc(const size_t size, const char* file, const int line) {
     char* ptr;
@@ -1373,11 +1407,11 @@ void* _test_malloc(const size_t size, const char* file, const int line) {
     char* const block = (char*)malloc(allocate_size);
     assert_non_null(block);
 
-    // Calculate the returned address.
+    /* Calculate the returned address. */
     ptr = (char*)(((size_t)block + MALLOC_GUARD_SIZE + sizeof(*block_info) +
                   MALLOC_ALIGNMENT) & ~(MALLOC_ALIGNMENT - 1));
 
-    // Initialize the guard blocks.
+    /* Initialize the guard blocks. */
     memset(ptr - MALLOC_GUARD_SIZE, MALLOC_GUARD_PATTERN, MALLOC_GUARD_SIZE);
     memset(ptr + size, MALLOC_GUARD_PATTERN, MALLOC_GUARD_SIZE);
     memset(ptr, MALLOC_ALLOC_PATTERN, size);
@@ -1405,7 +1439,7 @@ void* _test_calloc(const size_t number_of_elements, const size_t size,
 }
 
 
-// Use the real free in this function.
+/* Use the real free in this function. */
 #undef free
 void _test_free(void* const ptr, const char* file, const int line) {
     unsigned int i;
@@ -1415,7 +1449,7 @@ void _test_free(void* const ptr, const char* file, const int line) {
     _assert_true(cast_ptr_to_largest_integral_type(ptr), "ptr", file, line);
     block_info = (MallocBlockInfo*)(block - (MALLOC_GUARD_SIZE +
                                                sizeof(*block_info)));
-    // Check the guard blocks.
+    /* Check the guard blocks. */
     {
         char *guards[2] = {block - MALLOC_GUARD_SIZE,
                            block + block_info->size};
@@ -1445,7 +1479,7 @@ void _test_free(void* const ptr, const char* file, const int line) {
 #define free test_free
 
 
-// Crudely checkpoint the current heap state.
+/* Crudely checkpoint the current heap state. */
 static const ListNode* check_point_allocated_blocks() {
     return get_allocated_blocks_list()->prev;
 }
@@ -1477,7 +1511,7 @@ static int display_allocated_blocks(const ListNode * const check_point) {
 }
 
 
-// Free all blocks allocated after the specified check point.
+/* Free all blocks allocated after the specified check point. */
 static void free_allocated_blocks(const ListNode * const check_point) {
     const ListNode * const head = get_allocated_blocks_list();
     const ListNode *node;
@@ -1494,7 +1528,7 @@ static void free_allocated_blocks(const ListNode * const check_point) {
 }
 
 
-// Fail if any any blocks are allocated after the specified check point.
+/* Fail if any any blocks are allocated after the specified check point. */
 static void fail_if_blocks_allocated(const ListNode * const check_point,
                                      const char * const test_name) {
     const int allocated_blocks = display_allocated_blocks(check_point);
@@ -1523,7 +1557,7 @@ static void exception_handler(int sig) {
     exit_test(1);
 }
 
-#else // _WIN32
+#else /* _WIN32 */
 
 static LONG WINAPI exception_filter(EXCEPTION_POINTERS *exception_pointers) {
     EXCEPTION_RECORD * const exception_record =
@@ -1558,10 +1592,10 @@ static LONG WINAPI exception_filter(EXCEPTION_POINTERS *exception_pointers) {
     }
     return EXCEPTION_CONTINUE_SEARCH;
 }
-#endif // !_WIN32
+#endif /* !_WIN32 */
 
 
-// Standard output and error print methods.
+/* Standard output and error print methods. */
 void vprint_message(const char* const format, va_list args) {
     char buffer[1024];
     vsnprintf(buffer, sizeof(buffer), format, args);
@@ -1569,7 +1603,7 @@ void vprint_message(const char* const format, va_list args) {
     fflush(stdout);
 #ifdef _WIN32
     OutputDebugString(buffer);
-#endif // _WIN32
+#endif /* _WIN32 */
 }
 
 
@@ -1580,7 +1614,7 @@ void vprint_error(const char* const format, va_list args) {
     fflush(stderr);
 #ifdef _WIN32
     OutputDebugString(buffer);
-#endif // _WIN32
+#endif /* _WIN32 */
 }
 
 
@@ -1612,10 +1646,10 @@ int _run_test(
     int handle_exceptions = 1;
 #ifdef _WIN32
     handle_exceptions = !IsDebuggerPresent();
-#endif // _WIN32
+#endif /* _WIN32 */
 #if UNIT_TESTING_DEBUG
     handle_exceptions = 0;
-#endif // UNIT_TESTING_DEBUG
+#endif /* UNIT_TESTING_DEBUG */
 
     if (handle_exceptions) {
 #ifndef _WIN32
@@ -1624,10 +1658,10 @@ int _run_test(
             default_signal_functions[i] = signal(
                 exception_signals[i], exception_handler);
         }
-#else // _WIN32
+#else /* _WIN32 */
         previous_exception_filter = SetUnhandledExceptionFilter(
             exception_filter);
-#endif // !_WIN32
+#endif /* !_WIN32 */
     }
 
     if (function_type == UNIT_TEST_FUNCTION_TYPE_TEST) {
@@ -1663,12 +1697,12 @@ int _run_test(
         for (i = 0; i < ARRAY_LENGTH(exception_signals); i++) {
             signal(exception_signals[i], default_signal_functions[i]);
         }
-#else // _WIN32
+#else /* _WIN32 */
         if (previous_exception_filter) {
             SetUnhandledExceptionFilter(previous_exception_filter);
             previous_exception_filter = NULL;
         }
-#endif // !_WIN32
+#endif /* !_WIN32 */
     }
 
     return rc;
@@ -1676,35 +1710,37 @@ int _run_test(
 
 
 int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
-    // Whether to execute the next test.
+    /* Whether to execute the next test. */
     int run_next_test = 1;
-    // Whether the previous test failed.
+    /* Whether the previous test failed. */
     int previous_test_failed = 0;
-    // Check point of the heap state.
+    /* Check point of the heap state. */
     const ListNode * const check_point = check_point_allocated_blocks();
-    // Current test being executed.
+    /* Current test being executed. */
     size_t current_test = 0;
-    // Number of tests executed.
+    /* Number of tests executed. */
     size_t tests_executed = 0;
-    // Number of failed tests.
+    /* Number of failed tests. */
     size_t total_failed = 0;
-    // Number of setup functions.
+    /* Number of setup functions. */
     size_t setups = 0;
-    // Number of teardown functions.
+    /* Number of teardown functions. */
     size_t teardowns = 0;
-    /* A stack of test states.  A state is pushed on the stack
-     * when a test setup occurs and popped on tear down. */
+    /*
+     * A stack of test states.  A state is pushed on the stack
+     * when a test setup occurs and popped on tear down.
+     */
     TestState* test_states =
 	    (TestState*)malloc(number_of_tests * sizeof(*test_states));
     size_t number_of_test_states = 0;
-    // Names of the tests that failed.
+    /* Names of the tests that failed. */
     const char** failed_names = (const char**)malloc(number_of_tests *
                                        sizeof(*failed_names));
     void **current_state = NULL;
 
     print_message("[==========] Running %"PRIdS " test(s).\n", number_of_tests);
 
-    // Make sure LargestIntegralType is at least the size of a pointer.
+    /* Make sure LargestIntegralType is at least the size of a pointer. */
     assert_true(sizeof(LargestIntegralType) >= sizeof(void*));
 
     while (current_test < number_of_tests) {
@@ -1720,7 +1756,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
             run_next_test = 1;
             break;
         case UNIT_TEST_FUNCTION_TYPE_SETUP: {
-            // Checkpoint the heap before the setup.
+            /* Checkpoint the heap before the setup. */
             current_TestState = &test_states[number_of_test_states++];
             current_TestState->check_point = check_point_allocated_blocks();
             test_check_point = current_TestState->check_point;
@@ -1731,7 +1767,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
             break;
         }
         case UNIT_TEST_FUNCTION_TYPE_TEARDOWN:
-            // Check the heap based on the last setup checkpoint.
+            /* Check the heap based on the last setup checkpoint. */
             assert_true(number_of_test_states);
             current_TestState = &test_states[--number_of_test_states];
             test_check_point = current_TestState->check_point;
@@ -1763,14 +1799,14 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
                 if (failed) {
                     total_failed ++;
                     tests_executed ++;
-                    // Skip forward until the next test or setup function.
+                    /* Skip forward until the next test or setup function. */
                     run_next_test = 0;
                 }
                 previous_test_failed = 0;
                 break;
 
             case UNIT_TEST_FUNCTION_TYPE_TEARDOWN:
-                // If this test failed.
+                /* If this test failed. */
                 if (failed && !previous_test_failed) {
                     total_failed ++;
                 }
