@@ -409,11 +409,25 @@ void assert_null(void *pointer);
 __FILE__, __LINE__)
 #endif
 
-/* Assert that the two given integers are equal, otherwise fail. */
+#ifdef DOXYGEN
+/**
+ * @brief Assert that the two given integers are equal.
+ *
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if the integers are not equal.
+ *
+ * @param[in]  a  The first integer to compare.
+ *
+ * @param[in]  b  The integer to compare against the first one.
+ */
+void assert_int_equal(int a, int b);
+#else
 #define assert_int_equal(a, b) \
     _assert_int_equal(cast_to_largest_integral_type(a), \
                       cast_to_largest_integral_type(b), \
                       __FILE__, __LINE__)
+#endif
+
 /* Assert that the two given integers are not equal, otherwise fail. */
 #define assert_int_not_equal(a, b) \
     _assert_int_not_equal(cast_to_largest_integral_type(a), \
