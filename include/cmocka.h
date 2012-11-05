@@ -392,9 +392,22 @@ void assert_non_null(void *pointer);
                                         __FILE__, __LINE__)
 #endif
 
-/* Assert that the given pointer is NULL. */
+#ifdef DOXYGEN
+/**
+ * @brief Assert that the given pointer is NULL.
+ *
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if the pointer is non-NULL.
+ *
+ * @param[in]  pointer  The pointer to evaluate.
+ *
+ * @see assert_non_null()
+ */
+void assert_null(void *pointer);
+#else
 #define assert_null(c) _assert_true(!(cast_ptr_to_largest_integral_type(c)), #c, \
 __FILE__, __LINE__)
+#endif
 
 /* Assert that the two given integers are equal, otherwise fail. */
 #define assert_int_equal(a, b) \
