@@ -445,6 +445,23 @@ __FILE__, __LINE__)
  *
  * This is the way tests are executed with CMocka.
  *
+ * The following example illustrates this macro's use with the unit_test macro.
+ *
+ * @code
+ * void Test0(void **state);
+ * void Test1(void **state);
+ *
+ * int main(void)
+ * {
+ *     const UnitTest tests[] = {
+ *         unit_test(Test0),
+ *         unit_test(Test1),
+ *     };
+ *
+ *     return run_tests(tests);
+ * }
+ * @endcode
+ *
  * @{
  */
 
@@ -500,21 +517,6 @@ int run_test(#function);
     unit_test(test), \
     unit_test_teardown(test, teardown)
 
-/*
- * Run tests specified by an array of UnitTest structures.  The following
- * example illustrates this macro's use with the unit_test macro.
- *
- * void Test0();
- * void Test1();
- *
- * int main(int argc, char* argv[]) {
- *     const UnitTest tests[] = {
- *         unit_test(Test0);
- *         unit_test(Test1);
- *     };
- *     return run_tests(tests);
- * }
- */
 #ifdef DOXYGEN
 /**
  * @brief Run tests specified by an array of UnitTest structures.
