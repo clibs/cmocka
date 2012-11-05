@@ -326,6 +326,15 @@ void will_return_count(#function, void *value, int count);
  * This is a set of useful assert macros like the standard C libary's
  * assert(3) macro.
  *
+ * On an assertion failure a cmocka assert macro will write the failure to the
+ * standard error stream and signal a test failure. Due to limitations of the C
+ * language the general C standard library assert() and cmocka's assert_true()
+ * and assert_false() macros can only display the expression that caused the
+ * assert failure. cmocka's type specific assert macros, assert_{type}_equal()
+ * and assert_{type}_not_equal(), display the data that caused the assertion
+ * failure which increases data visibility aiding debugging of failing test
+ * cases.
+ *
  * @{
  */
 
