@@ -529,12 +529,29 @@ void assert_memory_not_equal(const void *a, const void *b, size_t size);
                              __FILE__, __LINE__)
 #endif
 
+#ifdef DOXYGEN
+/**
+ * @brief Assert that the specified value is bigger than the minimum and
+ * smaller than the maximum.
+ *
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if value is not in range.
+ *
+ * @param[in]  value  The value to check.
+ *
+ * @param[in]  minimum  The minimum value allowed.
+ *
+ * @param[in]  maximum  The maximum value allowed.
+ */
+void assert_in_range(uintmax_t value, uintmax_t minimum, uintmax_t maximum);
+#else
 /* Assert that the specified value is >= minimum and <= maximum. */
 #define assert_in_range(value, minimum, maximum) \
     _assert_in_range( \
         cast_to_largest_integral_type(value), \
         cast_to_largest_integral_type(minimum), \
         cast_to_largest_integral_type(maximum), __FILE__, __LINE__)
+#endif
 
 /* Assert that the specified value is < minumum or > maximum */
 #define assert_not_in_range(value, minimum, maximum) \
