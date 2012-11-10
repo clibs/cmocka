@@ -485,10 +485,28 @@ void assert_string_not_equal(const char *a, const char *b);
                              __LINE__)
 #endif
 
-/* Assert that the two given areas of memory are equal, otherwise fail. */
+#ifdef DOXYGEN
+/**
+ * @brief Assert that the two given areas of memory are equal, otherwise fail.
+ *
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if the memory is not equal.
+ *
+ * @param[in]  a  The first memory area to compare
+ *                (interpreted as unsigned char).
+ *
+ * @param[in]  b  The second memory area to compare
+ *                (interpreted as unsigned char).
+ *
+ * @param[in]  size  The first n bytes of the memory areas to compare.
+ */
+void assert_memory_equal(const void *a, const void *b, size_t size);
+#else
 #define assert_memory_equal(a, b, size) \
-    _assert_memory_equal((const char*)(a), (const char*)(b), size, __FILE__, \
+    _assert_memory_equal((const void*)(a), (const void*)(b), size, __FILE__, \
                          __LINE__)
+#endif
+
 /* Assert that the two given areas of memory are not equal, otherwise fail. */
 #define assert_memory_not_equal(a, b, size) \
     _assert_memory_not_equal((const char*)(a), (const char*)(b), size, \
