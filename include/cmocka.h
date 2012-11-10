@@ -545,7 +545,6 @@ void assert_memory_not_equal(const void *a, const void *b, size_t size);
  */
 void assert_in_range(uintmax_t value, uintmax_t minimum, uintmax_t maximum);
 #else
-/* Assert that the specified value is >= minimum and <= maximum. */
 #define assert_in_range(value, minimum, maximum) \
     _assert_in_range( \
         cast_to_largest_integral_type(value), \
