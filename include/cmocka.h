@@ -467,10 +467,23 @@ void assert_string_equal(const char *a, const char *b);
                          __LINE__)
 #endif
 
-/* Assert that the two given strings are not equal, otherwise fail. */
+#ifdef DOXYGEN
+/**
+ * @brief Assert that the two given strings are not equal.
+ *
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if the strings are equal.
+ *
+ * @param[in]  a  The string to check.
+ *
+ * @param[in]  b  The other string to compare.
+ */
+void assert_string_not_equal(const char *a, const char *b);
+#else
 #define assert_string_not_equal(a, b) \
     _assert_string_not_equal((const char*)(a), (const char*)(b), __FILE__, \
                              __LINE__)
+#endif
 
 /* Assert that the two given areas of memory are equal, otherwise fail. */
 #define assert_memory_equal(a, b, size) \
