@@ -797,7 +797,25 @@ void *test_malloc(size_t size);
 #define test_malloc(size) _test_malloc(size, __FILE__, __LINE__)
 #endif
 
+#ifdef DOXYGEN
+/**
+ * @brief Test function overriding calloc.
+ *
+ * The memory is set to zero.
+ *
+ * @param[in]  nmemb  The number of elements for an array to be allocated.
+ *
+ * @param[in]  size   The size in bytes of each array element to allocate.
+ *
+ * @return A pointer to the allocated memory, NULL on error.
+ *
+ * @see calloc(3)
+ */
+void *test_calloc(size_t nmemb, size_t size);
+#else
 #define test_calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)
+#endif
+
 #define test_free(ptr) _test_free(ptr, __FILE__, __LINE__)
 
 /* Redirect malloc, calloc and free to the unit test allocators. */
