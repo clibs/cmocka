@@ -769,8 +769,34 @@ int run_tests(const UnitTest tests[]);
  * @{
  */
 
-/* Dynamic allocators */
+#ifdef DOXYGEN
+/**
+ * @brief Test function overriding malloc.
+ *
+ * @param[in]  size  The bytes which should be allocated.
+ *
+ * @return A pointer to the allocated memory or NULL on error.
+ *
+ * @code
+ * #if UNIT_TESTING
+ * extern void* _test_malloc(const size_t size, const char* file, const int line);
+ *
+ * #define malloc(size) _test_malloc(size, __FILE__, __LINE__)
+ * #endif
+ *
+ * void leak_memory() {
+ *     int * const temporary = (int*)malloc(sizeof(int));
+ *     *temporary = 0;
+ * }
+ * @endcode
+ *
+ * @see malloc(3)
+ */
+void *test_malloc(size_t size);
+#else
 #define test_malloc(size) _test_malloc(size, __FILE__, __LINE__)
+#endif
+
 #define test_calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)
 #define test_free(ptr) _test_free(ptr, __FILE__, __LINE__)
 
