@@ -892,11 +892,15 @@ void test_free(void *ptr);
 void mock_assert(const int result, const char* const expression,
                  const char * const file, const int line);
 
-/*
- * Ensure mock_assert() is called.  If mock_assert() is called the assert
- * expression string is returned.
- * For example:
+#ifdef DOXYGEN
+/**
+ * @brief Ensure that mock_assert() is called.
  *
+ * If mock_assert() is called the assert expression string is returned.
+ *
+ * @param[in]  fn_call  The function will will call mock_assert().
+ *
+ * @code
  * #define assert mock_assert
  *
  * void showmessage(const char *message) {
@@ -908,7 +912,11 @@ void mock_assert(const int result, const char* const expression,
  *   printf("succeeded\n");
  *   return 0;
  * }
+ * @endcode
+ *
  */
+void expect_assert_failure(function fn_call);
+#else
 #define expect_assert_failure(function_call) \
   { \
     const int result = setjmp(global_expect_assert_env); \
@@ -924,6 +932,7 @@ void mock_assert(const int result, const char* const expression,
       _fail(__FILE__, __LINE__); \
     } \
   }
+#endif
 
 /** @} */
 
