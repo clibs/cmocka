@@ -856,6 +856,42 @@ void test_free(void *ptr);
  * @{
  */
 
+/**
+ * @brief Function to replace assert(3) in tested code.
+ *
+ * In conjuction with check_assert() it's possible to determine whether an
+ * assert condition has failed without stopping a test.
+ *
+ * @param[in]  result  The expression to assert.
+ *
+ * @param[in]  expression  The expression as string.
+ *
+ * @param[in]  file  The file mock_assert() is called.
+ *
+ * @param[in]  line  The line mock_assert() is called.
+ *
+ * @code
+ * #if UNIT_TESTING
+ * extern void mock_assert(const int result, const char* const expression,
+ *                         const char * const file, const int line);
+ *
+ * #undef assert
+ * #define assert(expression) \
+ *     mock_assert((int)(expression), #expression, __FILE__, __LINE__);
+ * #endif
+ *
+ * void increment_value(int * const value) {
+ *     assert(value);
+ *     (*value) ++;
+ * }
+ * @endcode
+ *
+ * @see assert(3)
+ * @see expect_assert_failure
+ */
+void mock_assert(const int result, const char* const expression,
+                 const char * const file, const int line);
+
 /*
  * Ensure mock_assert() is called.  If mock_assert() is called the assert
  * expression string is returned.
@@ -1001,14 +1037,6 @@ void _expect_any(
 void _check_expected(
     const char * const function_name, const char * const parameter_name,
     const char* file, const int line, const LargestIntegralType value);
-
-/*
- * Can be used to replace assert in tested code so that in conjuction with
- * check_assert() it's possible to determine whether an assert condition has
- * failed without stopping a test.
- */
-void mock_assert(const int result, const char* const expression,
-                 const char * const file, const int line);
 
 void _will_return(const char * const function_name, const char * const file,
                   const int line, const LargestIntegralType value,
