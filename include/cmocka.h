@@ -746,6 +746,29 @@ int run_tests(const UnitTest tests[]);
 
 /** @} */
 
+/**
+ * @defgroup cmocka_alloc Dynamic Memory Allocation
+ * @ingroup cmocka
+ *
+ * Memory leaks, buffer overflows and underflows can be checked using cmocka.
+ *
+ * To test for memory leaks, buffer overflows and underflows a module being
+ * tested by cmocka should replace calls to malloc(), calloc() and free() to
+ * test_malloc(), test_calloc() and test_free() respectively. Each time a block
+ * is deallocated using test_free() it is checked for corruption, if a corrupt
+ * block is found a test failure is signalled. All blocks allocated using the
+ * test_*() allocation functions are tracked by the cmocka library. When a test
+ * completes if any allocated blocks (memory leaks) remain they are reported
+ * and a test failure is signalled.
+ *
+ * For simplicity cmocka currently executes all tests in one process. Therefore
+ * all test cases in a test application share a single address space which
+ * means memory corruption from a single test case could potentially cause the
+ * test application to exit prematurely.
+ *
+ * @{
+ */
+
 /* Dynamic allocators */
 #define test_malloc(size) _test_malloc(size, __FILE__, __LINE__)
 #define test_calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)
@@ -757,6 +780,8 @@ int run_tests(const UnitTest tests[]);
 #define calloc test_calloc
 #define free test_free
 #endif /* UNIT_TESTING */
+
+/** @} */
 
 /*
  * Ensure mock_assert() is called.  If mock_assert() is called the assert
