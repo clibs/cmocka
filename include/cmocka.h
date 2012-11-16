@@ -816,7 +816,18 @@ void *test_calloc(size_t nmemb, size_t size);
 #define test_calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)
 #endif
 
+#ifdef DOXYGEN
+/**
+ * @brief Test function overriding free(3).
+ *
+ * @param[in]  ptr  The pointer to the memory space to free.
+ *
+ * @see free(3).
+ */
+void test_free(void *ptr);
+#else
 #define test_free(ptr) _test_free(ptr, __FILE__, __LINE__)
+#endif
 
 /* Redirect malloc, calloc and free to the unit test allocators. */
 #if UNIT_TESTING
