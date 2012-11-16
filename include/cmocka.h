@@ -838,6 +838,24 @@ void test_free(void *ptr);
 
 /** @} */
 
+
+/**
+ * @defgroup cmocka_mock_assert Standard Assertions
+ * @ingroup cmocka
+ *
+ * How to handle assert(3) of the standard C library.
+ *
+ * Runtime assert macros like the standard C library's assert() should be
+ * redefined in modules being tested to use cmocka's mock_assert() function.
+ * Normally mock_assert() signals a test failure. If a function is called using
+ * the expect_assert_failure() macro, any calls to mock_assert() within the
+ * function will result in the execution of the test. If no calls to
+ * mock_assert() occur during the function called via expect_assert_failure() a
+ * test failure is signalled.
+ *
+ * @{
+ */
+
 /*
  * Ensure mock_assert() is called.  If mock_assert() is called the assert
  * expression string is returned.
@@ -870,6 +888,8 @@ void test_free(void *ptr);
       _fail(__FILE__, __LINE__); \
     } \
   }
+
+/** @} */
 
 /* Function prototype for setup, test and teardown functions. */
 typedef void (*UnitTestFunction)(void **state);
