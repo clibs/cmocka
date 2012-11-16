@@ -575,9 +575,25 @@ void assert_not_in_range(uintmax_t value, uintmax_t minimum, uintmax_t maximum);
         cast_to_largest_integral_type(maximum), __FILE__, __LINE__)
 #endif
 
-/* Assert that the specified value is within a set. */
+#ifdef DOXYGEN
+/**
+ * @brief Assert that the specified value is within a set.
+ *
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if value is not within a set.
+ *
+ * @param[in]  value  The value to look up
+ *
+ * @param[in]  values[]  The array to check for the value.
+ *
+ * @param[in]  count  The size of the values array.
+ */
+void assert_in_set(uintmax_t value, uintmax_t values[], size_t count);
+#else
 #define assert_in_set(value, values, number_of_values) \
     _assert_in_set(value, values, number_of_values, __FILE__, __LINE__)
+#endif
+
 /* Assert that the specified value is not within a set. */
 #define assert_not_in_set(value, values, number_of_values) \
     _assert_not_in_set(value, values, number_of_values, __FILE__, __LINE__)
