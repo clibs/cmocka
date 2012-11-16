@@ -552,12 +552,28 @@ void assert_in_range(uintmax_t value, uintmax_t minimum, uintmax_t maximum);
         cast_to_largest_integral_type(maximum), __FILE__, __LINE__)
 #endif
 
-/* Assert that the specified value is < minumum or > maximum */
+#ifdef DOXYGEN
+/**
+ * @brief Assert that the specified value is smaller than the minimum and
+ * bigger than the maximum.
+ *
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if value is in range.
+ *
+ * @param[in]  value  The value to check.
+ *
+ * @param[in]  minimum  The minimum value to compare.
+ *
+ * @param[in]  maximum  The maximum value to compare.
+ */
+void assert_not_in_range(uintmax_t value, uintmax_t minimum, uintmax_t maximum);
+#else
 #define assert_not_in_range(value, minimum, maximum) \
     _assert_not_in_range( \
         cast_to_largest_integral_type(value), \
         cast_to_largest_integral_type(minimum), \
         cast_to_largest_integral_type(maximum), __FILE__, __LINE__)
+#endif
 
 /* Assert that the specified value is within a set. */
 #define assert_in_set(value, values, number_of_values) \
