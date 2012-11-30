@@ -351,13 +351,21 @@ void expect_check(#function, #parameter, #check_function, const void *check_data
 #define expect_any_count(function, parameter, count) \
     _expect_any(#function, #parameter, __FILE__, __LINE__, count)
 
-/*
- * Determine whether a function parameter is correct.  This ensures the next
- * value queued by one of the expect_*() macros matches the specified variable.
+#if DOXYGEN
+/**
+ * @brief Determine whether a function parameter is correct.
+ *
+ * This ensures the next value queued by one of the expect_*() macros matches
+ * the specified variable.
+ *
+ * @param[in]  #parameter  The parameter to check.
  */
+void check_expected(#parameter);
+#else
 #define check_expected(parameter) \
     _check_expected(__func__, #parameter, __FILE__, __LINE__, \
                     cast_to_largest_integral_type(parameter))
+#endif
 
 /** @} */
 
