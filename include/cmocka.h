@@ -203,6 +203,26 @@ void will_return_count(#function, void *value, int count);
 
 /** @} */
 
+/**
+ * @defgroup cmocka_param Checking Parameters
+ * @ingroup cmocka
+ *
+ * Functionality to store expected values for mock function parameters.
+ *
+ * In addition to storing the return values of mock functions, cmocka provides
+ * functionality to store expected values for mock function parameters using
+ * the expect_*() functions provided. A mock function parameter can then be
+ * validated using the check_expected() macro.
+ *
+ * Successive calls to expect_*() macros for a parameter queues values to check
+ * the specified parameter. check_expected() checks a function parameter
+ * against the next value queued using expect_*(), if the parameter check fails
+ * a test failure is signalled. In addition if check_expected() is called and
+ * no more parameter values are queued a test failure occurs.
+ *
+ * @{
+ */
+
 /*
  * Add a custom parameter checking function.  If the event parameter is NULL
  * the event structure is allocated internally by this function.  If event
@@ -318,6 +338,8 @@ void will_return_count(#function, void *value, int count);
 #define check_expected(parameter) \
     _check_expected(__func__, #parameter, __FILE__, __LINE__, \
                     cast_to_largest_integral_type(parameter))
+
+/** @} */
 
 /**
  * @defgroup cmocka_asserts Assert Macros
