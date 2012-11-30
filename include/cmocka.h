@@ -229,9 +229,29 @@ void will_return_count(#function, void *value, int count);
  * parameter is provided it must be allocated on the heap and doesn't need to
  * be deallocated by the caller.
  */
+#ifdef DOXYGEN
+/**
+ * @brief Add a custom parameter checking function.
+ *
+ * If the event parameter is NULL the event structure is allocated internally
+ * by this function. If the parameter is provided it must be allocated on the
+ * heap and doesn't need to be deallocated by the caller.
+ *
+ * @param[in]  #function  The fuction to add a custom paramater checking function
+ *                        for.
+ *
+ * @param[in]  #parameter The parametes passed to the function.
+ *
+ * @param[in]  #check_function  The check function to call.
+ *
+ * @param[in]  check_data       The data to pass to the check function.
+ */
+void expect_check(#function, #parameter, #check_function, const void *check_data);
+#else
 #define expect_check(function, parameter, check_function, check_data) \
     _expect_check(#function, #parameter, __FILE__, __LINE__, check_function, \
                   cast_to_largest_integral_type(check_data), NULL, 0)
+#endif
 
 /*
  * Add an event to check a parameter, using check_expected(), against a set of
