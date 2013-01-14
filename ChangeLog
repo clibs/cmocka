@@ -1,7 +1,15 @@
+Mon Jan 14 11:16 2013 Andreas Schneider <asn@cryptomilk.org>
+    * cmocka: version 0.2.0
+    * Added doxygen api documentation.
+    * Added new cmake build system.
+    * Added support to create windows NSIS installer.
+    * Fixed examples which didn't work.
+    * Fixed a huge amount of bugs.
+
 Mon Sep 15 17:21:22 2008 Google Inc. <opensource@google.com>
 	* cmockery: version 0.12
 	* Made it possible to specify additional compiler, lib tool and link 
-	flags on Windows.
+	  flags on Windows.
 	* Added Windows makefile to the tar ball.
 
 Fri Aug 29 10:50:46 2008  Google Inc. <opensource@google.com>
