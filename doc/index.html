@@ -74,7 +74,7 @@ is complete <b>run_tests()</b> performs various checks to determine whether
 the test succeeded.</p>
 
 <h4>Using run_tests()</h4>
-<a href="../src/example/run_tests.c">run_tests.c</a>
+<a href="../example/run_tests.c">run_tests.c</a>
 <listing>
 #include &lt;stdarg.h&gt;
 #include &lt;stddef.h&gt;
@@ -132,7 +132,7 @@ calls to <b>mock_assert()</b> occur during the function called via
 <b>expect_assert_failure()</b> a test failure is signalled.</p>
 
 <h4>Using mock_assert()</h4>
-<a href="../src/example/assert_module.c">assert_module.c</a>
+<a href="../example/assert_module.c">assert_module.c</a>
 <listing>
 #include &lt;assert.h&gt;
 
@@ -156,7 +156,7 @@ void decrement_value(int * const value) {
     }
 }
 </listing>
-<a href="../src/example/assert_module_test.c">assert_module_test.c</a>
+<a href="../example/assert_module_test.c">assert_module_test.c</a>
 <listing>
 #include &lt;stdarg.h&gt;
 #include &lt;stddef.h&gt;
@@ -206,7 +206,7 @@ caused the assertion failure which increases data visibility aiding
 debugging of failing test cases.</p>
 
 <h4>Using assert_{type}_equal() macros</h4>
-<a href="../src/example/assert_macro.c">assert_macro.c</a>
+<a href="../example/assert_macro.c">assert_macro.c</a>
 <listing>
 #include &lt;string.h&gt;
 
@@ -231,7 +231,7 @@ unsigned int string_to_status_code(const char* const status_code_string) {
     return ~0U;
 }
 </listing>
-<a href="../src/example/assert_macro_test.c">assert_macro_test.c</a>
+<a href="../example/assert_macro_test.c">assert_macro_test.c</a>
 <listing>
 #include &lt;stdarg.h&gt;
 #include &lt;stddef.h&gt;
@@ -281,7 +281,7 @@ which means memory corruption from a single test case could potentially cause
 the test application to exit prematurely.</p>
 
 <h4>Using cmocka's Allocators</h4>
-<a href="../src/example/allocate_module.c">allocate_module.c</a>
+<a href="../example/allocate_module.c">allocate_module.c</a>
 <listing>
 #include &lt;malloc.h&gt;
 
@@ -313,7 +313,7 @@ void buffer_underflow() {
     free(memory);
 }
 </listing>
-<a href="../src/example/allocate_module_test.c">allocate_module_test.c</a>
+<a href="../example/allocate_module_test.c">allocate_module_test.c</a>
 <listing>
 #include &lt;stdarg.h&gt;
 #include &lt;stddef.h&gt;
@@ -374,7 +374,7 @@ return value.  In addition this allows the specification of return values for
 multiple calls to a mock function.</p>
 
 <h4>Using will_return()</h4>
-<a name="../src/example/database.h" href="database.h">database.h</a>
+<a href="../example/database.h">database.h</a>
 <listing>
 typedef struct DatabaseConnection DatabaseConnection;
 
@@ -398,7 +398,7 @@ struct DatabaseConnection {
 DatabaseConnection* connect_to_database(const char * const url,
                                         const unsigned int port);
 </listing>
-<a href="../src/example/customer_database.c">customer_database.c</a>
+<a href="../example/customer_database.c">customer_database.c</a>
 <listing>
 #include &lt;stddef.h&gt;
 #include &lt;stdio.h&gt;
@@ -430,7 +430,7 @@ unsigned int get_customer_id_by_name(
     return (unsigned int)results[0];
 }
 </listing>
-<a href="../src/example/customer_database_test.c">customer_database_test.c</a>
+<a href="../example/customer_database_test.c">customer_database_test.c</a>
 <listing>
 #include &lt;stdarg.h&gt;
 #include &lt;stddef.h&gt;
@@ -505,7 +505,7 @@ test failure is signalled.  In addition if check_expected() is called and
 no more parameter values are queued a test failure occurs.</p>
 
 <h4>Using expect_*()</h4>
-<a href="../src/example/product_database.c">product_database.c</a>
+<a href="../example/product_database.c">product_database.c</a>
 <listing>
 #include &lt;database.h&gt;
 
@@ -514,7 +514,7 @@ DatabaseConnection* connect_to_product_database() {
     return connect_to_database("products.abcd.org", 322);
 }
 </listing>
-<a href="../src/example/product_database_test.c">product_database_test.c</a>
+<a href="../example/product_database_test.c">product_database_test.c</a>
 <listing>
 #include &lt;stdarg.h&gt;
 #include &lt;stddef.h&gt;
@@ -580,7 +580,7 @@ specified by the <b>unit_test_teardown()</b> or
 executed for a test case even when it fails.</p>
 
 <h4>Using unit_test_setup_teardown()</h4>
-<a href="../src/example/key_value.c">key_value.c</a>
+<a href="../example/key_value.c">key_value.c</a>
 <listing>
 #include &lt;stddef.h&gt;
 #include &lt;stdlib.h&gt;
@@ -622,7 +622,7 @@ void sort_items_by_key() {
           key_value_compare_keys);
 }
 </listing>
-<a href="../src/example/key_value_test.c">key_value_test.c</a>
+<a href="../example/key_value_test.c">key_value_test.c</a>
 <listing>
 #include &lt;stdarg.h&gt;
 #include &lt;stddef.h&gt;
@@ -694,9 +694,9 @@ int main(int argc, char* argv[]) {
 <a name="Example"><h2>Example</h2></a>
 
 <p>A small command line calculator
-<a href="../src/example/calculator.c">calculator.c</a> application
+<a href="../example/calculator.c">calculator.c</a> application
 and test application that full exercises the calculator application
-<a href="../src/example/calculator_test.c">calculator_test.c</a>
+<a href="../example/calculator_test.c">calculator_test.c</a>
 are provided as an example of cmocka's features discussed in this document.
 </p>
 
