@@ -54,3 +54,14 @@ add_subdirectory(src)
 if (UNIT_TESTING)
     add_subdirectory(example)
 endif (UNIT_TESTING)
+
+# pkg-config file
+configure_file(cmocka.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/cmocka.pc)
+install(
+  FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/cmocka.pc
+  DESTINATION
+    ${LIB_INSTALL_DIR}/pkgconfig
+  COMPONENT
+    pkgconfig
+)
