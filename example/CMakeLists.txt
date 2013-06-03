@@ -68,6 +68,9 @@ set_tests_properties(
         "\\[  FAILED  \\] 2 test"
 )
 
+if (${CMAKE_C_COMPILER_ID} MATCHES "(GNU|Clang)")
+    add_subdirectory(chef_wrap)
+endif()
 
 add_executable(run_tests run_tests.c)
 target_link_libraries(run_tests ${CMOCKA_SHARED_LIBRARY})
