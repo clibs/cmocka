@@ -150,6 +150,60 @@ void *mock(void);
 
 #ifdef DOXYGEN
 /**
+ * @brief Retrieve a typed return value of the current function.
+ *
+ * The value would be casted to type internally to avoid having the
+ * caller to do the cast manually.
+ *
+ * @param[in]  #type  The expected type of the return value
+ *
+ * @return The value which was stored to return by this function.
+ *
+ * @code
+ * int param;
+ *
+ * param = mock_type(int);
+ * @endcode
+ *
+ * @see will_return()
+ * @see mock()
+ * @see mock_ptr_type()
+ */
+void *mock_type(#type);
+#else
+#define mock_type(type) ((type) mock())
+#endif
+
+#ifdef DOXYGEN
+/**
+ * @brief Retrieve a typed return value of the current function.
+ *
+ * The value would be casted to type internally to avoid having the
+ * caller to do the cast manually but also casted to uintptr_t to make
+ * sure the result has a valid size to be used as a pointer.
+ *
+ * @param[in]  #type  The expected type of the return value
+ *
+ * @return The value which was stored to return by this function.
+ *
+ * @code
+ * char *param;
+ *
+ * param = mock_ptr_type(char *);
+ * @endcode
+ *
+ * @see will_return()
+ * @see mock()
+ * @see mock_type()
+ */
+void *mock_ptr_type(#type);
+#else
+#define mock_ptr_type(type) ((type) (uintptr_t) mock())
+#endif
+
+
+#ifdef DOXYGEN
+/**
  * @brief Store a value to be returned by mock() later.
  *
  * @param[in]  #function  The function which should return the given value.
