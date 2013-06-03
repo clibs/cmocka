@@ -104,10 +104,10 @@ static int waiter_process(const char *order, char **dish)
 
 static void test_order_hotdog(void **state)
 {
-    (void) state; /* unused */
-
     int rv;
     char *dish;
+
+    (void) state; /* unused */
 
     /* We expect the chef to receive an order for a hotdog */
     expect_string(__wrap_chef_cook, order, "hotdog");
@@ -131,10 +131,10 @@ static void test_order_hotdog(void **state)
 
 static void test_bad_dish(void **state)
 {
-    (void) state; /* unused */
-
     int rv;
     char *dish;
+
+    (void) state; /* unused */
 
     /* We expect the chef to receive an order for a hotdog */
     expect_string(__wrap_chef_cook, order, "hotdog");
