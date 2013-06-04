@@ -131,6 +131,42 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
  * real objects. Instead of calling the real objects, the tested object calls a
  * mock object that merely asserts that the correct methods were called, with
  * the expected parameters, in the correct order.
+ * 
+ * <ul>
+ * <li><strong>will_return(function, value)</strong> - The will_return() macro
+ * pushes a value onto a stack of mock values. This macro is intended to be
+ * used by the unit test itself, while programming the behaviour of the mocked
+ * object.</li>
+ *
+ * <li><strong>mock()</strong> - the mock macro pops a value from a stack of
+ * test values. The user of the mock() macro is the mocked object that uses it
+ * to learn how it should behave.</li>
+ * </ul>
+ *
+ * Because the will_return() and mock() are intended to be used in pairs, the
+ * cmocka library would fail the test if there are more values pushed onto the
+ * stack using will_return() than consumed with mock() and vice-versa.
+ *
+ * The following unit test stub illustrates how would a unit test instruct the
+ * mock object to return a particular value:
+ *
+ * @code
+ * will_return(chef_cook, "hotdog");
+ * will_return(chef_cook, 0);
+ * @endcode
+ *
+ * Now the mock object can check if the parameter it received is the parameter
+ * which is expected by the test driver. This can be done the following way:
+ *
+ * @code
+ * int chef_cook(const char *order, char **dish_out)
+ * {
+ *     check_expected(order);
+ * }
+ * @endcode
+ *
+ * For a complete example please at a look
+ * <a href="http://git.cryptomilk.org/projects/cmocka.git/tree/example/chef_wrap/waiter_test_wrap.c">here</a>.
  *
  * @{
  */
