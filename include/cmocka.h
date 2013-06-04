@@ -437,21 +437,97 @@ void expect_not_in_set(#function, #parameter, uintmax_t value_array[], size_t co
     _expect_not_value(#function, #parameter, __FILE__, __LINE__, \
                       cast_to_largest_integral_type(value), count)
 
-/*
- * Add an event to check whether a parameter, using check_expected(),
- * is or isn't a string.  See will_return() for a description of the count
- * parameter.
+#if DOXYGEN
+/**
+ * @brief Add an event to check if the parameter value is equal to the
+ *        provided string.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  string   The string value to compare.
+ *
+ * @see check_expected().
  */
+void expect_string(#function, #parameter, const char *string);
+#else
 #define expect_string(function, parameter, string) \
     expect_string_count(function, parameter, string, 1)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to check if the parameter value is equal to the
+ *        provided string.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  string   The string value to compare.
+ *
+ * @param[in]  count  This is the value which defines the number of chars to
+ *                    compare.
+ *
+ * @see check_expected().
+ */
+void expect_string(#function, #parameter, const char *string, size_t count);
+#else
 #define expect_string_count(function, parameter, string, count) \
     _expect_string(#function, #parameter, __FILE__, __LINE__, \
                    (const char*)(string), count)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to check if the parameter value isn't equal to the
+ *        provided string.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  string   The string value to compare.
+ *
+ * @see check_expected().
+ */
+void expect_not_string(#function, #parameter, const char *string);
+#else
 #define expect_not_string(function, parameter, string) \
     expect_not_string_count(function, parameter, string, 1)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to check if the parameter value isn't equal to the
+ *        provided string.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  string   The string value to compare.
+ *
+ * @param[in]  count  This is the value which defines the number of chars to
+ *                    compare.
+ *
+ * @see check_expected().
+ */
+void expect_not_string_count(#function, #parameter, const char *string, size_t count);
+#else
 #define expect_not_string_count(function, parameter, string, count) \
     _expect_not_string(#function, #parameter, __FILE__, __LINE__, \
                        (const char*)(string), count)
+#endif
 
 /*
  * Add an event to check whether a parameter, using check_expected() does or
