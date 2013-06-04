@@ -365,7 +365,9 @@ void expect_in_set(#function, #parameter, uintmax_t value_array[]);
  *
  * @param[in]  value_array[] The array to check for the value.
  *
- * @param[in]  count  The size of the values array.
+ * @param[in]  count  The count parameter returns the number of times the value
+ *                    should be returned by check_expected(). If count is set
+ *                    to -1 the value will always be returned.
  *
  * @see check_expected().
  */
@@ -410,7 +412,9 @@ void expect_not_in_set(#function, #parameter, uintmax_t value_array[]);
  *
  * @param[in]  value_array[] The array to check for the value.
  *
- * @param[in]  count  The size of the values array.
+ * @param[in]  count  The count parameter returns the number of times the value
+ *                    should be returned by check_expected(). If count is set
+ *                    to -1 the value will always be returned.
  *
  * @see check_expected().
  */
@@ -495,12 +499,13 @@ void expect_string(#function, #parameter, const char *string);
  *
  * @param[in]  string   The string value to compare.
  *
- * @param[in]  count  This is the value which defines the number of chars to
- *                    compare.
+ * @param[in]  count  The count parameter returns the number of times the value
+ *                    should be returned by check_expected(). If count is set
+ *                    to -1 the value will always be returned.
  *
  * @see check_expected().
  */
-void expect_string(#function, #parameter, const char *string, size_t count);
+void expect_string_count(#function, #parameter, const char *string, size_t count);
 #else
 #define expect_string_count(function, parameter, string, count) \
     _expect_string(#function, #parameter, __FILE__, __LINE__, \
@@ -541,8 +546,9 @@ void expect_not_string(#function, #parameter, const char *string);
  *
  * @param[in]  string   The string value to compare.
  *
- * @param[in]  count  This is the value which defines the number of chars to
- *                    compare.
+ * @param[in]  count  The count parameter returns the number of times the value
+ *                    should be returned by check_expected(). If count is set
+ *                    to -1 the value will always be returned.
  *
  * @see check_expected().
  */
