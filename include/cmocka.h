@@ -274,6 +274,30 @@ void will_return_count(#function, void *value, int count);
  * a test failure is signalled. In addition if check_expected() is called and
  * no more parameter values are queued a test failure occurs.
  *
+ * The following test stub illustrates how to do this. First is the the function
+ * we call in the test driver:
+ *
+ * @code
+ * static void test_driver(void **state)
+ * {
+ *     expect_string(chef_cook, order, "hotdog");
+ * }
+ * @endcode
+ *
+ * Now the chef_cook function can check if the parameter we got passed is the
+ * parameter which is expected by the test driver. This can be done the
+ * following way:
+ *
+ * @code
+ * int chef_cook(const char *order, char **dish_out)
+ * {
+ *     check_expected(order);
+ * }
+ * @endcode
+ *
+ * For a complete example please at a look at
+ * <a href="http://git.cryptomilk.org/projects/cmocka.git/tree/example/chef_wrap/waiter_test_wrap.c">here</a>
+ *
  * @{
  */
 
