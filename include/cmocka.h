@@ -714,21 +714,106 @@ void expect_not_string_count(#function, #parameter, const char *string, size_t c
                        (const char*)(string), count)
 #endif
 
-/*
- * Add an event to check whether a parameter, using check_expected() does or
- * doesn't match an area of memory.  See will_return() for a description of
- * the count parameter.
+#if DOXYGEN
+/**
+ * @brief Add an event to check if the parameter does match an area of memory.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  memory  The memory to compare.
+ *
+ * @param[in]  size  The size of the memory to compare.
+ *
+ * @see check_expected().
  */
+void expect_memory(#function, #parameter, void *memory, size_t size);
+#else
 #define expect_memory(function, parameter, memory, size) \
     expect_memory_count(function, parameter, memory, size, 1)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to repeatedly check if the parameter does match an area
+ *        of memory.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  memory  The memory to compare.
+ *
+ * @param[in]  size  The size of the memory to compare.
+ *
+ * @param[in]  count  The count parameter returns the number of times the value
+ *                    should be returned by check_expected(). If count is set
+ *                    to -1 the value will always be returned.
+ *
+ * @see check_expected().
+ */
+void expect_memory_count(#function, #parameter, void *memory, size_t size, size_t count);
+#else
 #define expect_memory_count(function, parameter, memory, size, count) \
     _expect_memory(#function, #parameter, __FILE__, __LINE__, \
                    (const void*)(memory), size, count)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to check if the parameter doesn't match an area of
+ *        memory.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  memory  The memory to compare.
+ *
+ * @param[in]  size  The size of the memory to compare.
+ *
+ * @see check_expected().
+ */
+void expect_not_memory(#function, #parameter, void *memory, size_t size);
+#else
 #define expect_not_memory(function, parameter, memory, size) \
     expect_not_memory_count(function, parameter, memory, size, 1)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to repeatedly check if the parameter doesn't match an
+ *        area of memory.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  memory  The memory to compare.
+ *
+ * @param[in]  size  The size of the memory to compare.
+ *
+ * @param[in]  count  The count parameter returns the number of times the value
+ *                    should be returned by check_expected(). If count is set
+ *                    to -1 the value will always be returned.
+ *
+ * @see check_expected().
+ */
+void expect_not_memory_count(#function, #parameter, void *memory, size_t size, size_t count);
+#else
 #define expect_not_memory_count(function, parameter, memory, size, count) \
     _expect_not_memory(#function, #parameter, __FILE__, __LINE__, \
                        (const void*)(memory), size, count)
+#endif
 
 
 #if DOXYGEN
