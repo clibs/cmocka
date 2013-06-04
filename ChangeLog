@@ -1,4 +1,12 @@
 Mon Jan 14 11:16 2013 Andreas Schneider <asn@cryptomilk.org>
+    * cmocka: version 0.3.0
+    * Added a better mock object example.
+    * Added pkgconfig file.
+    * Added new macros mock_type() and mock_ptr_type().
+    * Added more documentation.
+    * Fixed installation problems on some platforms.
+
+Mon Jan 14 11:16 2013 Andreas Schneider <asn@cryptomilk.org>
     * cmocka: version 0.2.0
     * Added doxygen api documentation.
     * Added new cmake build system.
