@@ -414,7 +414,7 @@ void expect_not_in_set(#function, #parameter, uintmax_t value_array[]);
  *
  * @see check_expected().
  */
-void expect_not_in_set(#function, #parameter, uintmax_t value_array[], size_t count);
+void expect_not_in_set_count(#function, #parameter, uintmax_t value_array[], size_t count);
 #else
 #define expect_not_in_set_count(function, parameter, value_array, count) \
     _expect_not_in_set( \
