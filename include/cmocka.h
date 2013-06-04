@@ -731,15 +731,46 @@ void expect_not_string_count(#function, #parameter, const char *string, size_t c
                        (const void*)(memory), size, count)
 
 
-/*
- * Add an event to allow any value for a parameter checked using
- * check_expected().  See will_return() for a description of the count
- * parameter.
+#if DOXYGEN
+/**
+ * @brief Add an event to check if a parameter (of any value) has been passed.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @see check_expected().
  */
+void expect_any(#function, #parameter);
+#else
 #define expect_any(function, parameter) \
     expect_any_count(function, parameter, 1)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to repeatedly check if a parameter (of any value) has
+ *        been passed.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  count  The count parameter returns the number of times the value
+ *                    should be returned by check_expected(). If count is set
+ *                    to -1 the value will always be returned.
+ *
+ * @see check_expected().
+ */
+void expect_any_count(#function, #parameter, size_t count);
+#else
 #define expect_any_count(function, parameter, count) \
     _expect_any(#function, #parameter, __FILE__, __LINE__, count)
+#endif
 
 #if DOXYGEN
 /**
