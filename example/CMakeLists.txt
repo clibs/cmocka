@@ -1,4 +1,4 @@
-project(cmocka-examples C CXX)
+project(cmocka-examples C)
 
 include_directories(
     ${CMAKE_BINARY_DIR}
@@ -6,7 +6,14 @@ include_directories(
     ${CMOCKA_PUBLIC_INCLUDE_DIRS}
 )
 
-add_definitions(-DUNIT_TESTING=1)
+set_source_files_properties(
+    calculator.c
+    calculator_test.c
+    allocate_module.c
+    allocate_module_test.c
+    run_tests.c
+    PROPERTIES
+        COMPILE_FLAGS -DUNIT_TESTING=1)
 
 add_executable(calculator_test calculator.c calculator_test.c)
 target_link_libraries(calculator_test ${CMOCKA_SHARED_LIBRARY})
@@ -68,11 +75,11 @@ set_tests_properties(
         "\\[  FAILED  \\] 2 test"
 )
 
-if (${CMAKE_C_COMPILER_ID} MATCHES "(GNU|Clang)")
-    add_subdirectory(chef_wrap)
-endif()
-
 add_executable(run_tests run_tests.c)
 target_link_libraries(run_tests ${CMOCKA_SHARED_LIBRARY})
 
 add_test(run_tests ${CMAKE_CURRENT_BINARY_DIR}/run_tests)
+
+if (${CMAKE_C_COMPILER_ID} MATCHES "(GNU|Clang)")
+    add_subdirectory(chef_wrap)
+endif()

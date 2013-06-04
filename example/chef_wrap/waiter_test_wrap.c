@@ -15,14 +15,15 @@
  * limitations under the License.
  */
 
+#include <errno.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+
 #include <stdarg.h>
 #include <stddef.h>
 #include <setjmp.h>
 #include <cmocka.h>
-#include <stdio.h>
-#include <errno.h>
-#include <stdbool.h>
-#include <string.h>
 
 #include "waiter_test_wrap.h"
 #include "chef.h"
