@@ -427,28 +427,108 @@ void expect_not_in_set_count(#function, #parameter, uintmax_t value_array[], siz
 #endif
 
 
-/*
- * Add an event to check a parameter, using check_expected(), against a
- * signed range.  Where range is minimum <= value <= maximum.
- * See will_return() for a description of the count parameter.
+#if DOXYGEN
+/**
+ * @brief Add an event to check a parameter is inside a numerical range.
+ * The check would succeed if minimum <= value <= maximum.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  minimum  The lower boundary of the interval to check against.
+ *
+ * @param[in]  maximum  The upper boundary of the interval to check against.
+ *
+ * @see check_expected().
  */
+void expect_in_range(#function, #parameter, uintmax_t minimum, uintmax_t maximum);
+#else
 #define expect_in_range(function, parameter, minimum, maximum) \
     expect_in_range_count(function, parameter, minimum, maximum, 1)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to repeatedly check a parameter is inside a
+ * numerical range. The check would succeed if minimum <= value <= maximum.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  minimum  The lower boundary of the interval to check against.
+ *
+ * @param[in]  maximum  The upper boundary of the interval to check against.
+ *
+ * @param[in]  count  The count parameter returns the number of times the value
+ *                    should be returned by check_expected(). If count is set
+ *                    to -1 the value will always be returned.
+ *
+ * @see check_expected().
+ */
+void expect_in_range_count(#function, #parameter, uintmax_t minimum, uintmax_t maximum, size_t count);
+#else
 #define expect_in_range_count(function, parameter, minimum, maximum, count) \
     _expect_in_range(#function, #parameter, __FILE__, __LINE__, minimum, \
                      maximum, count)
+#endif
 
-/*
- * Add an event to check a parameter, using check_expected(), against a
- * signed range.  Where range is value < minimum or value > maximum.
- * See will_return() for a description of the count parameter.
+#if DOXYGEN
+/**
+ * @brief Add an event to check a parameter is outside a numerical range.
+ * The check would succeed if minimum > value > maximum.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  minimum  The lower boundary of the interval to check against.
+ *
+ * @param[in]  maximum  The upper boundary of the interval to check against.
+ *
+ * @see check_expected().
  */
+void expect_not_in_range(#function, #parameter, uintmax_t minimum, uintmax_t maximum);
+#else
 #define expect_not_in_range(function, parameter, minimum, maximum) \
     expect_not_in_range_count(function, parameter, minimum, maximum, 1)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to repeatedly check a parameter is outside a
+ * numerical range. The check would succeed if minimum > value > maximum.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  minimum  The lower boundary of the interval to check against.
+ *
+ * @param[in]  maximum  The upper boundary of the interval to check against.
+ *
+ * @param[in]  count  The count parameter returns the number of times the value
+ *                    should be returned by check_expected(). If count is set
+ *                    to -1 the value will always be returned.
+ *
+ * @see check_expected().
+ */
+void expect_not_in_range_count(#function, #parameter, uintmax_t minimum, uintmax_t maximum, size_t count);
+#else
 #define expect_not_in_range_count(function, parameter, minimum, maximum, \
                                   count) \
     _expect_not_in_range(#function, #parameter, __FILE__, __LINE__, \
                          minimum, maximum, count)
+#endif
 
 /*
  * Add an event to check whether a parameter, using check_expected(), is or
