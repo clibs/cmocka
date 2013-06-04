@@ -530,20 +530,95 @@ void expect_not_in_range_count(#function, #parameter, uintmax_t minimum, uintmax
                          minimum, maximum, count)
 #endif
 
-/*
- * Add an event to check whether a parameter, using check_expected(), is or
- * isn't a value.  See will_return() for a description of the count parameter.
+#if DOXYGEN
+/**
+ * @brief Add an event to check if a parameter is the given value.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  minimum  The value to check.
+ *
+ * @see check_expected().
  */
+void expect_value(#function, #parameter, uintmax_t value)
+#else
 #define expect_value(function, parameter, value) \
     expect_value_count(function, parameter, value, 1)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to repeatedly check if a parameter is the given value.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  minimum  The value to check.
+ *
+ * @param[in]  count  The count parameter returns the number of times the value
+ *                    should be returned by check_expected(). If count is set
+ *                    to -1 the value will always be returned.
+ *
+ * @see check_expected().
+ */
+void expect_value_count(#function, #parameter, uintmax_t value, size_t count)
+#else
 #define expect_value_count(function, parameter, value, count) \
     _expect_value(#function, #parameter, __FILE__, __LINE__, \
                   cast_to_largest_integral_type(value), count)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to check if a parameter isn't the given value.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  minimum  The value to check.
+ *
+ * @see check_expected().
+ */
+void expect_not_value(#function, #parameter, uintmax_t value)
+#else
 #define expect_not_value(function, parameter, value) \
     expect_not_value_count(function, parameter, value, 1)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to repeatedly check if a parameter isn't the given value.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  minimum  The value to check.
+ *
+ * @param[in]  count  The count parameter returns the number of times the value
+ *                    should be returned by check_expected(). If count is set
+ *                    to -1 the value will always be returned.
+ *
+ * @see check_expected().
+ */
+void expect_not_value_count(#function, #parameter, uintmax_t value, size_t count)
+#else
 #define expect_not_value_count(function, parameter, value, count) \
     _expect_not_value(#function, #parameter, __FILE__, __LINE__, \
                       cast_to_largest_integral_type(value), count)
+#endif
 
 #if DOXYGEN
 /**
