@@ -307,21 +307,96 @@ void expect_check(#function, #parameter, #check_function, const void *check_data
                   cast_to_largest_integral_type(check_data), NULL, 0)
 #endif
 
-/*
- * Add an event to check a parameter, using check_expected(), against a set of
- * values. See will_return() for a description of the count parameter.
+#if DOXYGEN
+/**
+ * @brief Add an event to check if the parameter value is part of the provided
+ *        array.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  value_array[] The array to check for the value.
+ *
+ * @see check_expected().
  */
+void expect_in_set(#function, #parameter, uintmax_t value_array[]);
+#else
 #define expect_in_set(function, parameter, value_array) \
     expect_in_set_count(function, parameter, value_array, 1)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to check if the parameter value is part of the provided
+ *        array.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  value_array[] The array to check for the value.
+ *
+ * @param[in]  count  The size of the values array.
+ *
+ * @see check_expected().
+ */
+void expect_in_set_count(#function, #parameter, uintmax_t value_array[], size_t count);
+#else
 #define expect_in_set_count(function, parameter, value_array, count) \
     _expect_in_set(#function, #parameter, __FILE__, __LINE__, value_array, \
                    sizeof(value_array) / sizeof((value_array)[0]), count)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to check if the parameter value is not part of the
+ *        provided array.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  value_array[] The array to check for the value.
+ *
+ * @see check_expected().
+ */
+void expect_not_in_set(#function, #parameter, uintmax_t value_array[]);
+#else
 #define expect_not_in_set(function, parameter, value_array) \
     expect_not_in_set_count(function, parameter, value_array, 1)
+#endif
+
+#if DOXYGEN
+/**
+ * @brief Add an event to check if the parameter value is not part of the
+ *        provided array.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @param[in]  value_array[] The array to check for the value.
+ *
+ * @param[in]  count  The size of the values array.
+ *
+ * @see check_expected().
+ */
+void expect_not_in_set(#function, #parameter, uintmax_t value_array[], size_t count);
+#else
 #define expect_not_in_set_count(function, parameter, value_array, count) \
     _expect_not_in_set( \
         #function, #parameter, __FILE__, __LINE__, value_array, \
         sizeof(value_array) / sizeof((value_array)[0]), count)
+#endif
 
 
 /*
