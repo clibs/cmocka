@@ -587,6 +587,8 @@ void expect_not_string_count(#function, #parameter, const char *string, size_t c
  * This ensures the next value queued by one of the expect_*() macros matches
  * the specified variable.
  *
+ * This function needs to be called in the mock object.
+ *
  * @param[in]  #parameter  The parameter to check.
  */
 void check_expected(#parameter);
