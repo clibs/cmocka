@@ -61,21 +61,21 @@ int __wrap_chef_cook(const char *order, char **dish_out)
 
     check_expected(order);
 
-    knows_dish = (bool) mock();
+    knows_dish = mock_type(bool);
     if (knows_dish == false) {
         return -1;
     }
 
-    has_ingredients = (bool) mock();
+    has_ingredients = mock_type(bool);
     if (has_ingredients == false) {
         return -2;
     }
 
-    dish = (char *) mock();
+    dish = mock_ptr_type(char *);
     *dish_out = strdup(dish);
     if (*dish_out == NULL) return ENOMEM;
 
-    return mock();
+    return mock_type(int);
 }
 
 /* Waiter return codes:
