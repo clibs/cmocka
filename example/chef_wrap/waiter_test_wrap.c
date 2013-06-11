@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <stdarg.h>
@@ -96,6 +97,7 @@ static int waiter_process(const char *order, char **dish)
 
     /* Check if we received the dish we wanted from the kitchen */
     if (strcmp(order, *dish) != 0) {
+        free(*dish);
         *dish = NULL;
         return -2;
     }
@@ -128,6 +130,9 @@ static void test_order_hotdog(void **state)
     assert_int_equal(rv, 0);
     /* And actually receive one */
     assert_string_equal(dish, "hotdog");
+    if (dish != NULL) {
+        free(dish);
+    }
 }
 
 static void test_bad_dish(void **state)
