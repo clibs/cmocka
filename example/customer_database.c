@@ -42,8 +42,10 @@ unsigned int get_customer_id_by_name(
              "SELECT ID FROM CUSTOMERS WHERE NAME = %s", customer_name);
     number_of_results = connection->query_database(connection, query_string,
                                                    &results);
+
     if (number_of_results != 1) {
         return -1;
     }
-    return (unsigned int)(size_t) results[0];
+
+    return (unsigned int)*((int *)results);
 }

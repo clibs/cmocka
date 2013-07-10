@@ -30,8 +30,8 @@ static unsigned int mock_query_database(DatabaseConnection* const connection,
     (void) connection; /* unused */
     (void) query_string; /* unused */
 
-    *results = (void**)((size_t)mock());
-    return (unsigned int)mock();
+    *results = (void **)mock_ptr_type(int *);
+    return mock_ptr_type(int);
 }
 
 /* Mock of the connect to database function. */
@@ -68,12 +68,15 @@ static void test_get_customer_id_by_name(void **state) {
     };
     /* Return a single customer ID when mock_query_database() is called. */
     int customer_ids = 543;
+    int rc;
 
     (void) state; /* unused */
 
     will_return(mock_query_database, &customer_ids);
     will_return(mock_query_database, 1);
-    assert_int_equal(get_customer_id_by_name(&connection, "john doe"), 543);
+
+    rc = get_customer_id_by_name(&connection, "john doe");
+    assert_int_equal(rc, 543);
 }
 
 int main(void) {
