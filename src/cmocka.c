@@ -97,7 +97,7 @@ WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 typedef union ValuePointer {
     LargestIntegralType value;
     struct {
-#if defined(WORDS_BIGENDIAN) && (WORKS_SIZEOF_VOID_P == 4)
+#if defined(WORDS_BIGENDIAN) && (WORDS_SIZEOF_VOID_P == 4)
         unsigned int padding;
 #endif
         void *pointer;
