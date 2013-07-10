@@ -131,6 +131,8 @@
 
 /*************************** ENDIAN *****************************/
 
+#cmakedefine WORDS_SIZEOF_VOID_P ${WORDS_SIZEOF_VOID_P}
+
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */
 #cmakedefine WORDS_BIGENDIAN 1

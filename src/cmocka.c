@@ -78,7 +78,7 @@ WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 #define declare_initialize_value_pointer_pointer(name, ptr) \
     ValuePointer name ; \
     name.value = 0; \
-    name.pointer = (void*)(ptr)
+    name.x.pointer = (void*)(ptr)
 
 /*
  * Declare and initialize the value member of ValuePointer variable name
@@ -91,12 +91,17 @@ WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 /* Cast a LargestIntegralType to pointer_type via a ValuePointer. */
 #define cast_largest_integral_type_to_pointer( \
     pointer_type, largest_integral_type) \
-    ((pointer_type)((ValuePointer*)&(largest_integral_type))->pointer)
+    ((pointer_type)((ValuePointer*)&(largest_integral_type))->x.pointer)
 
 /* Used to cast LargetIntegralType to void* and vice versa. */
 typedef union ValuePointer {
     LargestIntegralType value;
-    void *pointer;
+    struct {
+#if defined(WORDS_BIGENDIAN) && (WORKS_SIZEOF_VOID_P == 4)
+        unsigned int padding;
+#endif
+        void *pointer;
+    } x;
 } ValuePointer;
 
 /* Doubly linked list node. */
