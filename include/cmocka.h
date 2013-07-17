@@ -1246,6 +1246,18 @@ void fail(void);
 
 #ifdef DOXYGEN
 /**
+ * @brief Forces the test to fail immediately and quit, printing the reason.
+ */
+void fail_msg(const char *msg, ...);
+#else
+#define fail_msg(msg, ...) do { \
+    print_error("ERROR: " msg "\n", ##__VA_ARGS__); \
+    fail(); \
+} while (0)
+#endif
+
+#ifdef DOXYGEN
+/**
  * @brief Generic method to run a single test.
  *
  * @param[in]  #function The function to test.
