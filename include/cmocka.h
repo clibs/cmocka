@@ -291,6 +291,28 @@ void will_return_count(#function, void *value, int count);
                  cast_to_largest_integral_type(value), count)
 #endif
 
+#ifdef DOXYGEN
+/**
+ * @brief Store a value that will be always returned by mock().
+ *
+ * @param[in]  #function  The function which should return the given value.
+ *
+ * @param[in]  value The value to be returned by mock().
+ *
+ * This is equivalent to:
+ * @code
+ * will_return_count(function, value, -1);
+ * @endcode
+ *
+ * @see will_return_count()
+ * @see mock()
+ */
+void will_return_always(#function, void *value);
+#else
+#define will_return_always(function, value) \
+    will_return_count(#function, (value), -1)
+#endif
+
 /** @} */
 
 /**
