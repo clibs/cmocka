@@ -3,7 +3,7 @@
 
 ### general settings
 set(CPACK_PACKAGE_NAME ${APPLICATION_NAME})
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The lightweight C unit testing library")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Unit testing framework for C with mock objects")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README")
 set(CPACK_PACKAGE_VENDOR "Andreas Schneider")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME})
@@ -29,7 +29,7 @@ if (WIN32)
     find_package(NSIS)
     if (NSIS_MAKE)
         set(CPACK_GENERATOR "${CPACK_GENERATOR};NSIS")
-        set(CPACK_NSIS_DISPLAY_NAME ${CPACK_PACKAGE_DESCRIPTION_SUMMARY})
+        set(CPACK_NSIS_DISPLAY_NAME "CMocka")
         set(CPACK_NSIS_COMPRESSOR "/SOLID zlib")
         set(CPACK_NSIS_MENU_LINKS "http://cmocka.org/" "cmocka homepage")
     endif (NSIS_MAKE)
