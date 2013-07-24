@@ -82,38 +82,33 @@ int __stdcall IsDebuggerPresent();
     ((LargestIntegralType)((size_t)(value)))
 
 /* Smallest integral type capable of holding a pointer. */
-#ifndef _UINTPTR_T
-#define _UINTPTR_T
-#ifdef _WIN32
-
-/* WIN32 is an ILP32 platform */
-typedef unsigned long uintptr_t;
-
-/* what about 64-bit windows?
- * what's the right preprocessor symbol?
-typedef unsigned long long uintptr_t */
-
-#else /* _WIN32 */
+#if !defined(_UINTPTR_T) && !defined(_UINTPTR_T_DEFINED)
+# if defined(_WIN32)
+    /* WIN32 is an ILP32 platform */
+    typedef unsigned int uintptr_t;
+# elif defined(_WIN64)
+    typedef unsigned long int uintptr_t
+# else /* _WIN32 */
 
 /* ILP32 and LP64 platforms */
-#ifdef __WORDSIZE /* glibc */
-# if __WORDSIZE == 64
-typedef unsigned long int uintptr_t;
-# else
-typedef unsigned int uintptr_t;
-# endif /* __WORDSIZE == 64 */
-#else /* __WORDSIZE */
+#  ifdef __WORDSIZE /* glibc */
+#   if __WORDSIZE == 64
+      typedef unsigned long int uintptr_t;
+#   else
+      typedef unsigned int uintptr_t;
+#   endif /* __WORDSIZE == 64 */
+#  else /* __WORDSIZE */
+#   if defined(_LP64) || defined(_I32LPx)
+      typedef unsigned long int uintptr_t;
+#   else
+      typedef unsigned int uintptr_t;
+#   endif
+#  endif /* __WORDSIZE */
+# endif /* _WIN32 */
 
-# if defined(_LP64) || defined(_I32LPx)
-typedef unsigned long int uintptr_t;
-# else
-typedef unsigned int uintptr_t;
-# endif
-
-#endif /* __WORDSIZE */
-
-#endif /* _WIN32 */
-#endif /* _UINTPTR_T */
+# define _UINTPTR_T
+# define _UINTPTR_T_DEFINED
+#endif /* !defined(_UINTPTR_T) || !defined(_UINTPTR_T_DEFINED) */
 
 /* Perform an unsigned cast to uintptr_t. */
 #define cast_to_pointer_integral_type(value) \
