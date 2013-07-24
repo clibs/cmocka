@@ -31,7 +31,7 @@ if (WIN32)
         set(CPACK_GENERATOR "${CPACK_GENERATOR};NSIS")
         set(CPACK_NSIS_DISPLAY_NAME ${CPACK_PACKAGE_DESCRIPTION_SUMMARY})
         set(CPACK_NSIS_COMPRESSOR "/SOLID zlib")
-        set(CPACK_NSIS_MENU_LINKS "https://code.google.com/p/cmocka/" "cmocka homepage")
+        set(CPACK_NSIS_MENU_LINKS "http://cmocka.org/" "cmocka homepage")
     endif (NSIS_MAKE)
 endif (WIN32)
 
