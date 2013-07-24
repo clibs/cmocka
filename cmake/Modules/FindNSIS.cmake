@@ -37,7 +37,7 @@ endif (WIN32)
 find_program(NSIS_MAKE
     NAMES
         makensis
-    PATH
+    PATHS
         ${NSIS_ROOT_PATH}
 )
 
