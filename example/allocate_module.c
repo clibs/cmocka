@@ -20,6 +20,7 @@
 #include <malloc.h>
 #endif
 #include <sys/types.h>
+#include <stdlib.h>
 
 #if UNIT_TESTING
 extern void* _test_malloc(const size_t size, const char* file, const int line);
