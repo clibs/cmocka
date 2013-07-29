@@ -1299,22 +1299,31 @@ int run_test(#function);
 /** Initializes a UnitTest structure. */
 #define unit_test(f) { #f, f, UNIT_TEST_FUNCTION_TYPE_TEST }
 
+#define _unit_test_setup(test, setup) \
+    { #test "_" #setup, setup, UNIT_TEST_FUNCTION_TYPE_SETUP }
+
 /** Initializes a UnitTest structure with a setup function. */
 #define unit_test_setup(test, setup) \
-    { #test "_" #setup, setup, UNIT_TEST_FUNCTION_TYPE_SETUP }
+    _unit_test_setup(test, setup), \
+    unit_test(test)
+
+#define _unit_test_teardown(test, teardown) \
+    { #test "_" #teardown, teardown, UNIT_TEST_FUNCTION_TYPE_TEARDOWN }
 
 /** Initializes a UnitTest structure with a teardown function. */
 #define unit_test_teardown(test, teardown) \
-    { #test "_" #teardown, teardown, UNIT_TEST_FUNCTION_TYPE_TEARDOWN }
+    _unit_test_setup(test, setup), \
+    unit_test(test), \
+    _unit_test_teardown(test, teardown)
 
 /**
  * Initialize an array of UnitTest structures with a setup function for a test
  * and a teardown function.  Either setup or teardown can be NULL.
  */
 #define unit_test_setup_teardown(test, setup, teardown) \
-    unit_test_setup(test, setup), \
+    _unit_test_setup(test, setup), \
     unit_test(test), \
-    unit_test_teardown(test, teardown)
+    _unit_test_teardown(test, teardown)
 
 #ifdef DOXYGEN
 /**
