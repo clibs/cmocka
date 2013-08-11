@@ -18,9 +18,6 @@ headers especially on a lot of different platforms.
 Currently CMocka is tested on Linux, FreeBSD, Solaris and Windows. See the
 <a href="http://mock.cryptomilk.org/index.php?project=cmocka">Testing Dashboard</a>.
 
-
-CMocka is a fork of Google's cmockery.
-
 @section main-features Features
 
 CMocka tests are compiled into stand-alone executables and linked with the
@@ -37,10 +34,8 @@ The CMocka library provides:
 
  - An easy to use framework to write unit tests.
  - Support for mock objects.
-
-@section main-mock Mock objects
-
-TODO Explain mock objects.
+ - Fixtures to implement a setup and teardown function.
+ - A set of assert macros.
 
 @section main-test A CMocka test
 
@@ -58,9 +53,9 @@ the test succeeded.
 #include <setjmp.h>
 #include <cmocka.h>
 
-/* A test case that does nothing and succeeds. */
+/* A test case that does nothing and succeeds. * /
 static void null_test_success(void **state) {
-    (void) state; /* unused */
+    (void) state; /* unused * /
 }
 
 int main(void) {
@@ -71,5 +66,23 @@ int main(void) {
     return run_tests(tests);
 }
 @endcode
+
+@section main-mock Mock objects
+
+You may already have heard the term "Mock Object". It describes a special case
+of an object that mimics a real instance of an interface in order to provide
+enough of that interface for testing. While there are several unit testing
+frameworks that already provide some easy to use interface for creating
+different kinds of "fake" objects for testing, there may be some confusion in
+terms of how these test objects are programmed and what the behavioral
+differences are between them.
+
+Mock objects include some logic and the test driver is able to modify the
+behaviour and state. The object can call some functions or act on different
+input (abort a test if it is wrong). The test driver injects what it expects
+the mock object to return. CMocka provides and API to easily mock code.
+
+Read the article <a href="https://lwn.net/Articles/558106/">Unit testing with mock objects in C</a>
+to learn more.
 
 */
