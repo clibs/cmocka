@@ -670,13 +670,13 @@ static int check_for_leftover_values(
             if (number_of_symbol_names == 1) {
                 const ListNode *child_node;
                 print_error(error_message, value->symbol_name);
-                print_error("  Remaining item(s) declared at...\n");
 
                 for (child_node = child_list->next; child_node != child_list;
                      child_node = child_node->next) {
                     const SourceLocation * const location =
 			    (const SourceLocation*)child_node->value;
-                    print_error("    " SOURCE_LOCATION_FORMAT "\n",
+                    print_error(SOURCE_LOCATION_FORMAT
+                                ": note: remaining item was declared here\n",
                                 location->file, location->line);
                 }
             } else {
@@ -706,11 +706,11 @@ LargestIntegralType _mock(const char * const function, const char* const file,
         }
         return value;
     } else {
-        print_error("ERROR: " SOURCE_LOCATION_FORMAT " - Could not get value "
+        print_error(SOURCE_LOCATION_FORMAT ": error: Could not get value "
                     "to mock function %s\n", file, line, function);
         if (source_location_is_set(&global_last_mock_value_location)) {
-            print_error("Previously returned mock value was declared at "
-                        SOURCE_LOCATION_FORMAT "\n",
+            print_error(SOURCE_LOCATION_FORMAT
+                        ": note: Previously returned mock value was declared here\n",
                         global_last_mock_value_location.file,
                         global_last_mock_value_location.line);
         } else {
@@ -1245,21 +1245,23 @@ void _check_expected(
             free(check);
         }
         if (!check_succeeded) {
-            print_error("ERROR: Check of parameter %s, function %s failed\n"
-                        "Expected parameter declared at "
-                        SOURCE_LOCATION_FORMAT "\n",
+            print_error(SOURCE_LOCATION_FORMAT
+                        ": error: Check of parameter %s, function %s failed\n"
+                        SOURCE_LOCATION_FORMAT
+                        ": note: Expected parameter declared here\n",
+                        file, line,
                         parameter_name, function_name,
                         global_last_parameter_location.file,
                         global_last_parameter_location.line);
             _fail(file, line);
         }
     } else {
-        print_error("ERROR: " SOURCE_LOCATION_FORMAT " - Could not get value "
+        print_error(SOURCE_LOCATION_FORMAT ": error: Could not get value "
                     "to check parameter %s of function %s\n", file, line,
                     parameter_name, function_name);
         if (source_location_is_set(&global_last_parameter_location)) {
-            print_error("Previously declared parameter value was declared at "
-                        SOURCE_LOCATION_FORMAT "\n",
+            print_error(SOURCE_LOCATION_FORMAT
+                        ": note: Previously declared parameter value was declared here\n",
                         global_last_parameter_location.file,
                         global_last_parameter_location.line);
         } else {
@@ -1464,12 +1466,13 @@ void _test_free(void* const ptr, const char* file, const int line) {
             for (j = 0; j < MALLOC_GUARD_SIZE; j++) {
                 const char diff = guard[j] - MALLOC_GUARD_PATTERN;
                 if (diff) {
-                    print_error(
-                        "Guard block of %p size=%lu allocated by "
-                        SOURCE_LOCATION_FORMAT " at %p is corrupt\n",
-                        ptr, (unsigned long)block_info->size,
-                        block_info->location.file, block_info->location.line,
-                        &guard[j]);
+                    print_error(SOURCE_LOCATION_FORMAT
+                                ": error: Guard block of %p size=%lu is corrupt\n"
+                                SOURCE_LOCATION_FORMAT ": note: allocated here at %p\n",
+                                file, line,
+                                ptr, (unsigned long)block_info->size,
+                                block_info->location.file, block_info->location.line,
+                                &guard[j]);
                     _fail(file, line);
                 }
             }
@@ -1507,9 +1510,10 @@ static int display_allocated_blocks(const ListNode * const check_point) {
         if (!allocated_blocks) {
             print_error("Blocks allocated...\n");
         }
-        print_error("  %p : " SOURCE_LOCATION_FORMAT "\n",
-                    block_info->block, block_info->location.file,
-                    block_info->location.line);
+        print_error(SOURCE_LOCATION_FORMAT ": note: block %p allocated here\n",
+                    block_info->location.file,
+                    block_info->location.line,
+                    block_info->block);
         allocated_blocks ++;
     }
     return allocated_blocks;
@@ -1547,7 +1551,7 @@ static void fail_if_blocks_allocated(const ListNode * const check_point,
 
 
 void _fail(const char * const file, const int line) {
-    print_error("ERROR: " SOURCE_LOCATION_FORMAT " Failure!\n", file, line);
+  print_error(SOURCE_LOCATION_FORMAT ": error: Failure!\n", file, line);
     exit_test(1);
 }
 
