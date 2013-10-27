@@ -305,7 +305,7 @@ void will_return_count(#function, void *value, int count);
 void will_return_always(#function, void *value);
 #else
 #define will_return_always(function, value) \
-    will_return_count(#function, (value), -1)
+    will_return_count(function, (value), -1)
 #endif
 
 /** @} */
