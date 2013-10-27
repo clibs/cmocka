@@ -1312,7 +1312,6 @@ int run_test(#function);
 
 /** Initializes a UnitTest structure with a teardown function. */
 #define unit_test_teardown(test, teardown) \
-    _unit_test_setup(test, setup), \
     unit_test(test), \
     _unit_test_teardown(test, teardown)
 
