@@ -1,3 +1,10 @@
+Wed Nov 06 2013 Andreas Schneider <asn@cryptomilk.org>
+    * cmocka: version 0.3.2
+    * Fixed FindNSIS detection.
+    * Fixed unit_test_setup() and unit_test_teardown().
+    * Fixed GTest and GCC message style conformance
+    * Fixed stringification in will_return_always().
+
 Wed Jul 10 15:24 2013 Andreas Schneider <asn@cryptomilk.org>
     * cmocka: version 0.3.1
     * Fixed pointer conversion on s390 and ppc (32bit big endian).
