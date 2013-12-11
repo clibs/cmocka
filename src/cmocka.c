@@ -1559,9 +1559,9 @@ void _fail(const char * const file, const int line) {
 #ifndef _WIN32
 static void exception_handler(int sig) {
 #ifdef HAVE_STRSIGNAL
-    print_error("%s\n", strsignal(sig));
+    print_error("Test failed with exception: %s\n", strsignal(sig));
 #else
-    print_error("%d\n", sig);
+    print_error("Test failed with exception: %d\n", sig);
 #endif
     exit_test(1);
 }
