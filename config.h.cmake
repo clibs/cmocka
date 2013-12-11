@@ -112,6 +112,9 @@
 /* Define to 1 if you have the `vsnprintf' function. */
 #cmakedefine HAVE_VSNPRINTF 1
 
+/* Define to 1 if you have the `strsignal' function. */
+#cmakedefine HAVE_STRSIGNAL 0
+
 /**************************** OPTIONS ****************************/
 
 /* define if the compiler implements namespaces */
