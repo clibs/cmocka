@@ -15,12 +15,19 @@ set_source_files_properties(
     PROPERTIES
         COMPILE_FLAGS -DUNIT_TESTING=1)
 
+### The most simple test
+add_executable(simple_test simple_test.c)
+target_link_libraries(simple_test ${CMOCKA_SHARED_LIBRARY})
+
+add_test(simple_test ${CMAKE_CURRENT_BINARY_DIR}/simple_test)
+
+### Test different fixture setups
 add_executable(fixture_test fixture_test.c)
 target_link_libraries(fixture_test ${CMOCKA_SHARED_LIBRARY})
 
 add_test(fixture_test ${CMAKE_CURRENT_BINARY_DIR}/fixture_test)
 
-# segfault test
+### Test the exception handler with a segfault
 add_executable(segfault_test segfault_test.c)
 target_link_libraries(segfault_test ${CMOCKA_SHARED_LIBRARY})
 
