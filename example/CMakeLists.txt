@@ -29,7 +29,7 @@ set_tests_properties(
     segfault_test
         PROPERTIES
         PASS_REGULAR_EXPRESSION
-        "Test failed with exception: (Segmentation fault|11)"
+        "Test failed with exception: (Segmentation fault|Segmentation Fault|11)"
 )
 
 add_executable(calculator_test calculator.c calculator_test.c)
