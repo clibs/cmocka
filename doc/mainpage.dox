@@ -2,25 +2,18 @@
 
 @mainpage
 
-This is the online reference for developing with the CMocka library. It
-documents the CMocka C API.
+This is the online reference for developing with the cmocka library. It
+documents the cmocka C API.
 
-@section main-motivation Motivation
+cmocka is an elegant unit testing framework for C with support for mock
+objects. It only requires the standard C library, works on a lot of platforms
+(including embedded) and with different compilers.
 
-There are a variety of C unit testing frameworks available supporting different
-platforms and compilers. Some development requires a lot of different compilers
-and older versions which makes it difficult to use unit testing frameworks.
-
-The idea of CMocka is that a test application only requires the standard C
-library and CMocka itself to minimize the conflicts with standard C library
-headers especially on a lot of different platforms.
-
-Currently CMocka is tested on Linux, FreeBSD, Solaris and Windows. See the
-<a href="http://mock.cryptomilk.org/index.php?project=cmocka">Testing Dashboard</a>.
+http://cmocka.org/
 
 @section main-features Features
 
-CMocka tests are compiled into stand-alone executables and linked with the
+Tests written with cmocka are compiled into stand-alone executables and linked with the
 CMock library, the standard C library and module being tested. Any symbols
 external to the module being tested should be mocked - replaced with functions
 that return values determined by the test - within the test application. Even
@@ -32,16 +25,21 @@ execution environment.
 
 The CMocka library provides:
 
- - An easy to use framework to write unit tests.
  - Support for mock objects.
- - Fixtures to implement a setup and teardown function.
+ - Test fixtures.
+ - Only requires a C library
+ - Exception handling for signals (SIGSEGV, SIGILL, ...)
+ - No use of fork()
+ - Very well tested
+ - Testing of memory leaks, buffer overflows and underflows.
  - A set of assert macros.
+ - License: Apache License 2.0
 
-@section main-test A CMocka test
+@section main-test A cmocka test
 
-CMocka unit test cases are functions with the signature void function(void **state).
-CMocka test applications initialize a table with test case function pointers
-using unit_test() macros. This table is then passed to the run_tests() macro to
+Test cases are functions with the signature void function(void **state).  Test
+applications initialize a table with test case function pointers using
+unit_test() macros. This table is then passed to the run_tests() macro to
 execute the tests. run_tests() sets up the appropriate exception / signal
 handlers and other data structures prior to running each test function. When a
 unit test is complete run_tests() performs various checks to determine whether
@@ -53,9 +51,9 @@ the test succeeded.
 #include <setjmp.h>
 #include <cmocka.h>
 
-/* A test case that does nothing and succeeds. * /
+/* A test case that does nothing and succeeds. */
 static void null_test_success(void **state) {
-    (void) state; /* unused * /
+    (void) state; /* unused */
 }
 
 int main(void) {
@@ -82,7 +80,6 @@ behaviour and state. The object can call some functions or act on different
 input (abort a test if it is wrong). The test driver injects what it expects
 the mock object to return. CMocka provides and API to easily mock code.
 
-Read the article <a href="https://lwn.net/Articles/558106/">Unit testing with mock objects in C</a>
-to learn more.
+<a href="https://lwn.net/Articles/558106/">Learn more ...</a>
 
 */
