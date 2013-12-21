@@ -8,12 +8,10 @@ include_directories(
 
 set_source_files_properties(
     calculator.c
-    calculator_test.c
     allocate_module.c
-    allocate_module_test.c
-    run_tests.c
+    assert_module.c
     PROPERTIES
-        COMPILE_FLAGS -DUNIT_TESTING=1)
+        COMPILE_DEFINITIONS UNIT_TESTING=1)
 
 ### The most simple test
 add_executable(simple_test simple_test.c)
@@ -70,7 +68,7 @@ set_tests_properties(
 add_executable(assert_module_test assert_module.c assert_module_test.c)
 target_link_libraries(assert_module_test ${CMOCKA_SHARED_LIBRARY})
 
-add_test(assert_module_test ${CMAKE_CURRENT_BINARY_DIR}/assert_macro_test)
+add_test(assert_module_test ${CMAKE_CURRENT_BINARY_DIR}/assert_module_test)
 set_tests_properties(
     assert_module_test
         PROPERTIES
