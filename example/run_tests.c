@@ -13,6 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/* Use the unit test allocators */
+#define UNIT_TESTING 1
+
 #include <stdarg.h>
 #include <stddef.h>
 #include <setjmp.h>
