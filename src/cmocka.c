@@ -1297,6 +1297,47 @@ void _assert_true(const LargestIntegralType result,
     }
 }
 
+void _assert_return_code(const LargestIntegralType result,
+                         size_t rlen,
+                         const LargestIntegralType error,
+                         const char * const expression,
+                         const char * const file,
+                         const int line)
+{
+    LargestIntegralType valmax;
+
+
+    switch (rlen) {
+    case 1:
+        valmax = 255;
+        break;
+    case 2:
+        valmax = 32767;
+        break;
+    case 4:
+        valmax = 2147483647;
+        break;
+    case 8:
+    default:
+        if (rlen > sizeof(valmax)) {
+            valmax = 2147483647;
+        } else {
+            valmax = 9223372036854775807L;
+        }
+        break;
+    }
+
+    if (result > valmax - 1) {
+        if (error > 0) {
+            print_error("%s < 0, errno(%llu): %s\n",
+                        expression, error, strerror(error));
+        } else {
+            print_error("%s < 0\n", expression);
+        }
+        _fail(file, line);
+    }
+}
+
 void _assert_int_equal(
         const LargestIntegralType a, const LargestIntegralType b,
         const char * const file, const int line) {

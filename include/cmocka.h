@@ -988,6 +988,26 @@ void assert_false(scalar expression);
 
 #ifdef DOXYGEN
 /**
+ * @brief Assert if the return_code is smaller than 0.
+ *
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if the return code is smaller than 0.
+ *
+ * @param[in]  rc       The return code to evaluate.
+ *
+ * @param[in]  errno    Pass errno here or 0.
+ */
+void assert_return_code(int rc, int error);
+#else
+#define assert_return_code(rc, error) \
+    _assert_return_code(cast_to_largest_integral_type(rc), \
+                        sizeof(rc), \
+                        cast_to_largest_integral_type(error), \
+                        #rc, __FILE__, __LINE__)
+#endif
+
+#ifdef DOXYGEN
+/**
  * @brief Assert that the given pointer is non-NULL.
  *
  * The function prints an error message to standard error and terminates the
@@ -1684,6 +1704,12 @@ void _will_return(const char * const function_name, const char * const file,
 void _assert_true(const LargestIntegralType result,
                   const char* const expression,
                   const char * const file, const int line);
+void _assert_return_code(const LargestIntegralType result,
+                         size_t rlen,
+                         const LargestIntegralType error,
+                         const char * const expression,
+                         const char * const file,
+                         const int line);
 void _assert_int_equal(
     const LargestIntegralType a, const LargestIntegralType b,
     const char * const file, const int line);
