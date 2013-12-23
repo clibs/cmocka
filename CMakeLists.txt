@@ -35,10 +35,6 @@ include(DefineInstallationPaths)
 include(DefineOptions.cmake)
 include(CPackConfig.cmake)
 
-if (UNIT_TESTING)
-    include(AddCMockaTest)
-endif (UNIT_TESTING)
-
 # disallow in-source build
 include(MacroEnsureOutOfSourceBuild)
 macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source build. Please create a separate build directory and run 'cmake /path/to/${PROJECT_NAME} [options]' there.")
@@ -51,8 +47,11 @@ configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 add_subdirectory(doc)
 add_subdirectory(include)
 add_subdirectory(src)
+add_subdirectory(example)
+
 if (UNIT_TESTING)
-    add_subdirectory(example)
+    include(AddCMockaTest)
+    add_subdirectory(tests)
 endif (UNIT_TESTING)
 
 # pkg-config file
