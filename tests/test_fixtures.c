@@ -1,9 +1,9 @@
-#define UNIT_TESTING 1
-
 #include <stdarg.h>
 #include <stddef.h>
 #include <setjmp.h>
 #include <cmocka.h>
+
+#include <stdlib.h>
 
 static void setup_only(void **state)
 {
