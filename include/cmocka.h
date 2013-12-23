@@ -991,11 +991,13 @@ void assert_false(scalar expression);
  * @brief Assert if the return_code is smaller than 0.
  *
  * The function prints an error message to standard error and terminates the
- * test by calling fail() if the return code is smaller than 0.
+ * test by calling fail() if the return code is smaller than 0. If the function
+ * you check sets an errno if it fails you can pass it to the function and
+ * it will be printed as part of the error message.
  *
  * @param[in]  rc       The return code to evaluate.
  *
- * @param[in]  errno    Pass errno here or 0.
+ * @param[in]  error    Pass errno here or 0.
  */
 void assert_return_code(int rc, int error);
 #else
