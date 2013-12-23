@@ -1900,3 +1900,147 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
     fail_if_blocks_allocated(check_point, "run_tests");
     return (int)total_failed;
 }
+
+int _run_group_tests(const UnitTest * const tests, const size_t number_of_tests)
+{
+    UnitTestFunction setup = NULL;
+    const char *setup_name;
+    size_t num_setups = 0;
+    UnitTestFunction teardown = NULL;
+    const char *teardown_name;
+    size_t num_teardowns = 0;
+    size_t current_test = 0;
+    size_t i;
+
+    /* Number of tests executed. */
+    size_t tests_executed = 0;
+    /* Number of failed tests. */
+    size_t total_failed = 0;
+    /* Check point of the heap state. */
+    const ListNode * const check_point = check_point_allocated_blocks();
+    const char** failed_names = (const char**)malloc(number_of_tests *
+                                       sizeof(*failed_names));
+    void **current_state = NULL;
+    TestState group_state;
+
+    /* Find setup and teardown function */
+    for (i = 0; i < number_of_tests; i++) {
+        const UnitTest * const test = &tests[i];
+
+        if (test->function_type == UNIT_TEST_FUNCTION_TYPE_GROUP_SETUP) {
+            if (setup == NULL) {
+                setup = test->function;
+                setup_name = test->name;
+                num_setups = 1;
+            } else {
+                print_error("[  ERROR   ] More than one group setup function detected\n");
+                exit_test(1);
+            }
+        }
+
+        if (test->function_type == UNIT_TEST_FUNCTION_TYPE_GROUP_TEARDOWN) {
+            if (teardown == NULL) {
+                teardown = test->function;
+                teardown_name = test->name;
+                num_teardowns = 1;
+            } else {
+                print_error("[  ERROR   ] More than one group teardown function detected\n");
+                exit_test(1);
+            }
+        }
+    }
+
+    print_message("[==========] Running %"PRIdS " test(s).\n",
+                  number_of_tests - num_setups - num_teardowns);
+
+    if (setup != NULL) {
+        int failed;
+
+        group_state.check_point = check_point_allocated_blocks();
+        current_state = &group_state.state;
+        *current_state = NULL;
+        failed = _run_test(setup_name,
+                           setup,
+                           current_state,
+                           UNIT_TEST_FUNCTION_TYPE_SETUP,
+                           group_state.check_point);
+        if (failed) {
+            failed_names[total_failed] = setup_name;
+        }
+
+        total_failed += failed;
+        tests_executed++;
+    }
+
+    while (current_test < number_of_tests) {
+        int run_test = 0;
+        const UnitTest * const test = &tests[current_test++];
+        if (test->function == NULL) {
+            continue;
+        }
+
+        switch (test->function_type) {
+        case UNIT_TEST_FUNCTION_TYPE_TEST:
+            run_test = 1;
+            break;
+        case UNIT_TEST_FUNCTION_TYPE_SETUP:
+        case UNIT_TEST_FUNCTION_TYPE_TEARDOWN:
+        case UNIT_TEST_FUNCTION_TYPE_GROUP_SETUP:
+        case UNIT_TEST_FUNCTION_TYPE_GROUP_TEARDOWN:
+            break;
+        default:
+            print_error("Invalid unit test function type %d\n",
+                        test->function_type);
+            break;
+        }
+
+        if (run_test) {
+            int failed;
+
+            failed = _run_test(test->name,
+                               test->function,
+                               current_state,
+                               test->function_type,
+                               NULL);
+            if (failed) {
+                failed_names[total_failed] = test->name;
+            }
+
+            total_failed += failed;
+            tests_executed++;
+        }
+    }
+
+    if (teardown != NULL) {
+        int failed;
+
+        failed = _run_test(teardown_name,
+                           teardown,
+                           current_state,
+                           UNIT_TEST_FUNCTION_TYPE_GROUP_TEARDOWN,
+                           group_state.check_point);
+        if (failed) {
+            failed_names[total_failed] = teardown_name;
+        }
+
+        total_failed += failed;
+        tests_executed++;
+    }
+
+    print_message("[==========] %"PRIdS " test(s) run.\n", tests_executed);
+    print_error("[  PASSED  ] %"PRIdS " test(s).\n", tests_executed - total_failed);
+
+    if (total_failed) {
+        print_error("[  FAILED  ] %"PRIdS " test(s), listed below:\n", total_failed);
+        for (i = 0; i < total_failed; i++) {
+            print_error("[  FAILED  ] %s\n", failed_names[i]);
+        }
+    } else {
+        print_error("\n %"PRIdS " FAILED TEST(S)\n", total_failed);
+    }
+
+    free((void*)failed_names);
+    fail_if_blocks_allocated(check_point, "run_group_tests");
+
+    return (int)total_failed;
+}

@@ -1344,6 +1344,12 @@ static inline void _unit_test_dummy(void **state) {
     unit_test(test), \
     _unit_test_teardown(test, teardown)
 
+#define group_test_setup(setup) \
+    { "group_" #setup, setup, UNIT_TEST_FUNCTION_TYPE_GROUP_SETUP }
+
+#define group_test_teardown(teardown) \
+    { "group_" #teardown, teardown, UNIT_TEST_FUNCTION_TYPE_GROUP_TEARDOWN }
+
 /**
  * Initialize an array of UnitTest structures with a setup function for a test
  * and a teardown function.  Either setup or teardown can be NULL.
@@ -1403,6 +1409,8 @@ int run_tests(const UnitTest tests[]);
 #else
 #define run_tests(tests) _run_tests(tests, sizeof(tests) / sizeof(tests)[0])
 #endif
+
+#define run_group_tests(tests) _run_group_tests(tests, sizeof(tests) / sizeof(tests)[0])
 
 /** @} */
 
@@ -1608,6 +1616,8 @@ typedef enum UnitTestFunctionType {
     UNIT_TEST_FUNCTION_TYPE_TEST = 0,
     UNIT_TEST_FUNCTION_TYPE_SETUP,
     UNIT_TEST_FUNCTION_TYPE_TEARDOWN,
+    UNIT_TEST_FUNCTION_TYPE_GROUP_SETUP,
+    UNIT_TEST_FUNCTION_TYPE_GROUP_TEARDOWN,
 } UnitTestFunctionType;
 
 /*
@@ -1621,6 +1631,12 @@ typedef struct UnitTest {
     UnitTestFunctionType function_type;
 } UnitTest;
 
+typedef struct GroupTest {
+    UnitTestFunction setup;
+    UnitTestFunction teardown;
+    const UnitTest *tests;
+    const size_t number_of_tests;
+} GroupTest;
 
 /* Location within some source code. */
 typedef struct SourceLocation {
@@ -1759,6 +1775,8 @@ int _run_test(
     void ** const volatile state, const UnitTestFunctionType function_type,
     const void* const heap_check_point);
 int _run_tests(const UnitTest * const tests, const size_t number_of_tests);
+int _run_group_tests(const UnitTest * const tests,
+                     const size_t number_of_tests);
 
 /* Standard output and error print methods. */
 void print_message(const char* const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
