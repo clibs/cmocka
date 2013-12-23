@@ -8,7 +8,8 @@ include_directories(
 
 set(CMOCKA_TESTS
     test_assert_macros
-    test_assert_macros_fail)
+    test_assert_macros_fail
+    test_exception_handler)
 
 foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
     add_cmocka_test(${_CMOCKA_TEST} ${_CMOCKA_TEST}.c ${CMOCKA_SHARED_LIBRARY})
@@ -22,4 +23,12 @@ set_tests_properties(
         PROPERTIES
         PASS_REGULAR_EXPRESSION
         "\\[  FAILED  \\] 1 test"
+)
+
+# test_exception_handler
+set_tests_properties(
+    test_exception_handler
+        PROPERTIES
+        PASS_REGULAR_EXPRESSION
+        "Test failed with exception: (Segmentation fault|Segmentation Fault|11)"
 )

@@ -25,18 +25,6 @@ target_link_libraries(fixture_test ${CMOCKA_SHARED_LIBRARY})
 
 add_test(fixture_test ${CMAKE_CURRENT_BINARY_DIR}/fixture_test)
 
-### Test the exception handler with a segfault
-add_executable(segfault_test segfault_test.c)
-target_link_libraries(segfault_test ${CMOCKA_SHARED_LIBRARY})
-
-add_test(segfault_test ${CMAKE_CURRENT_BINARY_DIR}/segfault_test)
-set_tests_properties(
-    segfault_test
-        PROPERTIES
-        PASS_REGULAR_EXPRESSION
-        "Test failed with exception: (Segmentation fault|Segmentation Fault|11)"
-)
-
 add_executable(calculator_test calculator.c calculator_test.c)
 target_link_libraries(calculator_test ${CMOCKA_SHARED_LIBRARY})
 
