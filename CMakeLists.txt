@@ -47,12 +47,13 @@ configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 add_subdirectory(doc)
 add_subdirectory(include)
 add_subdirectory(src)
-add_subdirectory(example)
 
 if (UNIT_TESTING)
     include(AddCMockaTest)
     add_subdirectory(tests)
 endif (UNIT_TESTING)
+
+add_subdirectory(example)
 
 # pkg-config file
 configure_file(cmocka.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/cmocka.pc)
