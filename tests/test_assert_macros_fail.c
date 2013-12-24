@@ -14,12 +14,16 @@
  **************************************/
 static void test_assert_return_code_fail(void **state)
 {
-    int rc;
+    int fd;
 
     (void)state; /* unused */
 
-    rc = open("this_file_doesnt_exist.cmocka", 0);
-    assert_return_code(rc, errno);
+    fd = open("this_file_doesnt_exist.cmocka", 0);
+    assert_return_code(fd, errno);
+
+    if (fd >= 0) {
+        close(fd);
+    }
 }
 
 int main(void) {
