@@ -65,3 +65,16 @@ install(
   COMPONENT
     pkgconfig
 )
+
+# cmake config files
+configure_file(cmocka-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/cmocka-config.cmake @ONLY)
+configure_file(cmocka-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/cmocka-config-version.cmake @ONLY)
+install(
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/cmocka-config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/cmocka-config-version.cmake
+    DESTINATION
+        ${CMAKE_INSTALL_DIR}
+    COMPONENT
+        devel
+)

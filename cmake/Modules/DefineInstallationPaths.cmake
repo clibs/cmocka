@@ -1,4 +1,4 @@
-if (UNIX)
+if (UNIX OR OS2)
   IF (NOT APPLICATION_NAME)
     MESSAGE(STATUS "${PROJECT_NAME} is used as APPLICATION_NAME")
     SET(APPLICATION_NAME ${PROJECT_NAME})
@@ -47,6 +47,10 @@ if (UNIX)
     CACHE PATH "The subdirectory to the header prefix (default prefix/include)"
   )
 
+  set(CMAKE_INSTALL_DIR
+    "${LIB_INSTALL_DIR}/cmake"
+    CACHE PATH "The subdirectory to install cmake config files")
+
   SET(DATA_INSTALL_DIR
     "${DATA_INSTALL_PREFIX}"
     CACHE PATH "The parent directory where applications can install their data (default prefix/share/${APPLICATION_NAME})"
@@ -91,13 +95,15 @@ if (UNIX)
     CACHE PATH "The ${APPLICATION_NAME} info install dir (default prefix/info)"
   )
 else()
+  # Same same
   set(BIN_INSTALL_DIR "bin" CACHE PATH "-")
-  set(SBIN_INSTALL_DIR "." CACHE PATH "-")
+  set(SBIN_INSTALL_DIR "sbin" CACHE PATH "-")
   set(LIB_INSTALL_DIR "lib${LIB_SUFFIX}" CACHE PATH "-")
   set(INCLUDE_INSTALL_DIR "include" CACHE PATH "-")
+  set(CMAKE_INSTALL_DIR "CMake" CACHE PATH "-")
   set(PLUGIN_INSTALL_DIR "plugins" CACHE PATH "-")
   set(HTML_INSTALL_DIR "doc/HTML" CACHE PATH "-")
-  set(ICON_INSTALL_DIR "." CACHE PATH "-")
-  set(SOUND_INSTALL_DIR "." CACHE PATH "-")
+  set(ICON_INSTALL_DIR "icons" CACHE PATH "-")
+  set(SOUND_INSTALL_DIR "soudns" CACHE PATH "-")
   set(LOCALE_INSTALL_DIR "lang" CACHE PATH "-")
 endif ()
