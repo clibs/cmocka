@@ -389,7 +389,7 @@ void expect_check(#function, #parameter, #check_function, const void *check_data
 #else
 #define expect_check(function, parameter, check_function, check_data) \
     _expect_check(#function, #parameter, __FILE__, __LINE__, check_function, \
-                  cast_to_largest_integral_type(check_data), NULL, 0)
+                  cast_to_largest_integral_type(check_data), NULL, 1)
 #endif
 
 #ifdef DOXYGEN
