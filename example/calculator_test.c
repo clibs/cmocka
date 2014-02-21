@@ -54,8 +54,8 @@ extern int perform_operation(
         int ** const intermediate_values, int * const error_occurred);
 extern int example_main(int argc, char *argv[]);
 
-int example_test_fprintf(FILE* const file, const char *format, ...) PRINTF_ATTRIBUTE(2, 3);
-int example_test_printf(const char *format, ...) PRINTF_ATTRIBUTE(1, 2);
+int example_test_fprintf(FILE* const file, const char *format, ...) CMOCKA_PRINTF_ATTRIBUTE(2, 3);
+int example_test_printf(const char *format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
 
 static char temporary_buffer[256];
 

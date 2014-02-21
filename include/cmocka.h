@@ -47,9 +47,10 @@ int __stdcall IsDebuggerPresent();
 
 /* GCC have printf type attribute check.  */
 #ifdef __GNUC__
-#define PRINTF_ATTRIBUTE(a,b) __attribute__ ((__format__ (__printf__, a, b)))
+#define CMOCKA_PRINTF_ATTRIBUTE(a,b) \
+    __attribute__ ((__format__ (__printf__, a, b)))
 #else
-#define PRINTF_ATTRIBUTE(a,b)
+#define CMOCKA_PRINTF_ATTRIBUTE(a,b)
 #endif /* __GNUC__ */
 
 /**
@@ -1754,10 +1755,10 @@ int _run_test(
 int _run_tests(const UnitTest * const tests, const size_t number_of_tests);
 
 /* Standard output and error print methods. */
-void print_message(const char* const format, ...) PRINTF_ATTRIBUTE(1, 2);
-void print_error(const char* const format, ...) PRINTF_ATTRIBUTE(1, 2);
-void vprint_message(const char* const format, va_list args) PRINTF_ATTRIBUTE(1, 0);
-void vprint_error(const char* const format, va_list args) PRINTF_ATTRIBUTE(1, 0);
+void print_message(const char* const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
+void print_error(const char* const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
+void vprint_message(const char* const format, va_list args) CMOCKA_PRINTF_ATTRIBUTE(1, 0);
+void vprint_error(const char* const format, va_list args) CMOCKA_PRINTF_ATTRIBUTE(1, 0);
 
 /** @} */
 
