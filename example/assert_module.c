@@ -18,7 +18,7 @@
 #include "assert_module.h"
 
 /* If unit testing is enabled override assert with mock_assert(). */
-#if UNIT_TESTING
+#ifdef UNIT_TESTING
 extern void mock_assert(const int result, const char* const expression,
                         const char * const file, const int line);
 #undef assert

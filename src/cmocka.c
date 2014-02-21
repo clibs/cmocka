@@ -1697,7 +1697,7 @@ int _run_test(
 #ifdef _WIN32
     handle_exceptions = !IsDebuggerPresent();
 #endif /* _WIN32 */
-#if UNIT_TESTING_DEBUG
+#ifdef UNIT_TESTING_DEBUG
     handle_exceptions = 0;
 #endif /* UNIT_TESTING_DEBUG */
 

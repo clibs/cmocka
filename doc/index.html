@@ -137,7 +137,7 @@ calls to <b>mock_assert()</b> occur during the function called via
 #include &lt;assert.h&gt;
 
 // If unit testing is enabled override assert with mock_assert().
-#if UNIT_TESTING
+#ifdef UNIT_TESTING
 extern void mock_assert(const int result, const char* const expression, 
                         const char * const file, const int line);
 #undef assert
@@ -285,7 +285,7 @@ the test application to exit prematurely.</p>
 <listing>
 #include &lt;malloc.h&gt;
 
-#if UNIT_TESTING
+#ifdef UNIT_TESTING
 extern void* _test_malloc(const size_t size, const char* file, const int line);
 extern void* _test_calloc(const size_t number_of_elements, const size_t size, 
                           const char* file, const int line);

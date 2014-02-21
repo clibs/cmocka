@@ -384,7 +384,7 @@ void expect_check(#function, #parameter, #check_function, const void *check_data
                   cast_to_largest_integral_type(check_data), NULL, 0)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check if the parameter value is part of the provided
  *        array.
@@ -405,7 +405,7 @@ void expect_in_set(#function, #parameter, uintmax_t value_array[]);
     expect_in_set_count(function, parameter, value_array, 1)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check if the parameter value is part of the provided
  *        array.
@@ -431,7 +431,7 @@ void expect_in_set_count(#function, #parameter, uintmax_t value_array[], size_t 
                    sizeof(value_array) / sizeof((value_array)[0]), count)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check if the parameter value is not part of the
  *        provided array.
@@ -452,7 +452,7 @@ void expect_not_in_set(#function, #parameter, uintmax_t value_array[]);
     expect_not_in_set_count(function, parameter, value_array, 1)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check if the parameter value is not part of the
  *        provided array.
@@ -480,7 +480,7 @@ void expect_not_in_set_count(#function, #parameter, uintmax_t value_array[], siz
 #endif
 
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check a parameter is inside a numerical range.
  * The check would succeed if minimum <= value <= maximum.
@@ -503,7 +503,7 @@ void expect_in_range(#function, #parameter, uintmax_t minimum, uintmax_t maximum
     expect_in_range_count(function, parameter, minimum, maximum, 1)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to repeatedly check a parameter is inside a
  * numerical range. The check would succeed if minimum <= value <= maximum.
@@ -531,7 +531,7 @@ void expect_in_range_count(#function, #parameter, uintmax_t minimum, uintmax_t m
                      maximum, count)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check a parameter is outside a numerical range.
  * The check would succeed if minimum > value > maximum.
@@ -554,7 +554,7 @@ void expect_not_in_range(#function, #parameter, uintmax_t minimum, uintmax_t max
     expect_not_in_range_count(function, parameter, minimum, maximum, 1)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to repeatedly check a parameter is outside a
  * numerical range. The check would succeed if minimum > value > maximum.
@@ -583,7 +583,7 @@ void expect_not_in_range_count(#function, #parameter, uintmax_t minimum, uintmax
                          minimum, maximum, count)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check if a parameter is the given value.
  *
@@ -603,7 +603,7 @@ void expect_value(#function, #parameter, uintmax_t value);
     expect_value_count(function, parameter, value, 1)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to repeatedly check if a parameter is the given value.
  *
@@ -628,7 +628,7 @@ void expect_value_count(#function, #parameter, uintmax_t value, size_t count);
                   cast_to_largest_integral_type(value), count)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check if a parameter isn't the given value.
  *
@@ -648,7 +648,7 @@ void expect_not_value(#function, #parameter, uintmax_t value);
     expect_not_value_count(function, parameter, value, 1)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to repeatedly check if a parameter isn't the given value.
  *
@@ -673,7 +673,7 @@ void expect_not_value_count(#function, #parameter, uintmax_t value, size_t count
                       cast_to_largest_integral_type(value), count)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check if the parameter value is equal to the
  *        provided string.
@@ -694,7 +694,7 @@ void expect_string(#function, #parameter, const char *string);
     expect_string_count(function, parameter, string, 1)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check if the parameter value is equal to the
  *        provided string.
@@ -720,7 +720,7 @@ void expect_string_count(#function, #parameter, const char *string, size_t count
                    (const char*)(string), count)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check if the parameter value isn't equal to the
  *        provided string.
@@ -741,7 +741,7 @@ void expect_not_string(#function, #parameter, const char *string);
     expect_not_string_count(function, parameter, string, 1)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check if the parameter value isn't equal to the
  *        provided string.
@@ -767,7 +767,7 @@ void expect_not_string_count(#function, #parameter, const char *string, size_t c
                        (const char*)(string), count)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check if the parameter does match an area of memory.
  *
@@ -789,7 +789,7 @@ void expect_memory(#function, #parameter, void *memory, size_t size);
     expect_memory_count(function, parameter, memory, size, 1)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to repeatedly check if the parameter does match an area
  *        of memory.
@@ -817,7 +817,7 @@ void expect_memory_count(#function, #parameter, void *memory, size_t size, size_
                    (const void*)(memory), size, count)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check if the parameter doesn't match an area of
  *        memory.
@@ -840,7 +840,7 @@ void expect_not_memory(#function, #parameter, void *memory, size_t size);
     expect_not_memory_count(function, parameter, memory, size, 1)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to repeatedly check if the parameter doesn't match an
  *        area of memory.
@@ -869,7 +869,7 @@ void expect_not_memory_count(#function, #parameter, void *memory, size_t size, s
 #endif
 
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to check if a parameter (of any value) has been passed.
  *
@@ -887,7 +887,7 @@ void expect_any(#function, #parameter);
     expect_any_count(function, parameter, 1)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Add an event to repeatedly check if a parameter (of any value) has
  *        been passed.
@@ -910,7 +910,7 @@ void expect_any_count(#function, #parameter, size_t count);
     _expect_any(#function, #parameter, __FILE__, __LINE__, count)
 #endif
 
-#if DOXYGEN
+#ifdef DOXYGEN
 /**
  * @brief Determine whether a function parameter is correct.
  *
@@ -1431,7 +1431,7 @@ int run_tests(const UnitTest tests[]);
  * @return A pointer to the allocated memory or NULL on error.
  *
  * @code
- * #if UNIT_TESTING
+ * #ifdef UNIT_TESTING
  * extern void* _test_malloc(const size_t size, const char* file, const int line);
  *
  * #define malloc(size) _test_malloc(size, __FILE__, __LINE__)
@@ -1483,7 +1483,7 @@ void test_free(void *ptr);
 #endif
 
 /* Redirect malloc, calloc and free to the unit test allocators. */
-#if UNIT_TESTING
+#ifdef UNIT_TESTING
 #define malloc test_malloc
 #define calloc test_calloc
 #define free test_free
@@ -1524,7 +1524,7 @@ void test_free(void *ptr);
  * @param[in]  line  The line mock_assert() is called.
  *
  * @code
- * #if UNIT_TESTING
+ * #ifdef UNIT_TESTING
  * extern void mock_assert(const int result, const char* const expression,
  *                         const char * const file, const int line);
  *

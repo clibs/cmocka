@@ -28,7 +28,7 @@
 #include <string.h>
 
 /* If this is being built for a unit test. */
-#if UNIT_TESTING
+#ifdef UNIT_TESTING
 
 /* Redirect printf to a function in the test application so it's possible to
  * test the standard output. */
