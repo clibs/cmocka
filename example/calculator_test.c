@@ -57,7 +57,7 @@ extern int example_main(int argc, char *argv[]);
 int example_test_fprintf(FILE* const file, const char *format, ...) PRINTF_ATTRIBUTE(2, 3);
 int example_test_printf(const char *format, ...) PRINTF_ATTRIBUTE(1, 2);
 
-char temporary_buffer[256];
+static char temporary_buffer[256];
 
 /* A mock fprintf function that checks the value of strings printed to the
  * standard error stream. */
