@@ -1764,6 +1764,8 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
     int run_next_test = 1;
     /* Whether the previous test failed. */
     int previous_test_failed = 0;
+    /* Whether the previous setup failed. */
+    int previous_setup_failed = 0;
     /* Check point of the heap state. */
     const ListNode * const check_point = check_point_allocated_blocks();
     /* Current test being executed. */
@@ -1803,7 +1805,9 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
 
         switch (test->function_type) {
         case UNIT_TEST_FUNCTION_TYPE_TEST:
-            run_next_test = 1;
+            if (! previous_setup_failed) {
+                run_next_test = 1;
+            }
             break;
         case UNIT_TEST_FUNCTION_TYPE_SETUP: {
             /* Checkpoint the heap before the setup. */
@@ -1851,6 +1855,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
                     tests_executed ++;
                     /* Skip forward until the next test or setup function. */
                     run_next_test = 0;
+                    previous_setup_failed = 1;
                 }
                 previous_test_failed = 0;
                 break;
