@@ -10,7 +10,8 @@ set(CMOCKA_TESTS
     test_fixtures
     test_assert_macros
     test_assert_macros_fail
-    test_exception_handler)
+    test_exception_handler
+    test_basics)
 
 foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
     add_cmocka_test(${_CMOCKA_TEST} ${_CMOCKA_TEST}.c ${CMOCKA_SHARED_LIBRARY})
