@@ -369,10 +369,10 @@ void will_return_always(#function, void *value);
  * by this function. If the parameter is provided it must be allocated on the
  * heap and doesn't need to be deallocated by the caller.
  *
- * @param[in]  #function  The fuction to add a custom paramater checking function
- *                        for.
+ * @param[in]  #function  The function to add a custom parameter checking
+ *                        function for.
  *
- * @param[in]  #parameter The parametes passed to the function.
+ * @param[in]  #parameter The parameters passed to the function.
  *
  * @param[in]  #check_function  The check function to call.
  *
