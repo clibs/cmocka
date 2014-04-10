@@ -30,6 +30,10 @@ static void malloc_teardown_test(void **state)
 int main(void) {
     const UnitTest tests[] = {
         unit_test_setup(malloc_setup_test, setup_only),
+        unit_test_setup(malloc_setup_test, setup_only),
+        unit_test_teardown(malloc_teardown_test, teardown_only),
+        unit_test_teardown(malloc_teardown_test, teardown_only),
+        unit_test_teardown(malloc_teardown_test, teardown_only),
         unit_test_teardown(malloc_teardown_test, teardown_only),
     };
 
