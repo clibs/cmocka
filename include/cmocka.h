@@ -1319,6 +1319,10 @@ int run_test(#function);
 #define run_test(f) _run_test(#f, f, NULL, UNIT_TEST_FUNCTION_TYPE_TEST, NULL)
 #endif
 
+static inline void _unit_test_dummy(void **state) {
+    (void)state;
+}
+
 /** Initializes a UnitTest structure. */
 #define unit_test(f) { #f, f, UNIT_TEST_FUNCTION_TYPE_TEST }
 
@@ -1328,13 +1332,15 @@ int run_test(#function);
 /** Initializes a UnitTest structure with a setup function. */
 #define unit_test_setup(test, setup) \
     _unit_test_setup(test, setup), \
-    unit_test(test)
+    unit_test(test), \
+    _unit_test_teardown(test, _unit_test_dummy)
 
 #define _unit_test_teardown(test, teardown) \
     { #test "_" #teardown, teardown, UNIT_TEST_FUNCTION_TYPE_TEARDOWN }
 
 /** Initializes a UnitTest structure with a teardown function. */
 #define unit_test_teardown(test, teardown) \
+    _unit_test_setup(test, _unit_test_dummy), \
     unit_test(test), \
     _unit_test_teardown(test, teardown)
 
