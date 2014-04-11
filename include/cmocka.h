@@ -1351,9 +1351,11 @@ static inline void _unit_test_dummy(void **state) {
     unit_test(test), \
     _unit_test_teardown(test, teardown)
 
+/** Initializes a UnitTest structure for a group setup function. */
 #define group_test_setup(setup) \
     { "group_" #setup, setup, UNIT_TEST_FUNCTION_TYPE_GROUP_SETUP }
 
+/** Initializes a UnitTest structure for a group teardown function. */
 #define group_test_teardown(teardown) \
     { "group_" #teardown, teardown, UNIT_TEST_FUNCTION_TYPE_GROUP_TEARDOWN }
 
