@@ -17,15 +17,22 @@
 #define CMOCKA_H_
 
 #ifdef _WIN32
-#if _MSC_VER < 1500
-#ifdef __cplusplus
+# ifdef _MSC_VER
+
+# ifndef inline
+#define inline __inline
+# endif /* inline */
+
+#  if _MSC_VER < 1500
+#   ifdef __cplusplus
 extern "C" {
-#endif   /* __cplusplus */
+#   endif   /* __cplusplus */
 int __stdcall IsDebuggerPresent();
-#ifdef __cplusplus
+#   ifdef __cplusplus
 } /* extern "C" */
-#endif   /* __cplusplus */
-#endif  /* _MSC_VER < 1500 */
+#   endif   /* __cplusplus */
+#  endif  /* _MSC_VER < 1500 */
+# endif /* _MSC_VER */
 #endif  /* _WIN32 */
 
 /*
