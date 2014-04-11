@@ -1,3 +1,12 @@
+Fri Apr 11 2014 Andreas Schneider <asn@cryptomilk.org>
+    * cmocka: version 0.4.0
+    * Added support for group testing.
+    * Added assert_return_code().
+    * Added better messages for errors.
+    * Added cmake config mode support.
+    * Fixed bug with unit_test_setup and unit_test_teardown.
+    * Fixed a lot of small bugs.
+
 Wed Nov 06 2013 Andreas Schneider <asn@cryptomilk.org>
     * cmocka: version 0.3.2
     * Fixed FindNSIS detection.
