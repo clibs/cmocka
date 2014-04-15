@@ -1790,7 +1790,8 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
      */
     TestState* test_states =
 	    (TestState*)malloc(number_of_tests * sizeof(*test_states));
-    size_t number_of_test_states = 0;
+    /* The number of test states which should be 0 at the end */
+    long number_of_test_states = 0;
     /* Names of the tests that failed. */
     const char** failed_names = (const char**)malloc(number_of_tests *
                                        sizeof(*failed_names));
@@ -1896,7 +1897,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
     print_message("[==========] %"PRIdS " test(s) run.\n", tests_executed);
     print_error("[  PASSED  ] %"PRIdS " test(s).\n", tests_executed - total_failed);
 
-    if (total_failed) {
+    if (total_failed > 0) {
         print_error("[  FAILED  ] %"PRIdS " test(s), listed below:\n", total_failed);
         for (i = 0; i < total_failed; i++) {
             print_error("[  FAILED  ] %s\n", failed_names[i]);
@@ -1905,7 +1906,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
         print_error("\n %"PRIdS " FAILED TEST(S)\n", total_failed);
     }
 
-    if (number_of_test_states) {
+    if (number_of_test_states != 0) {
         print_error("[  ERROR   ] Mismatched number of setup %"PRIdS " and "
                     "teardown %"PRIdS " functions\n", setups, teardowns);
         total_failed = (size_t)-1;
