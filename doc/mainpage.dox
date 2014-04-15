@@ -82,4 +82,18 @@ the mock object to return. CMocka provides and API to easily mock code.
 
 <a href="https://lwn.net/Articles/558106/">Learn more ...</a>
 
+@section main-threads Threading
+
+cmocka is not thread safe and it is not the goal of it to be it. However if
+you use cmocka for writing tests in an application which uses threads, you
+can set the following envionment variable:
+
+<pre>
+    CMOCKA_TEST_ABORT='1' ./my_threading_test
+</pre>
+
+With this environment variable set to '1', cmocka will call <tt>abort()</tt> if
+a test fails. Else it is likely that you will run into deadlocks with mutexes
+or other funny errors.
+
 */

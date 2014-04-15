@@ -297,8 +297,13 @@ static const ExceptionCodeInfo exception_codes[] = {
 
 
 /* Exit the currently executing test. */
-static void exit_test(const int quit_application) {
-    if (global_running_test) {
+static void exit_test(const int quit_application)
+{
+    const char *abort_test = getenv("CMOCKA_TEST_ABORT");
+
+    if (abort_test != NULL && abort_test[0] == '1') {
+        abort();
+    } else if (global_running_test) {
         longjmp(global_run_test_env, 1);
     } else if (quit_application) {
         exit(-1);
