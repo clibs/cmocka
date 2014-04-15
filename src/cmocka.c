@@ -1783,6 +1783,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
     size_t setups = 0;
     /* Number of teardown functions. */
     size_t teardowns = 0;
+    size_t i;
     /*
      * A stack of test states.  A state is pushed on the stack
      * when a test setup occurs and popped on tear down.
@@ -1795,7 +1796,21 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
                                        sizeof(*failed_names));
     void **current_state = NULL;
 
-    print_message("[==========] Running %"PRIdS " test(s).\n", number_of_tests);
+    /* Count setup and teardown functions */
+    for (i = 0; i < number_of_tests; i++) {
+        const UnitTest * const test = &tests[i];
+
+        if (test->function_type == UNIT_TEST_FUNCTION_TYPE_SETUP) {
+            setups++;
+        }
+
+        if (test->function_type == UNIT_TEST_FUNCTION_TYPE_TEARDOWN) {
+            teardowns++;
+        }
+    }
+
+    print_message("[==========] Running %"PRIdS " test(s).\n",
+                  number_of_tests - setups - teardowns);
 
     /* Make sure LargestIntegralType is at least the size of a pointer. */
     assert_true(sizeof(LargestIntegralType) >= sizeof(void*));
@@ -1822,7 +1837,6 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
             current_state = &current_TestState->state;
             *current_state = NULL;
             run_next_test = 1;
-            setups ++;
             break;
         }
         case UNIT_TEST_FUNCTION_TYPE_TEARDOWN:
@@ -1831,7 +1845,6 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
             current_TestState = &test_states[--number_of_test_states];
             test_check_point = current_TestState->check_point;
             current_state = &current_TestState->state;
-            teardowns ++;
             break;
         default:
             print_error("Invalid unit test function type %d\n",
@@ -1884,7 +1897,6 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
     print_error("[  PASSED  ] %"PRIdS " test(s).\n", tests_executed - total_failed);
 
     if (total_failed) {
-        size_t i;
         print_error("[  FAILED  ] %"PRIdS " test(s), listed below:\n", total_failed);
         for (i = 0; i < total_failed; i++) {
             print_error("[  FAILED  ] %s\n", failed_names[i]);
