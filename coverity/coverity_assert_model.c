@@ -21,6 +21,16 @@ void _assert_int_not_equal(
       __coverity_panic__();
 }
 
+void _assert_return_code(const LargestIntegralType result,
+                         size_t rlen,
+                         const LargestIntegralType error,
+                         const char * const expression,
+                         const char * const file,
+                         const int line)
+{
+      __coverity_panic__();
+}
+
 void _assert_string_equal(const char * const a, const char * const b,
                           const char * const file, const int line)
 {
