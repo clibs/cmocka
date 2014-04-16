@@ -74,7 +74,7 @@ install(
         ${CMAKE_CURRENT_BINARY_DIR}/cmocka-config.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/cmocka-config-version.cmake
     DESTINATION
-        ${CMAKE_INSTALL_DIR}
+        ${CMAKE_INSTALL_DIR}/cmocka
     COMPONENT
         devel
 )
