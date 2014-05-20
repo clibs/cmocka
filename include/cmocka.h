@@ -1294,6 +1294,17 @@ void fail(void);
 #ifdef DOXYGEN
 /**
  * @brief Forces the test to fail immediately and quit, printing the reason.
+ *
+ * @code
+ * fail_msg("This is some error message for test");
+ * @endcode
+ *
+ * or
+ *
+ * @code
+ * char *error_msg = "This is some error message for test";
+ * fail_msg("%s", error_msg);
+ * @endcode
  */
 void fail_msg(const char *msg, ...);
 #else
