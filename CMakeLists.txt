@@ -67,14 +67,16 @@ install(
 )
 
 # cmake config files
-configure_file(cmocka-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/cmocka-config.cmake @ONLY)
-configure_file(cmocka-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/cmocka-config-version.cmake @ONLY)
+set(CMOCKA_LIBRARY_NAME @CMAKE_SHARED_LIBRARY_PREFIX@${PROJECT_NAME}@CMAKE_SHARED_LIBRARY_SUFFIX@)
+
+configure_file(${PROJECT_NAME}-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake @ONLY)
+configure_file(${PROJECT_NAME}-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake @ONLY)
 install(
     FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/cmocka-config.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/cmocka-config-version.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
     DESTINATION
-        ${CMAKE_INSTALL_DIR}/cmocka
+        ${CMAKE_INSTALL_DIR}/${PROJECT_NAME}
     COMPONENT
         devel
 )
