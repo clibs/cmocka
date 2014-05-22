@@ -1,3 +1,10 @@
+Thu May 22 2014 Andreas Schneider <asn@cryptomilk.org>
+    * cmocka: version 0.4.1
+    * Added CMOCKA_TEST_ABORT env variable to leave threading apps.
+    * Fixed count parameter of expect_check() macro.
+    * Fixed reporting the number of tests.
+    * Fixed cmake config files.
+
 Fri Apr 11 2014 Andreas Schneider <asn@cryptomilk.org>
     * cmocka: version 0.4.0
     * Added support for group testing.
