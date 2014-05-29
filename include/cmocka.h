@@ -1172,8 +1172,8 @@ void assert_memory_not_equal(const void *a, const void *b, size_t size);
 
 #ifdef DOXYGEN
 /**
- * @brief Assert that the specified value is bigger than the minimum and
- * smaller than the maximum.
+ * @brief Assert that the specified value is not smaller than the minimum
+ * and and not greater than the maximum.
  *
  * The function prints an error message to standard error and terminates the
  * test by calling fail() if value is not in range.
