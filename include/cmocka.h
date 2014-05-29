@@ -1195,8 +1195,8 @@ void assert_in_range(uintmax_t value, uintmax_t minimum, uintmax_t maximum);
 
 #ifdef DOXYGEN
 /**
- * @brief Assert that the specified value is smaller than the minimum and
- * bigger than the maximum.
+ * @brief Assert that the specified value is smaller than the minimum or
+ * greater than the maximum.
  *
  * The function prints an error message to standard error and terminates the
  * test by calling fail() if value is in range.
