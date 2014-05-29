@@ -996,7 +996,7 @@ void assert_false(scalar expression);
 
 #ifdef DOXYGEN
 /**
- * @brief Assert if the return_code is smaller than 0.
+ * @brief Assert that the return_code is greater than or equal to 0.
  *
  * The function prints an error message to standard error and terminates the
  * test by calling fail() if the return code is smaller than 0. If the function
