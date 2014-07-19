@@ -1624,7 +1624,7 @@ static LONG WINAPI exception_filter(EXCEPTION_POINTERS *exception_pointers) {
         if (code == code_info->code) {
             static int shown_debug_message = 0;
             fflush(stdout);
-            print_error("%s occurred at 0x%08x.\n", code_info->description,
+            print_error("%s occurred at %#p.\n", code_info->description,
                         exception_record->ExceptionAddress);
             if (!shown_debug_message) {
                 print_error(
