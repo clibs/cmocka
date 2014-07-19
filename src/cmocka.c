@@ -819,9 +819,10 @@ static int value_in_set_display_error(
         if (succeeded) {
             return 1;
         }
-        print_error("%llu is %sin the set (", value, invert ? "" : "not ");
+        print_error(LargestIntegralTypePrintfUnsignedFormat
+                    "is %sin the set (", value, invert ? "" : "not ");
         for (i = 0; i < size_of_set; i++) {
-            print_error("%llu, ", set[i]);
+            print_error(LargestIntegralTypePrintfUnsignedFormat ", ", set[i]);
         }
         print_error(")\n");
     }
@@ -840,8 +841,11 @@ static int integer_in_range_display_error(
     if (value >= range_min && value <= range_max) {
         return 1;
     }
-    print_error("%llu is not within the range %llu-%llu\n", value, range_min,
-                range_max);
+    print_error(LargestIntegralTypePrintfUnsignedFormat
+                " is not within the range "
+                LargestIntegralTypePrintfUnsignedFormat "-"
+                LargestIntegralTypePrintfUnsignedFormat "\n",
+                value, range_min, range_max);
     return 0;
 }
 
@@ -857,8 +861,11 @@ static int integer_not_in_range_display_error(
     if (value < range_min || value > range_max) {
         return 1;
     }
-    print_error("%llu is within the range %llu-%llu\n", value, range_min,
-                range_max);
+    print_error(LargestIntegralTypePrintfUnsignedFormat
+                " is within the range "
+                LargestIntegralTypePrintfUnsignedFormat "-"
+                LargestIntegralTypePrintfUnsignedFormat "\n",
+                value, range_min, range_max);
     return 0;
 }
 
@@ -1334,7 +1341,8 @@ void _assert_return_code(const LargestIntegralType result,
 
     if (result > valmax - 1) {
         if (error > 0) {
-            print_error("%s < 0, errno(%llu): %s\n",
+            print_error("%s < 0, errno("
+                        LargestIntegralTypePrintfUnsignedFormat "): %s\n",
                         expression, error, strerror(error));
         } else {
             print_error("%s < 0\n", expression);
