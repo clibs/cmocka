@@ -85,15 +85,6 @@ int __stdcall IsDebuggerPresent();
 #endif /* _WIN32 */
 #endif /* LargestIntegralTypePrintfFormat */
 
-/* Printf format used to display LargestIntegralType as unsigned. */
-#ifndef LargestIntegralTypePrintfUnsignedFormat
-#ifdef _WIN32
-#define LargestIntegralTypePrintfUnsignedFormat "%I64u"
-#else
-#define LargestIntegralTypePrintfUnsignedFormat "%llu"
-#endif /* _WIN32 */
-#endif /* LargestIntegralTypePrintfFormat */
-
 /* Perform an unsigned cast to LargestIntegralType. */
 #define cast_to_largest_integral_type(value) \
     ((LargestIntegralType)((size_t)(value)))

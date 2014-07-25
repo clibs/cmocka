@@ -21,6 +21,10 @@
 #include <malloc.h>
 #endif
 
+#ifdef HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif
+
 #include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
@@ -43,10 +47,18 @@ WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 #define PRIdS "Id"
 #endif
 
+#ifndef PRIu64
+#define PRIu64 "I64u"
+#endif
+
 #else /* _WIN32 */
 
 #ifndef PRIdS
 #define PRIdS "zd"
+#endif
+
+#ifndef PRIu64
+#define PRIu64 "llu"
 #endif
 
 #include <signal.h>
@@ -819,10 +831,10 @@ static int value_in_set_display_error(
         if (succeeded) {
             return 1;
         }
-        print_error(LargestIntegralTypePrintfUnsignedFormat
-                    "is %sin the set (", value, invert ? "" : "not ");
+        print_error("%" PRIu64 " is %sin the set (", value,
+                    invert ? "" : "not ");
         for (i = 0; i < size_of_set; i++) {
-            print_error(LargestIntegralTypePrintfUnsignedFormat ", ", set[i]);
+            print_error("%" PRIu64 ", ", set[i]);
         }
         print_error(")\n");
     }
@@ -841,10 +853,7 @@ static int integer_in_range_display_error(
     if (value >= range_min && value <= range_max) {
         return 1;
     }
-    print_error(LargestIntegralTypePrintfUnsignedFormat
-                " is not within the range "
-                LargestIntegralTypePrintfUnsignedFormat "-"
-                LargestIntegralTypePrintfUnsignedFormat "\n",
+    print_error("%" PRIu64 " is not within the range %" PRIu64 "-%" PRIu64 "\n",
                 value, range_min, range_max);
     return 0;
 }
@@ -861,10 +870,7 @@ static int integer_not_in_range_display_error(
     if (value < range_min || value > range_max) {
         return 1;
     }
-    print_error(LargestIntegralTypePrintfUnsignedFormat
-                " is within the range "
-                LargestIntegralTypePrintfUnsignedFormat "-"
-                LargestIntegralTypePrintfUnsignedFormat "\n",
+    print_error("%" PRIu64 " is within the range %" PRIu64 "-%" PRIu64 "\n",
                 value, range_min, range_max);
     return 0;
 }
@@ -1341,8 +1347,7 @@ void _assert_return_code(const LargestIntegralType result,
 
     if (result > valmax - 1) {
         if (error > 0) {
-            print_error("%s < 0, errno("
-                        LargestIntegralTypePrintfUnsignedFormat "): %s\n",
+            print_error("%s < 0, errno(%" PRIu64 "): %s\n",
                         expression, error, strerror(error));
         } else {
             print_error("%s < 0\n", expression);
