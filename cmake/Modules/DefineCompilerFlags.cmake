@@ -36,10 +36,7 @@ if (UNIX AND NOT WIN32)
             endif()
         endif()
 
-        check_c_compiler_flag("-D_GNU_SOURCE" WITH_GNU_SOURCE)
-        if (WITH_GNU_SOURCE)
-            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_GNU_SOURCE")
-        endif (WITH_GNU_SOURCE)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_GNU_SOURCE")
     endif (${CMAKE_C_COMPILER_ID} MATCHES "(GNU|Clang)")
 
     #
