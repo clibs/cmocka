@@ -1,5 +1,7 @@
 /*
  * Copyright 2008 Google Inc.
+ * Copyright 2014-2015 Andreas Schneider <asn@cryptomilk.org>
+ * Copyright 2015      Jakub Hrozek <jakub.hrozek@posteo.se>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +33,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -312,6 +315,21 @@ static const ExceptionCodeInfo exception_codes[] = {
 };
 #endif /* !_WIN32 */
 
+enum CMUnitTestStatus {
+    CM_TEST_NOT_STARTED,
+    CM_TEST_PASSED,
+    CM_TEST_FAILED,
+    CM_TEST_ERROR,
+    CM_TEST_SKIPPED,
+};
+
+struct CMUnitTestState {
+    const ListNode *check_point; /* Check point of the test if there's a setup function. */
+    const struct CMUnitTest *test; /* Point to array element in the tests we get passed */
+    void *state; /* State associated with the test */
+    enum CMUnitTestStatus status; /* PASSED, FAILED, ABORT ... */
+    double runtime; /* Time calculations */
+};
 
 /* Exit the currently executing test. */
 static void exit_test(const int quit_application)
@@ -1772,6 +1790,349 @@ void print_error(const char* const format, ...) {
 }
 
 
+/****************************************************************************
+ * TIME CALCULATIONS
+ ****************************************************************************/
+
+static struct timespec cm_tspecdiff(struct timespec time1,
+                                    struct timespec time0)
+{
+    struct timespec ret;
+    int xsec = 0;
+    int sign = 1;
+
+    if (time0.tv_nsec > time1.tv_nsec) {
+        xsec = (int) ((time0.tv_nsec - time1.tv_nsec) / (1E9 + 1));
+        time0.tv_nsec -= (long int) (1E9 * xsec);
+        time0.tv_sec += xsec;
+    }
+
+    if ((time1.tv_nsec - time0.tv_nsec) > 1E9) {
+        xsec = (int) ((time1.tv_nsec - time0.tv_nsec) / 1E9);
+        time0.tv_nsec += (long int) (1E9 * xsec);
+        time0.tv_sec -= xsec;
+    }
+
+    ret.tv_sec = time1.tv_sec - time0.tv_sec;
+    ret.tv_nsec = time1.tv_nsec - time0.tv_nsec;
+
+    if (time1.tv_sec < time0.tv_sec) {
+        sign = -1;
+    }
+
+    ret.tv_sec = ret.tv_sec * sign;
+
+    return ret;
+}
+
+static double cm_secdiff(struct timespec clock1, struct timespec clock0)
+{
+    double ret;
+    struct timespec diff;
+
+    diff = cm_tspecdiff(clock1, clock0);
+
+    ret = diff.tv_sec;
+    ret += (double) diff.tv_nsec / (double) 1E9;
+
+    return ret;
+}
+
+/****************************************************************************
+ * CMOCKA TEST RUNNER
+ ****************************************************************************/
+static int cmocka_run_one_test_or_fixture(const char *function_name,
+                                          CMUnitTestFunction test_func,
+                                          CMFixtureFunction setup_func,
+                                          CMFixtureFunction teardown_func,
+                                          void **state,
+                                          const void *const heap_check_point)
+{
+    const ListNode * const volatile check_point = (const ListNode*)
+        (heap_check_point != NULL ?
+         heap_check_point : check_point_allocated_blocks());
+    int handle_exceptions = 1;
+    void *current_state = NULL;
+    int rc = 0;
+
+    /* FIXME check only one test or fixture is set */
+
+    /* Detect if we should handle exceptions */
+#ifdef _WIN32
+    handle_exceptions = !IsDebuggerPresent();
+#endif /* _WIN32 */
+#ifdef UNIT_TESTING_DEBUG
+    handle_exceptions = 0;
+#endif /* UNIT_TESTING_DEBUG */
+
+
+    if (handle_exceptions) {
+#ifndef _WIN32
+        unsigned int i;
+        for (i = 0; i < ARRAY_SIZE(exception_signals); i++) {
+            default_signal_functions[i] = signal(
+                    exception_signals[i], exception_handler);
+        }
+#else /* _WIN32 */
+        previous_exception_filter = SetUnhandledExceptionFilter(
+                exception_filter);
+#endif /* !_WIN32 */
+    }
+
+    /* Init the test structure */
+    initialize_testing(function_name);
+
+    global_running_test = 1;
+
+    if (state == NULL) {
+        state = &current_state;
+    }
+
+    if (setjmp(global_run_test_env) == 0) {
+        if (test_func != NULL) {
+            test_func(state);
+
+            fail_if_blocks_allocated(check_point, function_name);
+            rc = 0;
+        } else if (setup_func != NULL) {
+            rc = setup_func(state);
+
+            /*
+             * For setup we can ignore any allocated blocks. We just need to
+             * ensure they're deallocated on tear down.
+             */
+        } else if (teardown_func != NULL) {
+            rc = teardown_func(state);
+
+            fail_if_blocks_allocated(check_point, function_name);
+        } else {
+            /* ERROR */
+        }
+        fail_if_leftover_values(function_name);
+        global_running_test = 0;
+    } else {
+        /* TEST FAILED */
+        global_running_test = 0;
+        rc = -1;
+    }
+    teardown_testing(function_name);
+
+    if (handle_exceptions) {
+#ifndef _WIN32
+        unsigned int i;
+        for (i = 0; i < ARRAY_SIZE(exception_signals); i++) {
+            signal(exception_signals[i], default_signal_functions[i]);
+        }
+#else /* _WIN32 */
+        if (previous_exception_filter) {
+            SetUnhandledExceptionFilter(previous_exception_filter);
+            previous_exception_filter = NULL;
+        }
+#endif /* !_WIN32 */
+    }
+
+    return rc;
+}
+
+static int cmocka_run_group_fixture(const char *function_name,
+                                    CMFixtureFunction setup_func,
+                                    CMFixtureFunction teardown_func,
+                                    void **state,
+                                    const void *const heap_check_point)
+{
+    int rc;
+
+    if (setup_func != NULL) {
+        rc = cmocka_run_one_test_or_fixture(function_name,
+                                        NULL,
+                                        setup_func,
+                                        NULL,
+                                        state,
+                                        heap_check_point);
+    } else {
+        rc = cmocka_run_one_test_or_fixture(function_name,
+                                        NULL,
+                                        NULL,
+                                        teardown_func,
+                                        state,
+                                        heap_check_point);
+    }
+
+    return rc;
+}
+
+static int cmocka_run_one_tests(struct CMUnitTestState *test_state)
+{
+    struct timespec start, finish;
+    int rc = 0;
+
+    /* Run setup */
+    if (test_state->test->setup_func != NULL) {
+        /* Setup the memory check point, it will be evaluated on teardown */
+        test_state->check_point = check_point_allocated_blocks();
+
+        rc = cmocka_run_one_test_or_fixture(test_state->test->name,
+                                            NULL,
+                                            test_state->test->setup_func,
+                                            NULL,
+                                            &test_state->state,
+                                            test_state->check_point);
+        if (rc != 0) {
+            test_state->status = CM_TEST_ERROR;
+        }
+    }
+
+    /* Run test */
+    clock_gettime(CLOCK_REALTIME, &start);
+
+    if (rc == 0) {
+        rc = cmocka_run_one_test_or_fixture(test_state->test->name,
+                                            test_state->test->test_func,
+                                            NULL,
+                                            NULL,
+                                            &test_state->state,
+                                            NULL);
+        if (rc == 0) {
+            test_state->status = CM_TEST_PASSED;
+        } else {
+            test_state->status = CM_TEST_FAILED;
+        }
+        rc = 0;
+    }
+
+    clock_gettime(CLOCK_REALTIME, &finish);
+    test_state->runtime = cm_secdiff(finish, start);
+
+    /* Run teardown */
+    if (rc == 0 && test_state->test->teardown_func != NULL) {
+        rc = cmocka_run_one_test_or_fixture(test_state->test->name,
+                                            NULL,
+                                            NULL,
+                                            test_state->test->teardown_func,
+                                            &test_state->state,
+                                            test_state->check_point);
+        if (rc != 0) {
+            test_state->status = CM_TEST_ERROR;
+        }
+    }
+
+    return rc;
+}
+
+int _cmocka_run_group_tests(const char *group_name,
+                            const struct CMUnitTest * const tests,
+                            const size_t num_tests,
+                            CMFixtureFunction group_setup,
+                            CMFixtureFunction group_teardown)
+{
+    struct CMUnitTestState *cm_tests;
+    const ListNode *group_check_point = check_point_allocated_blocks();
+    void *group_state;
+    size_t total_failed = 0;
+    size_t total_passed = 0;
+    size_t total_executed = 0;
+    size_t total_errors = 0;
+    size_t i;
+    int rc;
+
+    /* Make sure LargestIntegralType is at least the size of a pointer. */
+    assert_true(sizeof(LargestIntegralType) >= sizeof(void*));
+
+    cm_tests = (struct CMUnitTestState *)libc_malloc(sizeof(struct CMUnitTestState) * num_tests);
+    if (cm_tests == NULL) {
+        return -1;
+    }
+
+    print_message("[==========] Running %u test(s).\n", (unsigned)num_tests);
+
+    /* Setup cmocka test array */
+    for (i = 0; i < num_tests; i++) {
+        cm_tests[i] = (struct CMUnitTestState) {
+            .test = &tests[i],
+            .status = CM_TEST_NOT_STARTED,
+        };
+    }
+
+    rc = 0;
+
+    /* Run group setup */
+    if (group_setup != NULL) {
+        rc = cmocka_run_group_fixture("cmocka_group_setup",
+                                      group_setup,
+                                      NULL,
+                                      &group_state,
+                                      group_check_point);
+    }
+
+    if (rc == 0) {
+        /* Execute tests */
+        for (i = 0; i < num_tests; i++) {
+            struct CMUnitTestState *cmtest = &cm_tests[i];
+
+            print_message("[ RUN      ] %s\n", cmtest->test->name);
+
+            if (group_state != NULL) {
+                cm_tests[i].state = group_state;
+            }
+            rc = cmocka_run_one_tests(cmtest);
+            total_executed++;
+            if (rc == 0) {
+                switch (cmtest->status) {
+                    case CM_TEST_PASSED:
+                        print_message("[       OK ] %s\n", cmtest->test->name);
+                        total_passed++;
+                        break;
+                    case CM_TEST_SKIPPED:
+                        print_message("[  SKIPPED ] %s\n", cmtest->test->name);
+                        break;
+                    case CM_TEST_FAILED:
+                        print_message("[  FAILED  ] %s\n", cmtest->test->name);
+                        total_failed++;
+                        break;
+                    default:
+                        print_message("[  ERROR   ] Internal cmocka error - %s\n",
+                                      cmtest->test->name);
+                        total_errors++;
+                        break;
+                }
+            } else {
+                print_message("[  ERROR   ] Internal cmocka error - %s\n",
+                              cmtest->test->name);
+                total_errors++;
+            }
+
+            /* TODO Write xml file here */
+        }
+    } else {
+        print_message("[  ERROR   ] Group setup failed\n");
+    }
+
+    /* Run group teardown */
+    if (group_teardown != NULL) {
+        rc = cmocka_run_group_fixture("cmocka_group_teardown",
+                                      NULL,
+                                      group_teardown,
+                                      &group_state,
+                                      group_check_point);
+    }
+
+    print_message("[==========] %"PRIdS " test(s) run.\n", num_tests);
+    print_error("[  PASSED  ] %"PRIdS " test(s).\n", total_passed);
+
+    if (total_failed > 0) {
+        print_error("[  FAILED  ] %u test(s)\n", (unsigned)total_failed);
+    }
+
+    libc_free(cm_tests);
+    fail_if_blocks_allocated(group_check_point, "cmocka_group_tests");
+
+    return total_failed + total_errors;
+}
+
+/****************************************************************************
+ * DEPRECATED TEST RUNNER
+ ****************************************************************************/
+
 int _run_test(
         const char * const function_name,  const UnitTestFunction Function,
         void ** const volatile state, const UnitTestFunctionType function_type,
@@ -2145,3 +2506,4 @@ int _run_group_tests(const UnitTest * const tests, const size_t number_of_tests)
 
     return (int)total_failed;
 }
+

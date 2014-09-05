@@ -1379,6 +1379,22 @@ static inline void _unit_test_dummy(void **state) {
     unit_test(test), \
     _unit_test_teardown(test, teardown)
 
+
+/** Initializes a CMUnitTest structure. */
+#define cmocka_unit_test(f) { #f, f, NULL, NULL }
+
+/** Initializes a CMUnitTest structure with a setup function. */
+#define cmocka_unit_test_setup(f, setup) { #f, f, setup, NULL }
+
+/** Initializes a CMUnitTest structure with a teardown function. */
+#define cmocka_unit_test_teardown(f, teardown) { #f, f, NULL, teardown }
+
+/**
+ * Initialize an array of CMUnitTest structures with a setup function for a test
+ * and a teardown function. Either setup or teardown can be NULL.
+ */
+#define cmocka_unit_test_setup_teardown(f, setup, teardown) { #f, f, setup, teardown }
+
 #ifdef DOXYGEN
 /**
  * @brief Run tests specified by an array of UnitTest structures.
@@ -1431,6 +1447,140 @@ int run_tests(const UnitTest tests[]);
 #endif
 
 #define run_group_tests(tests) _run_group_tests(tests, sizeof(tests) / sizeof(tests)[0])
+
+#ifdef DOXYGEN
+/**
+ * @brief Run tests specified by an array of CMUnitTest structures.
+ *
+ * @param[in]  group_tests[]  The array of unit tests to execute.
+ *
+ * @param[in]  group_setup    The setup function which should be called before
+ *                            all unit tests are executed.
+ *
+ * @param[in]  group_teardown The teardown function to be called after all
+ *                            tests have finished.
+ *
+ * @return 0 on success, or the number of failed tests.
+ *
+ * @code
+ * static int setup(void **state) {
+ *      int *answer = malloc(sizeof(int));
+ *      if (*answer == NULL) {
+ *          return -1;
+ *      }
+ *      *answer = 42;
+ *
+ *      *state = answer;
+ *
+ *      return 0;
+ * }
+ *
+ * static void teardown(void **state) {
+ *      free(*state);
+ *
+ *      return 0;
+ * }
+ *
+ * static void null_test_success(void **state) {
+ *     (void) state;
+ * }
+ *
+ * static void int_test_success(void **state) {
+ *      int *answer = *state;
+ *      assert_int_equal(*answer, 42);
+ * }
+ *
+ * int main(void) {
+ *     const struct CMUnitTest tests[] = {
+ *         cmocka_unit_test(null_test_success),
+ *         cmocka_unit_test_setup_teardown(int_test_success, setup, teardown),
+ *     };
+ *
+ *     return cmocka_run_group_tests(tests, NULL, NULL);
+ * }
+ * @endcode
+ *
+ * @see cmocka_unit_test
+ * @see cmocka_unit_test_setup
+ * @see cmocka_unit_test_teardown
+ * @see cmocka_unit_test_setup_teardown
+ */
+int cmocka_run_group_tests(const struct CMUnitTest group_tests[],
+                           CMFixtureFunction group_setup,
+                           CMFixtureFunction group_teardown);
+#else
+# define cmocka_run_group_tests(group_tests, group_setup, group_teardown) \
+        _cmocka_run_group_tests(#group_tests, group_tests, sizeof(group_tests) / sizeof(group_tests)[0], group_setup, group_teardown)
+#endif
+
+#ifdef DOXYGEN
+/**
+ * @brief Run tests specified by an array of CMUnitTest structures and specify
+ *        a name.
+ *
+ * @param[in]  group_name     The name of the group test.
+ *
+ * @param[in]  group_tests[]  The array of unit tests to execute.
+ *
+ * @param[in]  group_setup    The setup function which should be called before
+ *                            all unit tests are executed.
+ *
+ * @param[in]  group_teardown The teardown function to be called after all
+ *                            tests have finished.
+ *
+ * @return 0 on success, or the number of failed tests.
+ *
+ * @code
+ * static int setup(void **state) {
+ *      int *answer = malloc(sizeof(int));
+ *      if (*answer == NULL) {
+ *          return -1;
+ *      }
+ *      *answer = 42;
+ *
+ *      *state = answer;
+ *
+ *      return 0;
+ * }
+ *
+ * static void teardown(void **state) {
+ *      free(*state);
+ *
+ *      return 0;
+ * }
+ *
+ * static void null_test_success(void **state) {
+ *     (void) state;
+ * }
+ *
+ * static void int_test_success(void **state) {
+ *      int *answer = *state;
+ *      assert_int_equal(*answer, 42);
+ * }
+ *
+ * int main(void) {
+ *     const struct CMUnitTest tests[] = {
+ *         cmocka_unit_test(null_test_success),
+ *         cmocka_unit_test_setup_teardown(int_test_success, setup, teardown),
+ *     };
+ *
+ *     return cmocka_run_group_tests_name("success_test", tests, NULL, NULL);
+ * }
+ * @endcode
+ *
+ * @see cmocka_unit_test
+ * @see cmocka_unit_test_setup
+ * @see cmocka_unit_test_teardown
+ * @see cmocka_unit_test_setup_teardown
+ */
+int cmocka_run_group_tests_name(const char *group_name,
+                                const struct CMUnitTest group_tests[],
+                                CMFixtureFunction group_setup,
+                                CMFixtureFunction group_teardown);
+#else
+# define cmocka_run_group_tests_name(group_name, group_tests, group_setup, group_teardown) \
+        _cmocka_run_group_tests(group_name, group_tests, sizeof(group_tests) / sizeof(group_tests)[0], group_setup, group_teardown)
+#endif
 
 /** @} */
 
@@ -1675,6 +1825,19 @@ typedef struct GroupTest {
     const size_t number_of_tests;
 } GroupTest;
 
+/* Function prototype for test functions. */
+typedef void (*CMUnitTestFunction)(void **state);
+
+/* Function prototype for setup and teardown functions. */
+typedef int (*CMFixtureFunction)(void **state);
+
+struct CMUnitTest {
+    const char *name;
+    CMUnitTestFunction test_func;
+    CMFixtureFunction setup_func;
+    CMFixtureFunction teardown_func;
+};
+
 /* Location within some source code. */
 typedef struct SourceLocation {
     const char* file;
@@ -1815,6 +1978,13 @@ int _run_test(
 int _run_tests(const UnitTest * const tests, const size_t number_of_tests);
 int _run_group_tests(const UnitTest * const tests,
                      const size_t number_of_tests);
+
+/* Test runner */
+int _cmocka_run_group_tests(const char *group_name,
+                            const struct CMUnitTest * const tests,
+                            const size_t num_tests,
+                            CMFixtureFunction group_setup,
+                            CMFixtureFunction group_teardown);
 
 /* Standard output and error print methods. */
 void print_message(const char* const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
