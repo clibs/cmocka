@@ -117,21 +117,6 @@
 
 /**************************** OPTIONS ****************************/
 
-/* define if the compiler implements namespaces */
-#cmakedefine HAVE_NAMESPACES
-
-/* Namespace for Google classes */
-#cmakedefine GOOGLE_NAMESPACE
-
-/* the namespace where STL code like vector<> is defined */
-#cmakedefine STL_NAMESPACE
-
-/* Stops putting the code inside the Google namespace */
-#cmakedefine _END_GOOGLE_NAMESPACE_
-
-/* Puts following code inside the Google namespace */
-#cmakedefine _START_GOOGLE_NAMESPACE_
-
 /*************************** ENDIAN *****************************/
 
 #cmakedefine WORDS_SIZEOF_VOID_P ${WORDS_SIZEOF_VOID_P}
