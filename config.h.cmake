@@ -117,6 +117,12 @@
 
 /**************************** OPTIONS ****************************/
 
+/* Check if we have TLS support with GCC */
+#cmakedefine HAVE_GCC_THREAD_LOCAL_STORAGE 1
+
+/* Check if we have TLS support with MSVC */
+#cmakedefine HAVE_MSVC_THREAD_LOCAL_STORAGE 1
+
 /*************************** ENDIAN *****************************/
 
 #cmakedefine WORDS_SIZEOF_VOID_P ${WORDS_SIZEOF_VOID_P}

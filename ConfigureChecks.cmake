@@ -91,6 +91,21 @@ endif (WIN32)
 set(CMOCKA_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} CACHE INTERNAL "cmocka required system libraries")
 
 # OPTIONS
+check_c_source_compiles("
+__thread int tls;
+
+int main(void) {
+    return 0;
+}" HAVE_GCC_THREAD_LOCAL_STORAGE)
+
+if (WIN32)
+check_c_source_compiles("
+__declspec(thread) int tls;
+
+int main(void) {
+    return 0;
+}" HAVE_MSVC_THREAD_LOCAL_STORAGE)
+endif(WIN32)
 
 # ENDIAN
 if (NOT WIN32)
