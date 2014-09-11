@@ -80,6 +80,14 @@ WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 /* Printf formatting for source code locations. */
 #define SOURCE_LOCATION_FORMAT "%s:%u"
 
+#if defined(HAVE_GCC_THREAD_LOCAL_STORAGE)
+# define CMOCKA_THREAD __thread
+#elif defined(HAVE_MSVC_THREAD_LOCAL_STORAGE)
+# define CMOCKA_THREAD __declspec(thread)
+#else
+# define CMOCKA_THREAD
+#endif
+
 /*
  * Declare and initialize the pointer member of ValuePointer variable name
  * with ptr.
@@ -228,8 +236,8 @@ static void teardown_testing(const char *test_name);
  * Keeps track of the calling context returned by setenv() so that the fail()
  * method can jump out of a test.
  */
-static jmp_buf global_run_test_env;
-static int global_running_test = 0;
+static CMOCKA_THREAD jmp_buf global_run_test_env;
+static CMOCKA_THREAD int global_running_test = 0;
 
 /* Keeps track of the calling context returned by setenv() so that */
 /* mock_assert() can optionally jump back to expect_assert_failure(). */
@@ -239,18 +247,18 @@ const char *global_last_failed_assert = NULL;
 
 /* Keeps a map of the values that functions will have to return to provide */
 /* mocked interfaces. */
-static ListNode global_function_result_map_head;
+static CMOCKA_THREAD ListNode global_function_result_map_head;
 /* Location of the last mock value returned was declared. */
-static SourceLocation global_last_mock_value_location;
+static CMOCKA_THREAD SourceLocation global_last_mock_value_location;
 
 /* Keeps a map of the values that functions expect as parameters to their
  * mocked interfaces. */
-static ListNode global_function_parameter_map_head;
+static CMOCKA_THREAD ListNode global_function_parameter_map_head;
 /* Location of last parameter value checked was declared. */
-static SourceLocation global_last_parameter_location;
+static CMOCKA_THREAD SourceLocation global_last_parameter_location;
 
 /* List of all currently allocated blocks. */
-static ListNode global_allocated_blocks;
+static CMOCKA_THREAD ListNode global_allocated_blocks;
 
 #ifndef _WIN32
 /* Signals caught by exception_handler(). */
