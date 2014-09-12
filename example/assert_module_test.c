@@ -47,10 +47,10 @@ static void decrement_value_fail(void **state) {
 }
 
 int main(void) {
-    const UnitTest tests[] = {
-        unit_test(increment_value_fail),
-        unit_test(increment_value_assert),
-        unit_test(decrement_value_fail),
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(increment_value_fail),
+        cmocka_unit_test(increment_value_assert),
+        cmocka_unit_test(decrement_value_fail),
     };
-    return run_tests(tests);
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }

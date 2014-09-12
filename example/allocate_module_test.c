@@ -44,10 +44,10 @@ static void buffer_underflow_test(void **state) {
 }
 
 int main(void) {
-    const UnitTest tests[] = {
-        unit_test(leak_memory_test),
-        unit_test(buffer_overflow_test),
-        unit_test(buffer_underflow_test),
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(leak_memory_test),
+        cmocka_unit_test(buffer_overflow_test),
+        cmocka_unit_test(buffer_underflow_test),
     };
-    return run_tests(tests);
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }

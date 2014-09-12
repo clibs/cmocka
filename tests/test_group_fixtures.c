@@ -6,20 +6,22 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-static void group_setup(void **state)
+static int group_setup(void **state)
 {
     int *answer = malloc(sizeof(int));
     assert_non_null(answer);
     *answer = 42;
 
     *state = answer;
+    return 0;
 }
 
-static void group_teardown(void **state)
+static int group_teardown(void **state)
 {
     int *answer = (int *)*state;
 
     free(answer);
+    return 0;
 }
 
 static void test_value_equal(void **state)
@@ -37,12 +39,10 @@ static void test_value_range(void **state)
 }
 
 int main(void) {
-    const UnitTest tests[] = {
-        group_test_setup(group_setup),
-        unit_test(test_value_equal),
-        unit_test(test_value_range),
-        group_test_teardown(group_teardown),
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(test_value_equal),
+        cmocka_unit_test(test_value_range),
     };
 
-    return run_group_tests(tests);
+    return cmocka_run_group_tests(tests, group_setup, group_teardown);
 }

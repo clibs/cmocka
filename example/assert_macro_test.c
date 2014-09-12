@@ -38,9 +38,9 @@ static void string_to_status_code_test(void **state) {
 }
 
 int main(void) {
-    const UnitTest tests[] = {
-        unit_test(get_status_code_string_test),
-        unit_test(string_to_status_code_test),
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(get_status_code_string_test),
+        cmocka_unit_test(string_to_status_code_test),
     };
-    return run_tests(tests);
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }

@@ -5,11 +5,11 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-static void setup_fail(void **state) {
+static int setup_fail(void **state) {
     *state = NULL;
 
     /* We need to fail in setup */
-    assert_non_null(NULL);
+    return -1;
 }
 
 static void int_test_ignored(void **state) {
@@ -17,13 +17,18 @@ static void int_test_ignored(void **state) {
     assert_non_null(*state);
 }
 
-static void setup_ok(void **state) {
-    int *answer = malloc(sizeof(int));
+static int setup_ok(void **state) {
+    int *answer;
 
-    assert_non_null(answer);
+    answer = malloc(sizeof(int));
+    if (answer == NULL) {
+        return -1;
+    }
     *answer = 42;
 
     *state = answer;
+
+    return 0;
 }
 
 /* A test case that does check if an int is equal. */
@@ -33,15 +38,17 @@ static void int_test_success(void **state) {
     assert_int_equal(*answer, 42);
 }
 
-static void teardown(void **state) {
+static int teardown(void **state) {
     free(*state);
+
+    return 0;
 }
 
 int main(void) {
-    const UnitTest tests[] = {
-        unit_test_setup_teardown(int_test_ignored, setup_fail, teardown),
-        unit_test_setup_teardown(int_test_success, setup_ok, teardown),
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test_setup_teardown(int_test_ignored, setup_fail, teardown),
+        cmocka_unit_test_setup_teardown(int_test_success, setup_ok, teardown),
     };
 
-    return run_tests(tests);
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }

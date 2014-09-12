@@ -5,14 +5,18 @@
 
 #include <stdlib.h>
 
-static void setup_only(void **state)
+static int setup_only(void **state)
 {
     *state = malloc(1);
+
+    return 0;
 }
 
-static void teardown_only(void **state)
+static int teardown_only(void **state)
 {
     free(*state);
+
+    return 0;
 }
 
 static void malloc_setup_test(void **state)
@@ -28,14 +32,14 @@ static void malloc_teardown_test(void **state)
 }
 
 int main(void) {
-    const UnitTest tests[] = {
-        unit_test_setup(malloc_setup_test, setup_only),
-        unit_test_setup(malloc_setup_test, setup_only),
-        unit_test_teardown(malloc_teardown_test, teardown_only),
-        unit_test_teardown(malloc_teardown_test, teardown_only),
-        unit_test_teardown(malloc_teardown_test, teardown_only),
-        unit_test_teardown(malloc_teardown_test, teardown_only),
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test_setup(malloc_setup_test, setup_only),
+        cmocka_unit_test_setup(malloc_setup_test, setup_only),
+        cmocka_unit_test_teardown(malloc_teardown_test, teardown_only),
+        cmocka_unit_test_teardown(malloc_teardown_test, teardown_only),
+        cmocka_unit_test_teardown(malloc_teardown_test, teardown_only),
+        cmocka_unit_test_teardown(malloc_teardown_test, teardown_only),
     };
 
-    return run_tests(tests);
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }

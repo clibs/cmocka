@@ -20,9 +20,9 @@ static void test_segfault_recovery(void **state)
 }
 
 int main(void) {
-    const UnitTest tests[] = {
-        unit_test(test_segfault_recovery),
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(test_segfault_recovery),
     };
 
-    return run_tests(tests);
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }

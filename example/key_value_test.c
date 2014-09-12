@@ -28,16 +28,20 @@ static KeyValue key_values[] = {
     { 13, "is" },
 };
 
-static void create_key_values(void **state) {
+static int create_key_values(void **state) {
     KeyValue * const items = (KeyValue*)test_malloc(sizeof(key_values));
     memcpy(items, key_values, sizeof(key_values));
     *state = (void*)items;
     set_key_values(items, sizeof(key_values) / sizeof(key_values[0]));
+
+    return 0;
 }
 
-static void destroy_key_values(void **state) {
+static int destroy_key_values(void **state) {
     test_free(*state);
     set_key_values(NULL, 0);
+
+    return 0;
 }
 
 static void test_find_item_by_value(void **state) {
@@ -63,11 +67,11 @@ static void test_sort_items_by_key(void **state) {
 }
 
 int main(void) {
-    const UnitTest tests[] = {
-        unit_test_setup_teardown(test_find_item_by_value, create_key_values,
-                                 destroy_key_values),
-        unit_test_setup_teardown(test_sort_items_by_key, create_key_values,
-                                 destroy_key_values),
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test_setup_teardown(test_find_item_by_value,
+                                        create_key_values, destroy_key_values),
+        cmocka_unit_test_setup_teardown(test_sort_items_by_key,
+                                        create_key_values, destroy_key_values),
     };
-    return run_tests(tests);
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }

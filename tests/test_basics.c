@@ -22,17 +22,21 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-static void setup(void **state) {
+static int setup(void **state) {
     int *answer = malloc(sizeof(int));
 
     assert_non_null(answer);
     *answer = 42;
 
     *state = answer;
+
+    return 0;
 }
 
-static void teardown(void **state) {
+static int teardown(void **state) {
     free(*state);
+
+    return 0;
 }
 
 /* A test case that does nothing and succeeds. */
@@ -49,10 +53,10 @@ static void int_test_success(void **state) {
 
 
 int main(void) {
-    const UnitTest tests[] = {
-        unit_test(null_test_success),
-        unit_test_setup_teardown(int_test_success, setup, teardown),
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(null_test_success),
+        cmocka_unit_test_setup_teardown(int_test_success, setup, teardown),
     };
 
-    return run_tests(tests);
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }

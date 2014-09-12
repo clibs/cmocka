@@ -50,7 +50,7 @@ set_tests_properties(
     test_setup_fail_1_failed
         PROPERTIES
         PASS_REGULAR_EXPRESSION
-        "\\[  FAILED  \\] 1 test\\(s\\), listed below:"
+        "\\[  ERROR   \\] int_test_ignored"
 )
 
 add_test (test_setup_fail_1_passed test_setup_fail)
@@ -66,7 +66,7 @@ set_tests_properties(
     test_setup_fail_match_failed
         PROPERTIES
         PASS_REGULAR_EXPRESSION
-        "\\[  FAILED  \\] int_test_ignored_setup_fail"
+        "\\[  ERROR   \\] int_test_ignored"
 )
 
 add_test (test_setup_fail_match_passed test_setup_fail)

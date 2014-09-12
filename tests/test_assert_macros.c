@@ -26,8 +26,9 @@ static void test_assert_return_code(void **state)
 }
 
 int main(void) {
-    const UnitTest tests[] = {
-        unit_test(test_assert_return_code),
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(test_assert_return_code),
     };
-    return run_tests(tests);
+
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }

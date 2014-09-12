@@ -452,29 +452,29 @@ static void test_example_main(void **state) {
 
 
 int main(void) {
-	UnitTest tests[] = {
-		unit_test(test_add),
-		unit_test(test_subtract),
-		unit_test(test_multiply),
-		unit_test(test_divide),
-		unit_test(test_divide_by_zero),
-		unit_test(test_find_operator_function_by_string_null_functions),
-		unit_test(test_find_operator_function_by_string_null_string),
-		unit_test(test_find_operator_function_by_string_valid_null_functions),
-		unit_test(test_find_operator_function_by_string_not_found),
-		unit_test(test_find_operator_function_by_string_found),
-		unit_test(test_perform_operation_null_args),
-		unit_test(test_perform_operation_null_operator_functions),
-		unit_test(test_perform_operation_null_number_of_intermediate_values),
-		unit_test(test_perform_operation_null_intermediate_values),
-		unit_test(test_perform_operation_no_arguments),
-		unit_test(test_perform_operation_first_arg_not_integer),
-		unit_test(test_perform_operation_unknown_operator),
-		unit_test(test_perform_operation_missing_argument),
-		unit_test(test_perform_operation_no_integer_after_operator),
-		unit_test(test_perform_operation),
-		unit_test(test_example_main_no_args),
-		unit_test(test_example_main),
+	const struct CMUnitTest tests[] = {
+		cmocka_unit_test(test_add),
+		cmocka_unit_test(test_subtract),
+		cmocka_unit_test(test_multiply),
+		cmocka_unit_test(test_divide),
+		cmocka_unit_test(test_divide_by_zero),
+		cmocka_unit_test(test_find_operator_function_by_string_null_functions),
+		cmocka_unit_test(test_find_operator_function_by_string_null_string),
+		cmocka_unit_test(test_find_operator_function_by_string_valid_null_functions),
+		cmocka_unit_test(test_find_operator_function_by_string_not_found),
+		cmocka_unit_test(test_find_operator_function_by_string_found),
+		cmocka_unit_test(test_perform_operation_null_args),
+		cmocka_unit_test(test_perform_operation_null_operator_functions),
+		cmocka_unit_test(test_perform_operation_null_number_of_intermediate_values),
+		cmocka_unit_test(test_perform_operation_null_intermediate_values),
+		cmocka_unit_test(test_perform_operation_no_arguments),
+		cmocka_unit_test(test_perform_operation_first_arg_not_integer),
+		cmocka_unit_test(test_perform_operation_unknown_operator),
+		cmocka_unit_test(test_perform_operation_missing_argument),
+		cmocka_unit_test(test_perform_operation_no_integer_after_operator),
+		cmocka_unit_test(test_perform_operation),
+		cmocka_unit_test(test_example_main_no_args),
+		cmocka_unit_test(test_example_main),
 	};
-	return run_tests(tests);
+	return cmocka_run_group_tests(tests, NULL, NULL);
 }

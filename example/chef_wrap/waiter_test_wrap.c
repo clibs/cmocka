@@ -167,10 +167,10 @@ static void test_bad_dish(void **state)
 
 int main(void)
 {
-    const UnitTest tests[] = {
-        unit_test(test_order_hotdog),
-        unit_test(test_bad_dish),
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(test_order_hotdog),
+        cmocka_unit_test(test_bad_dish),
     };
 
-    return run_tests(tests);
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }
