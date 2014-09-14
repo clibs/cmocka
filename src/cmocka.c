@@ -80,9 +80,6 @@ WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 /* Printf formatting for source code locations. */
 #define SOURCE_LOCATION_FORMAT "%s:%u"
 
-/* Calculates the number of elements in an array. */
-#define ARRAY_LENGTH(x) (sizeof(x) / sizeof((x)[0]))
-
 /*
  * Declare and initialize the pointer member of ValuePointer variable name
  * with ptr.
@@ -268,7 +265,7 @@ static const int exception_signals[] = {
 /* Default signal functions that should be restored after a test is complete. */
 typedef void (*SignalFunction)(int signal);
 static SignalFunction default_signal_functions[
-    ARRAY_LENGTH(exception_signals)];
+    ARRAY_SIZE(exception_signals)];
 
 #else /* _WIN32 */
 
@@ -1520,7 +1517,7 @@ void _test_free(void* const ptr, const char* file, const int line) {
     {
         char *guards[2] = {block - MALLOC_GUARD_SIZE,
                            block + block_info->size};
-        for (i = 0; i < ARRAY_LENGTH(guards); i++) {
+        for (i = 0; i < ARRAY_SIZE(guards); i++) {
             unsigned int j;
             char * const guard = guards[i];
             for (j = 0; j < MALLOC_GUARD_SIZE; j++) {
@@ -1633,7 +1630,7 @@ static LONG WINAPI exception_filter(EXCEPTION_POINTERS *exception_pointers) {
         exception_pointers->ExceptionRecord;
     const DWORD code = exception_record->ExceptionCode;
     unsigned int i;
-    for (i = 0; i < ARRAY_LENGTH(exception_codes); i++) {
+    for (i = 0; i < ARRAY_SIZE(exception_codes); i++) {
         const ExceptionCodeInfo * const code_info = &exception_codes[i];
         if (code == code_info->code) {
             static int shown_debug_message = 0;
@@ -1723,7 +1720,7 @@ int _run_test(
     if (handle_exceptions) {
 #ifndef _WIN32
         unsigned int i;
-        for (i = 0; i < ARRAY_LENGTH(exception_signals); i++) {
+        for (i = 0; i < ARRAY_SIZE(exception_signals); i++) {
             default_signal_functions[i] = signal(
                 exception_signals[i], exception_handler);
         }
@@ -1763,7 +1760,7 @@ int _run_test(
     if (handle_exceptions) {
 #ifndef _WIN32
         unsigned int i;
-        for (i = 0; i < ARRAY_LENGTH(exception_signals); i++) {
+        for (i = 0; i < ARRAY_SIZE(exception_signals); i++) {
             signal(exception_signals[i], default_signal_functions[i]);
         }
 #else /* _WIN32 */
