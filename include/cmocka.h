@@ -60,6 +60,14 @@ int __stdcall IsDebuggerPresent();
 #define CMOCKA_PRINTF_ATTRIBUTE(a,b)
 #endif /* __GNUC__ */
 
+#if defined(__GNUC__)
+#define CMOCKA_DEPRECATED __attribute__ ((deprecated))
+#elif defined(_MSC_VER)
+#define CMOCKA_DEPRECATED __declspec(deprecated)
+#else
+#define CMOCKA_DEPRECATED
+#endif
+
 /**
  * @defgroup cmocka The CMocka API
  *
@@ -1395,57 +1403,7 @@ static inline void _unit_test_dummy(void **state) {
  */
 #define cmocka_unit_test_setup_teardown(f, setup, teardown) { #f, f, setup, teardown }
 
-#ifdef DOXYGEN
-/**
- * @brief Run tests specified by an array of UnitTest structures.
- *
- * @param[in]  tests[] The array of unit tests to execute.
- *
- * @return 0 on success, 1 if an error occured.
- *
- * @code
- * static void setup(void **state) {
- *      int *answer = malloc(sizeof(int));
- *      assert_non_null(answer);
- *
- *      *answer = 42;
- *
- *      *state = answer;
- * }
- *
- * static void teardown(void **state) {
- *      free(*state);
- * }
- *
- * static void null_test_success(void **state) {
- *     (void) state;
- * }
- *
- * static void int_test_success(void **state) {
- *      int *answer = *state;
- *      assert_int_equal(*answer, 42);
- * }
- *
- * int main(void) {
- *     const UnitTest tests[] = {
- *         unit_test(null_test_success),
- *         unit_test_setup_teardown(int_test_success, setup, teardown),
- *     };
- *
- *     return run_tests(tests);
- * }
- * @endcode
- *
- * @see unit_test
- * @see unit_test_setup
- * @see unit_test_teardown
- * @see unit_test_setup_teardown
- */
-int run_tests(const UnitTest tests[]);
-#else
 #define run_tests(tests) _run_tests(tests, sizeof(tests) / sizeof(tests)[0])
-#endif
-
 #define run_group_tests(tests) _run_group_tests(tests, sizeof(tests) / sizeof(tests)[0])
 
 #ifdef DOXYGEN
@@ -1971,13 +1929,15 @@ void* _test_calloc(const size_t number_of_elements, const size_t size,
 void _test_free(void* const ptr, const char* file, const int line);
 
 void _fail(const char * const file, const int line);
+
 int _run_test(
     const char * const function_name, const UnitTestFunction Function,
     void ** const volatile state, const UnitTestFunctionType function_type,
     const void* const heap_check_point);
-int _run_tests(const UnitTest * const tests, const size_t number_of_tests);
-int _run_group_tests(const UnitTest * const tests,
-                     const size_t number_of_tests);
+CMOCKA_DEPRECATED int _run_tests(const UnitTest * const tests,
+                                 const size_t number_of_tests);
+CMOCKA_DEPRECATED int _run_group_tests(const UnitTest * const tests,
+                                       const size_t number_of_tests);
 
 /* Test runner */
 int _cmocka_run_group_tests(const char *group_name,
