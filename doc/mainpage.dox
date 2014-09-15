@@ -57,11 +57,11 @@ static void null_test_success(void **state) {
 }
 
 int main(void) {
-    const UnitTest tests[] = {
-        unit_test(null_test_success),
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(null_test_success),
     };
 
-    return run_tests(tests);
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }
 @endcode
 
@@ -84,16 +84,17 @@ the mock object to return. CMocka provides and API to easily mock code.
 
 @section main-threads Threading
 
-cmocka is not thread safe and it is not the goal of it to be it. However if
-you use cmocka for writing tests in an application which uses threads, you
-can set the following envionment variable:
+cmocka is not fully thread safe and it is not the goal of it to be it. We have
+several global variables to track test states. They are marked as thread local
+but it is possible that you still run into issues. However if you use cmocka
+for writing tests in an application which uses threads, you can set the
+following envionment variable:
 
 <pre>
     CMOCKA_TEST_ABORT='1' ./my_threading_test
 </pre>
 
 With this environment variable set to '1', cmocka will call <tt>abort()</tt> if
-a test fails. Else it is likely that you will run into deadlocks with mutexes
-or other funny errors.
+a test fails.
 
 */
