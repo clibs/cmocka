@@ -992,6 +992,7 @@ static void expect_set(
     assert_true(number_of_values);
     memcpy(set, values, number_of_values * sizeof(values[0]));
     check_integer_set->set = set;
+    check_integer_set->size_of_set = number_of_values;
     _expect_check(
         function, parameter, file, line, check_function,
         check_data.value, &check_integer_set->event, count);
