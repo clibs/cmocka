@@ -91,6 +91,12 @@ WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 # define CMOCKA_THREAD
 #endif
 
+#ifdef HAVE_CLOCK_GETTIME_REALTIME
+#define CMOCKA_CLOCK_GETTIME(clock_id, ts) clock_gettime((clock_id), (ts))
+#else
+#define CMOCKA_CLOCK_GETTIME(clock_id, ts)
+#endif
+
 /*
  * Declare and initialize the pointer member of ValuePointer variable name
  * with ptr.
@@ -1963,7 +1969,14 @@ static int cmocka_run_group_fixture(const char *function_name,
 
 static int cmocka_run_one_tests(struct CMUnitTestState *test_state)
 {
-    struct timespec start, finish;
+    struct timespec start = {
+        .tv_sec = 0,
+        .tv_nsec = 0,
+    };
+    struct timespec finish = {
+        .tv_sec = 0,
+        .tv_nsec = 0,
+    };
     int rc = 0;
 
     /* Run setup */
@@ -1983,7 +1996,7 @@ static int cmocka_run_one_tests(struct CMUnitTestState *test_state)
     }
 
     /* Run test */
-    clock_gettime(CLOCK_REALTIME, &start);
+    CMOCKA_CLOCK_GETTIME(CLOCK_REALTIME, &start);
 
     if (rc == 0) {
         rc = cmocka_run_one_test_or_fixture(test_state->test->name,
@@ -2000,7 +2013,7 @@ static int cmocka_run_one_tests(struct CMUnitTestState *test_state)
         rc = 0;
     }
 
-    clock_gettime(CLOCK_REALTIME, &finish);
+    CMOCKA_CLOCK_GETTIME(CLOCK_REALTIME, &finish);
     test_state->runtime = cm_secdiff(finish, start);
 
     /* Run teardown */

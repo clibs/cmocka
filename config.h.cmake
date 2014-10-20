@@ -62,6 +62,9 @@
 /* Define to 1 if you have the <sys/types.h> header file. */
 #cmakedefine HAVE_SYS_TYPES_H 1
 
+/* Define to 1 if you have the <time.h> header file. */
+#cmakedefine HAVE_TIME_H 1
+
 /* Define to 1 if you have the <unistd.h> header file. */
 #cmakedefine HAVE_UNISTD_H 1
 
@@ -115,6 +118,9 @@
 /* Define to 1 if you have the `strsignal' function. */
 #cmakedefine HAVE_STRSIGNAL 1
 
+/* Define to 1 if you have the `clock_gettime' function. */
+#cmakedefine HAVE_CLOCK_GETTIME 1
+
 /**************************** OPTIONS ****************************/
 
 /* Check if we have TLS support with GCC */
@@ -122,6 +128,9 @@
 
 /* Check if we have TLS support with MSVC */
 #cmakedefine HAVE_MSVC_THREAD_LOCAL_STORAGE 1
+
+/* Check if we have CLOCK_REALTIME for clock_gettime() */
+#cmakedefine HAVE_CLOCK_GETTIME_REALTIME 1
 
 /*************************** ENDIAN *****************************/
 

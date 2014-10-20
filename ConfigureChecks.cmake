@@ -61,6 +61,7 @@ check_include_file(string.h HAVE_STRING_H)
 check_include_file(strings.h HAVE_STRINGS_H)
 check_include_file(sys/stat.h HAVE_SYS_STAT_H)
 check_include_file(sys/types.h HAVE_SYS_TYPES_H)
+check_include_file(time.h HAVE_TIME_H)
 check_include_file(unistd.h HAVE_UNISTD_H)
 
 
@@ -80,6 +81,7 @@ check_function_exists(strsignal HAVE_STRSIGNAL)
 check_function_exists(sprintf HAVE_SNPRINTF)
 check_function_exists(strcmp HAVE_STRCMP)
 check_function_exists(vsnprintf HAVE_VSNPRINTF)
+check_function_exists(clock_gettime HAVE_CLOCK_GETTIME)
 
 if (WIN32)
     check_function_exists(_vsnprintf_s HAVE__VSNPRINTF_S)
@@ -87,6 +89,11 @@ if (WIN32)
     check_function_exists(_snprintf HAVE__SNPRINTF)
     check_function_exists(_snprintf_s HAVE__SNPRINTF_S)
 endif (WIN32)
+
+find_library(RT_LIBRARY rt)
+if (RT_LIBRARY)
+    set(CMAKE_REQUIRED_LIBRARIES ${RT_LIBRARY})
+endif (RT_LIBRARY)
 
 set(CMOCKA_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} CACHE INTERNAL "cmocka required system libraries")
 
@@ -106,6 +113,23 @@ int main(void) {
     return 0;
 }" HAVE_MSVC_THREAD_LOCAL_STORAGE)
 endif(WIN32)
+
+if (HAVE_TIME_H AND HAVE_CLOCK_GETTIME)
+    set(CMAKE_REQUIRED_LIBRARIES ${RT_LIBRARY})
+
+    message(STATUS "CMAKE_REQUIRED_INCLUDES=${CMAKE_REQUIRED_INCLUDES} CMAKE_REQUIRED_LIBRARIES=${CMAKE_REQUIRED_LIBRARIES}")
+    check_c_source_compiles("
+#include <time.h>
+
+int main(void) {
+    struct timespec ts;
+
+    clock_gettime(CLOCK_REALTIME, &ts);
+
+    return 0;
+}" HAVE_CLOCK_GETTIME_REALTIME)
+    set(CMAKE_REQUIRED_INCLUDES)
+endif (HAVE_TIME_H AND HAVE_CLOCK_GETTIME)
 
 # ENDIAN
 if (NOT WIN32)
