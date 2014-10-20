@@ -113,7 +113,7 @@
 #cmakedefine HAVE_VSNPRINTF 1
 
 /* Define to 1 if you have the `strsignal' function. */
-#cmakedefine HAVE_STRSIGNAL 0
+#cmakedefine HAVE_STRSIGNAL 1
 
 /**************************** OPTIONS ****************************/
 
