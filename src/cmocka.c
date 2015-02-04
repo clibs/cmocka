@@ -1862,6 +1862,100 @@ void print_error(const char* const format, ...) {
     va_end(args);
 }
 
+/* New formatter */
+enum cm_printf_type {
+    PRINTF_TEST_START,
+    PRINTF_TEST_SUCCESS,
+    PRINTF_TEST_FAILURE,
+    PRINTF_TEST_ERROR,
+    PRINTF_TEST_SKIPPED,
+};
+
+static void cmprintf_group_start_standard(const size_t num_tests)
+{
+    print_message("[==========] Running %u test(s).\n",
+                  (unsigned)num_tests);
+}
+
+static void cmprintf_group_finish_standard(size_t total_executed,
+                                           size_t total_passed,
+                                           size_t total_failed,
+                                           size_t total_errors,
+                                           struct CMUnitTestState *cm_tests)
+{
+    size_t i;
+
+    print_message("[==========] %u test(s) run.\n", (unsigned)total_executed);
+    print_error("[  PASSED  ] %u test(s).\n",
+                (unsigned)(total_passed));
+
+    if (total_failed) {
+        print_error("[  FAILED  ] %"PRIdS " test(s), listed below:\n", total_failed);
+        for (i = 0; i < total_executed; i++) {
+            struct CMUnitTestState *cmtest = &cm_tests[i];
+
+            if (cmtest->status == CM_TEST_FAILED) {
+                print_error("[  FAILED  ] %s\n", cmtest->test->name);
+            }
+        }
+        print_error("\n %u FAILED TEST(S)\n",
+                    (unsigned)(total_failed + total_errors));
+    }
+}
+
+static void cmprintf_standard(enum cm_printf_type type,
+                              const char *test_name,
+                              const char *error_message)
+{
+    switch (type) {
+    case PRINTF_TEST_START:
+        print_message("[ RUN      ] %s\n", test_name);
+        break;
+    case PRINTF_TEST_SUCCESS:
+        print_message("[       OK ] %s\n", test_name);
+        break;
+    case PRINTF_TEST_FAILURE:
+        if (error_message != NULL) {
+            print_error("%s\n", error_message);
+        }
+        print_message("[  FAILED  ] %s\n", test_name);
+        break;
+    case PRINTF_TEST_SKIPPED:
+        print_message("[  SKIPPED ] %s\n", test_name);
+        break;
+    case PRINTF_TEST_ERROR:
+        if (error_message != NULL) {
+            print_error("%s\n", error_message);
+        }
+        print_error("[  ERROR   ] %s\n", test_name);
+        break;
+    }
+}
+
+static void cmprintf_group_start(const size_t num_tests)
+{
+    cmprintf_group_start_standard(num_tests);
+}
+
+static void cmprintf_group_finish(size_t total_executed,
+                                  size_t total_passed,
+                                  size_t total_failed,
+                                  size_t total_errors,
+                                  struct CMUnitTestState *cm_tests)
+{
+    cmprintf_group_finish_standard(total_executed,
+                                   total_passed,
+                                   total_failed,
+                                   total_errors,
+                                   cm_tests);
+}
+
+static void cmprintf(enum cm_printf_type type,
+                     const char *test_name,
+                     const char *error_message)
+{
+    cmprintf_standard(type, test_name, error_message);
+}
 
 /****************************************************************************
  * TIME CALCULATIONS
@@ -2126,7 +2220,7 @@ int _cmocka_run_group_tests(const char *group_name,
         return -1;
     }
 
-    print_message("[==========] Running %u test(s).\n", (unsigned)num_tests);
+    cmprintf_group_start(num_tests);
 
     /* Setup cmocka test array */
     for (i = 0; i < num_tests; i++) {
@@ -2152,7 +2246,7 @@ int _cmocka_run_group_tests(const char *group_name,
         for (i = 0; i < num_tests; i++) {
             struct CMUnitTestState *cmtest = &cm_tests[i];
 
-            print_message("[ RUN      ] %s\n", cmtest->test->name);
+            cmprintf(PRINTF_TEST_START, cmtest->test->name, NULL);
 
             if (group_state != NULL) {
                 cm_tests[i].state = group_state;
@@ -2162,33 +2256,42 @@ int _cmocka_run_group_tests(const char *group_name,
             if (rc == 0) {
                 switch (cmtest->status) {
                     case CM_TEST_PASSED:
-                        print_message("[       OK ] %s\n", cmtest->test->name);
+                        cmprintf(PRINTF_TEST_SUCCESS,
+                                 cmtest->test->name,
+                                 cmtest->error_message);
                         total_passed++;
                         break;
                     case CM_TEST_SKIPPED:
-                        print_message("[  SKIPPED ] %s\n", cmtest->test->name);
+                        cmprintf(PRINTF_TEST_SKIPPED,
+                                 cmtest->test->name,
+                                 cmtest->error_message);
                         break;
                     case CM_TEST_FAILED:
-                        print_error("%s\n", cmtest->error_message);
-                        print_message("[   FAILED ] %s\n", cmtest->test->name);
+                        cmprintf(PRINTF_TEST_FAILURE,
+                                 cmtest->test->name,
+                                 cmtest->error_message);
                         total_failed++;
                         break;
                     default:
-                        print_message("[    ERROR ] Internal cmocka error - %s\n",
-                                      cmtest->test->name);
+                        cmprintf(PRINTF_TEST_ERROR,
+                                 cmtest->test->name,
+                                 "Internal cmocka error");
                         total_errors++;
                         break;
                 }
             } else {
-                print_message("[    ERROR ] Internal cmocka error - %s\n",
-                              cmtest->test->name);
+                cmprintf(PRINTF_TEST_ERROR,
+                         cmtest->test->name,
+                         "Could not run the test - check test fixtures");
                 total_errors++;
             }
 
             /* TODO Write xml file here */
         }
     } else {
-        print_message("[  ERROR   ] Group setup failed\n");
+        cmprintf(PRINTF_TEST_ERROR,
+                 group_name, "Group setup failed");
+        total_errors++;
     }
 
     /* Run group teardown */
@@ -2200,12 +2303,11 @@ int _cmocka_run_group_tests(const char *group_name,
                                       group_check_point);
     }
 
-    print_message("[==========] %"PRIdS " test(s) run.\n", num_tests);
-    print_error("[  PASSED  ] %"PRIdS " test(s).\n", total_passed);
-
-    if (total_failed > 0) {
-        print_error("[  FAILED  ] %u test(s)\n", (unsigned)total_failed);
-    }
+    cmprintf_group_finish(total_executed,
+                          total_passed,
+                          total_failed,
+                          total_errors,
+                          cm_tests);
 
     for (i = 0; i < num_tests; i++) {
         vcm_free_error(discard_const_p(char, cm_tests[i].error_message));
