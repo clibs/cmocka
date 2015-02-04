@@ -1865,6 +1865,23 @@ void print_error(const char* const format, ...) {
 }
 
 /* New formatter */
+static enum cm_message_output cm_get_output(void)
+{
+    enum cm_message_output output = global_msg_output;
+    char *env;
+
+    env = getenv("CMOCKA_MESSAGE_OUTPUT");
+    if (env != NULL) {
+        if (strcasecmp(env, "STDOUT") == 0) {
+            output = CM_OUTPUT_STDOUT;
+        } else if (strcasecmp(env, "SUBUNIT") == 0) {
+            output = CM_OUTPUT_SUBUNIT;
+        }
+    }
+
+    return output;
+}
+
 enum cm_printf_type {
     PRINTF_TEST_START,
     PRINTF_TEST_SUCCESS,
@@ -1934,11 +1951,43 @@ static void cmprintf_standard(enum cm_printf_type type,
     }
 }
 
+static void cmprintf_subunit(enum cm_printf_type type,
+                             const char *test_name,
+                             const char *error_message)
+{
+    switch (type) {
+    case PRINTF_TEST_START:
+        print_message("test: %s\n", test_name);
+        break;
+    case PRINTF_TEST_SUCCESS:
+        print_message("success: %s\n", test_name);
+        break;
+    case PRINTF_TEST_FAILURE:
+        print_message("failure: %s", test_name);
+        if (error_message != NULL) {
+            print_message(" [\n%s]\n", error_message);
+        }
+        break;
+    case PRINTF_TEST_SKIPPED:
+        print_message("skip: %s\n", test_name);
+        break;
+    case PRINTF_TEST_ERROR:
+        print_message("error: %s [ %s ]", test_name, error_message);
+        break;
+    }
+}
+
 static void cmprintf_group_start(const size_t num_tests)
 {
-    switch (global_msg_output) {
+    enum cm_message_output output;
+
+    output = cm_get_output();
+
+    switch (output) {
     case CM_OUTPUT_STDOUT:
         cmprintf_group_start_standard(num_tests);
+        break;
+    case CM_OUTPUT_SUBUNIT:
         break;
     }
 }
@@ -1949,13 +1998,19 @@ static void cmprintf_group_finish(size_t total_executed,
                                   size_t total_errors,
                                   struct CMUnitTestState *cm_tests)
 {
-    switch (global_msg_output) {
+    enum cm_message_output output;
+
+    output = cm_get_output();
+
+    switch (output) {
     case CM_OUTPUT_STDOUT:
         cmprintf_group_finish_standard(total_executed,
                                     total_passed,
                                     total_failed,
                                     total_errors,
                                     cm_tests);
+        break;
+    case CM_OUTPUT_SUBUNIT:
         break;
     }
 }
@@ -1964,9 +2019,17 @@ static void cmprintf(enum cm_printf_type type,
                      const char *test_name,
                      const char *error_message)
 {
-    switch (global_msg_output) {
+    va_list ap;
+    enum cm_message_output output;
+
+    output = cm_get_output();
+
+    switch (output) {
     case CM_OUTPUT_STDOUT:
         cmprintf_standard(type, test_name, error_message);
+        break;
+    case CM_OUTPUT_SUBUNIT:
+        cmprintf_subunit(type, test_name, error_message);
         break;
     }
 }
