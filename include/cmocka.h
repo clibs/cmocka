@@ -1952,6 +1952,23 @@ void print_error(const char* const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
 void vprint_message(const char* const format, va_list args) CMOCKA_PRINTF_ATTRIBUTE(1, 0);
 void vprint_error(const char* const format, va_list args) CMOCKA_PRINTF_ATTRIBUTE(1, 0);
 
+enum cm_message_output {
+    CM_OUTPUT_STDOUT,
+};
+
+/**
+ * @brief Function to set the output format for a test.
+ *
+ * The ouput format for the test can either be set globally using this
+ * function or overriden with environment variable CMOCKA_MESSAGE_OUTPUT.
+ *
+ * The environment variable can be set to either STDOUT or SUBUNIT.
+ *
+ * @param[in] output    The output format to use for the test.
+ *
+ */
+void cmocka_set_message_output(enum cm_message_output output);
+
 /** @} */
 
 #endif /* CMOCKA_H_ */

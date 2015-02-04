@@ -273,6 +273,8 @@ static CMOCKA_THREAD SourceLocation global_last_parameter_location;
 /* List of all currently allocated blocks. */
 static CMOCKA_THREAD ListNode global_allocated_blocks;
 
+static enum cm_message_output global_msg_output = CM_OUTPUT_STDOUT;
+
 #ifndef _WIN32
 /* Signals caught by exception_handler(). */
 static const int exception_signals[] = {
@@ -1934,7 +1936,11 @@ static void cmprintf_standard(enum cm_printf_type type,
 
 static void cmprintf_group_start(const size_t num_tests)
 {
-    cmprintf_group_start_standard(num_tests);
+    switch (global_msg_output) {
+    case CM_OUTPUT_STDOUT:
+        cmprintf_group_start_standard(num_tests);
+        break;
+    }
 }
 
 static void cmprintf_group_finish(size_t total_executed,
@@ -1943,18 +1949,31 @@ static void cmprintf_group_finish(size_t total_executed,
                                   size_t total_errors,
                                   struct CMUnitTestState *cm_tests)
 {
-    cmprintf_group_finish_standard(total_executed,
-                                   total_passed,
-                                   total_failed,
-                                   total_errors,
-                                   cm_tests);
+    switch (global_msg_output) {
+    case CM_OUTPUT_STDOUT:
+        cmprintf_group_finish_standard(total_executed,
+                                    total_passed,
+                                    total_failed,
+                                    total_errors,
+                                    cm_tests);
+        break;
+    }
 }
 
 static void cmprintf(enum cm_printf_type type,
                      const char *test_name,
                      const char *error_message)
 {
-    cmprintf_standard(type, test_name, error_message);
+    switch (global_msg_output) {
+    case CM_OUTPUT_STDOUT:
+        cmprintf_standard(type, test_name, error_message);
+        break;
+    }
+}
+
+void cmocka_set_message_output(enum cm_message_output output)
+{
+    global_msg_output = output;
 }
 
 /****************************************************************************
