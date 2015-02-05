@@ -1876,6 +1876,8 @@ static enum cm_message_output cm_get_output(void)
             output = CM_OUTPUT_STDOUT;
         } else if (strcasecmp(env, "SUBUNIT") == 0) {
             output = CM_OUTPUT_SUBUNIT;
+        } else if (strcasecmp(env, "XML") == 0) {
+            output = CM_OUTPUT_XML;
         }
     }
 
@@ -1889,6 +1891,83 @@ enum cm_printf_type {
     PRINTF_TEST_ERROR,
     PRINTF_TEST_SKIPPED,
 };
+
+static void cmprintf_group_finish_xml(const char *group_name,
+                                      size_t total_executed,
+                                      size_t total_failed,
+                                      size_t total_errors,
+                                      double total_runtime,
+                                      struct CMUnitTestState *cm_tests)
+{
+    FILE *fp = stdout;
+    int file_opened = 0;
+    char *env;
+    size_t i;
+
+    env = getenv("CMOCKA_XML_FILE");
+    if (env != NULL) {
+        char buf[1024];
+        snprintf(buf, sizeof(buf), "%s", env);
+
+        fp = fopen(buf, "r");
+        if (fp == NULL) {
+            fp = fopen(buf, "w");
+            if (fp != NULL) {
+                file_opened = 1;
+            } else {
+                fp = stderr;
+            }
+        } else {
+            fclose(fp);
+            fp = stderr;
+        }
+    }
+
+    fprintf(fp, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
+    fprintf(fp, "<testsuites>\n");
+    fprintf(fp, "  <testsuite name=\"%s\" time=\"%.3f\" "
+                "tests=\"%u\" failures=\"%u\" errors=\"%u\" >\n",
+                group_name,
+                total_runtime * 1000, /* miliseconds */
+                (unsigned)total_executed,
+                (unsigned)total_failed,
+                (unsigned)total_errors);
+
+    for (i = 0; i < total_executed; i++) {
+        struct CMUnitTestState *cmtest = &cm_tests[i];
+
+        fprintf(fp, "    <testcase name=\"%s\" time=\"%.3f\" >\n",
+                cmtest->test->name, cmtest->runtime * 1000);
+
+        switch (cmtest->status) {
+        case CM_TEST_ERROR:
+        case CM_TEST_FAILED:
+            if (cmtest->error_message != NULL) {
+                fprintf(fp, "      <failure><![CDATA[%s]]></failure>\n",
+                        cmtest->error_message);
+            } else {
+                fprintf(fp, "      <failure message=\"Unknown error\" />\n");
+            }
+            break;
+        case CM_TEST_SKIPPED:
+            fprintf(fp, "      <skipped/>\n");
+            break;
+
+        case CM_TEST_PASSED:
+        case CM_TEST_NOT_STARTED:
+            break;
+        }
+
+        fprintf(fp, "    </testcase>\n");
+    }
+
+    fprintf(fp, "  </testsuite>\n");
+    fprintf(fp, "</testsuites>\n");
+
+    if (file_opened) {
+        fclose(fp);
+    }
+}
 
 static void cmprintf_group_start_standard(const size_t num_tests)
 {
@@ -1989,13 +2068,17 @@ static void cmprintf_group_start(const size_t num_tests)
         break;
     case CM_OUTPUT_SUBUNIT:
         break;
+    case CM_OUTPUT_XML:
+        break;
     }
 }
 
-static void cmprintf_group_finish(size_t total_executed,
+static void cmprintf_group_finish(const char *group_name,
+                                  size_t total_executed,
                                   size_t total_passed,
                                   size_t total_failed,
                                   size_t total_errors,
+                                  double total_runtime,
                                   struct CMUnitTestState *cm_tests)
 {
     enum cm_message_output output;
@@ -2012,6 +2095,14 @@ static void cmprintf_group_finish(size_t total_executed,
         break;
     case CM_OUTPUT_SUBUNIT:
         break;
+    case CM_OUTPUT_XML:
+        cmprintf_group_finish_xml(group_name,
+                                  total_executed,
+                                  total_failed,
+                                  total_errors,
+                                  total_runtime,
+                                  cm_tests);
+        break;
     }
 }
 
@@ -2019,7 +2110,6 @@ static void cmprintf(enum cm_printf_type type,
                      const char *test_name,
                      const char *error_message)
 {
-    va_list ap;
     enum cm_message_output output;
 
     output = cm_get_output();
@@ -2030,6 +2120,8 @@ static void cmprintf(enum cm_printf_type type,
         break;
     case CM_OUTPUT_SUBUNIT:
         cmprintf_subunit(type, test_name, error_message);
+        break;
+    case CM_OUTPUT_XML:
         break;
     }
 }
@@ -2291,6 +2383,7 @@ int _cmocka_run_group_tests(const char *group_name,
     size_t total_passed = 0;
     size_t total_executed = 0;
     size_t total_errors = 0;
+    double total_runtime = 0;
     size_t i;
     int rc;
 
@@ -2335,6 +2428,7 @@ int _cmocka_run_group_tests(const char *group_name,
             }
             rc = cmocka_run_one_tests(cmtest);
             total_executed++;
+            total_runtime += cmtest->runtime;
             if (rc == 0) {
                 switch (cmtest->status) {
                     case CM_TEST_PASSED:
@@ -2367,8 +2461,6 @@ int _cmocka_run_group_tests(const char *group_name,
                          "Could not run the test - check test fixtures");
                 total_errors++;
             }
-
-            /* TODO Write xml file here */
         }
     } else {
         cmprintf(PRINTF_TEST_ERROR,
@@ -2385,10 +2477,12 @@ int _cmocka_run_group_tests(const char *group_name,
                                       group_check_point);
     }
 
-    cmprintf_group_finish(total_executed,
+    cmprintf_group_finish(group_name,
+                          total_executed,
                           total_passed,
                           total_failed,
                           total_errors,
+                          total_runtime,
                           cm_tests);
 
     for (i = 0; i < num_tests; i++) {

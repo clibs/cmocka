@@ -1955,6 +1955,7 @@ void vprint_error(const char* const format, va_list args) CMOCKA_PRINTF_ATTRIBUT
 enum cm_message_output {
     CM_OUTPUT_STDOUT,
     CM_OUTPUT_SUBUNIT,
+    CM_OUTPUT_XML,
 };
 
 /**
