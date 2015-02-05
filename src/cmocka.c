@@ -240,6 +240,10 @@ static void initialize_testing(const char *test_name);
 /* This must be called at the end of a test to free() allocated structures. */
 static void teardown_testing(const char *test_name);
 
+static int cm_error_message_enabled = 1;
+static CMOCKA_THREAD char *cm_error_message;
+
+void cm_print_error(const char * const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
 
 /*
  * Keeps track of the calling context returned by setenv() so that the fail()
@@ -333,6 +337,7 @@ struct CMUnitTestState {
     const ListNode *check_point; /* Check point of the test if there's a setup function. */
     const struct CMUnitTest *test; /* Point to array element in the tests we get passed */
     void *state; /* State associated with the test */
+    const char *error_message; /* The error messages by the test */
     enum CMUnitTestStatus status; /* PASSED, FAILED, ABORT ... */
     double runtime; /* Time calculations */
 };
@@ -343,6 +348,7 @@ static void exit_test(const int quit_application)
     const char *abort_test = getenv("CMOCKA_TEST_ABORT");
 
     if (abort_test != NULL && abort_test[0] == '1') {
+        print_error("%s", cm_error_message);
         abort();
     } else if (global_running_test) {
         longjmp(global_run_test_env, 1);
@@ -648,7 +654,7 @@ static int get_symbol_value(
         }
         return return_value;
     } else {
-        print_error("No entries for symbol %s.\n", symbol_name);
+        cm_print_error("No entries for symbol %s.\n", symbol_name);
     }
     return 0;
 }
@@ -715,18 +721,18 @@ static int check_for_leftover_values(
         if (!list_empty(child_list)) {
             if (number_of_symbol_names == 1) {
                 const ListNode *child_node;
-                print_error(error_message, value->symbol_name);
+                cm_print_error(error_message, value->symbol_name);
 
                 for (child_node = child_list->next; child_node != child_list;
                      child_node = child_node->next) {
                     const SourceLocation * const location =
-			    (const SourceLocation*)child_node->value;
-                    print_error(SOURCE_LOCATION_FORMAT
-                                ": note: remaining item was declared here\n",
-                                location->file, location->line);
+                        (const SourceLocation*)child_node->value;
+                    cm_print_error(SOURCE_LOCATION_FORMAT
+                                   ": note: remaining item was declared here\n",
+                                   location->file, location->line);
                 }
             } else {
-                print_error("%s.", value->symbol_name);
+                cm_print_error("%s.", value->symbol_name);
                 check_for_leftover_values(child_list, error_message,
                                           number_of_symbol_names - 1);
             }
@@ -752,16 +758,16 @@ LargestIntegralType _mock(const char * const function, const char* const file,
         }
         return value;
     } else {
-        print_error(SOURCE_LOCATION_FORMAT ": error: Could not get value "
-                    "to mock function %s\n", file, line, function);
+        cm_print_error(SOURCE_LOCATION_FORMAT ": error: Could not get value "
+                       "to mock function %s\n", file, line, function);
         if (source_location_is_set(&global_last_mock_value_location)) {
-            print_error(SOURCE_LOCATION_FORMAT
-                        ": note: Previously returned mock value was declared here\n",
-                        global_last_mock_value_location.file,
-                        global_last_mock_value_location.line);
+            cm_print_error(SOURCE_LOCATION_FORMAT
+                           ": note: Previously returned mock value was declared here\n",
+                           global_last_mock_value_location.file,
+                           global_last_mock_value_location.line);
         } else {
-            print_error("There were no previously returned mock values for "
-                        "this test.\n");
+            cm_print_error("There were no previously returned mock values for "
+                           "this test.\n");
         }
         exit_test(1);
     }
@@ -813,8 +819,8 @@ static int values_equal_display_error(const LargestIntegralType left,
                                       const LargestIntegralType right) {
     const int equal = left == right;
     if (!equal) {
-        print_error(LargestIntegralTypePrintfFormat " != "
-                    LargestIntegralTypePrintfFormat "\n", left, right);
+        cm_print_error(LargestIntegralTypePrintfFormat " != "
+                       LargestIntegralTypePrintfFormat "\n", left, right);
     }
     return equal;
 }
@@ -826,8 +832,8 @@ static int values_not_equal_display_error(const LargestIntegralType left,
                                           const LargestIntegralType right) {
     const int not_equal = left != right;
     if (!not_equal) {
-        print_error(LargestIntegralTypePrintfFormat " == "
-                    LargestIntegralTypePrintfFormat "\n", left, right);
+        cm_print_error(LargestIntegralTypePrintfFormat " == "
+                       LargestIntegralTypePrintfFormat "\n", left, right);
     }
     return not_equal;
 }
@@ -860,12 +866,12 @@ static int value_in_set_display_error(
         if (succeeded) {
             return 1;
         }
-        print_error("%" PRIu64 " is %sin the set (", value,
-                    invert ? "" : "not ");
+        cm_print_error("%" PRIu64 " is %sin the set (", value,
+                       invert ? "" : "not ");
         for (i = 0; i < size_of_set; i++) {
-            print_error("%" PRIu64 ", ", set[i]);
+            cm_print_error("%" PRIu64 ", ", set[i]);
         }
-        print_error(")\n");
+        cm_print_error(")\n");
     }
     return 0;
 }
@@ -882,8 +888,8 @@ static int integer_in_range_display_error(
     if (value >= range_min && value <= range_max) {
         return 1;
     }
-    print_error("%" PRIu64 " is not within the range %" PRIu64 "-%" PRIu64 "\n",
-                value, range_min, range_max);
+    cm_print_error("%" PRIu64 " is not within the range %" PRIu64 "-%" PRIu64 "\n",
+                   value, range_min, range_max);
     return 0;
 }
 
@@ -899,8 +905,8 @@ static int integer_not_in_range_display_error(
     if (value < range_min || value > range_max) {
         return 1;
     }
-    print_error("%" PRIu64 " is within the range %" PRIu64 "-%" PRIu64 "\n",
-                value, range_min, range_max);
+    cm_print_error("%" PRIu64 " is within the range %" PRIu64 "-%" PRIu64 "\n",
+                   value, range_min, range_max);
     return 0;
 }
 
@@ -915,7 +921,7 @@ static int string_equal_display_error(
     if (strcmp(left, right) == 0) {
         return 1;
     }
-    print_error("\"%s\" != \"%s\"\n", left, right);
+    cm_print_error("\"%s\" != \"%s\"\n", left, right);
     return 0;
 }
 
@@ -930,7 +936,7 @@ static int string_not_equal_display_error(
     if (strcmp(left, right) != 0) {
         return 1;
     }
-    print_error("\"%s\" == \"%s\"\n", left, right);
+    cm_print_error("\"%s\" == \"%s\"\n", left, right);
     return 0;
 }
 
@@ -947,13 +953,13 @@ static int memory_equal_display_error(const char* const a, const char* const b,
         const char l = a[i];
         const char r = b[i];
         if (l != r) {
-            print_error("difference at offset %" PRIdS " 0x%02x 0x%02x\n",
-                        i, l, r);
+            cm_print_error("difference at offset %" PRIdS " 0x%02x 0x%02x\n",
+                           i, l, r);
             differences ++;
         }
     }
     if (differences) {
-        print_error("%d bytes of %p and %p differ\n", differences,
+        cm_print_error("%d bytes of %p and %p differ\n", differences,
                     a, b);
         return 0;
     }
@@ -978,7 +984,7 @@ static int memory_not_equal_display_error(
         }
     }
     if (same == size) {
-        print_error("%"PRIdS "bytes of %p and %p the same\n", same,
+        cm_print_error("%"PRIdS "bytes of %p and %p the same\n", same,
                     a, b);
         return 0;
     }
@@ -1293,27 +1299,27 @@ void _check_expected(
             free(check);
         }
         if (!check_succeeded) {
-            print_error(SOURCE_LOCATION_FORMAT
-                        ": error: Check of parameter %s, function %s failed\n"
-                        SOURCE_LOCATION_FORMAT
-                        ": note: Expected parameter declared here\n",
-                        file, line,
-                        parameter_name, function_name,
-                        global_last_parameter_location.file,
-                        global_last_parameter_location.line);
+            cm_print_error(SOURCE_LOCATION_FORMAT
+                           ": error: Check of parameter %s, function %s failed\n"
+                           SOURCE_LOCATION_FORMAT
+                           ": note: Expected parameter declared here\n",
+                           file, line,
+                           parameter_name, function_name,
+                           global_last_parameter_location.file,
+                           global_last_parameter_location.line);
             _fail(file, line);
         }
     } else {
-        print_error(SOURCE_LOCATION_FORMAT ": error: Could not get value "
+        cm_print_error(SOURCE_LOCATION_FORMAT ": error: Could not get value "
                     "to check parameter %s of function %s\n", file, line,
                     parameter_name, function_name);
         if (source_location_is_set(&global_last_parameter_location)) {
-            print_error(SOURCE_LOCATION_FORMAT
+            cm_print_error(SOURCE_LOCATION_FORMAT
                         ": note: Previously declared parameter value was declared here\n",
                         global_last_parameter_location.file,
                         global_last_parameter_location.line);
         } else {
-            print_error("There were no previously declared parameter values "
+            cm_print_error("There were no previously declared parameter values "
                         "for this test.\n");
         }
         exit_test(1);
@@ -1329,7 +1335,7 @@ void mock_assert(const int result, const char* const expression,
             global_last_failed_assert = expression;
             longjmp(global_expect_assert_env, result);
         } else {
-            print_error("ASSERT: %s\n", expression);
+            cm_print_error("ASSERT: %s\n", expression);
             _fail(file, line);
         }
     }
@@ -1340,7 +1346,7 @@ void _assert_true(const LargestIntegralType result,
                   const char * const expression,
                   const char * const file, const int line) {
     if (!result) {
-        print_error("%s\n", expression);
+        cm_print_error("%s\n", expression);
         _fail(file, line);
     }
 }
@@ -1377,10 +1383,10 @@ void _assert_return_code(const LargestIntegralType result,
 
     if (result > valmax - 1) {
         if (error > 0) {
-            print_error("%s < 0, errno(%" PRIu64 "): %s\n",
+            cm_print_error("%s < 0, errno(%" PRIu64 "): %s\n",
                         expression, error, strerror(error));
         } else {
-            print_error("%s < 0\n", expression);
+            cm_print_error("%s < 0\n", expression);
         }
         _fail(file, line);
     }
@@ -1513,6 +1519,56 @@ static void *libc_realloc(void *ptr, size_t size)
 #define realloc test_realloc
 }
 
+/* It's important to use the libc malloc and free here otherwise
+ * the automatic free of leaked blocks can reap the error messages
+ */
+static void vcm_print_error(const char* const format, va_list args)
+{
+    char buffer[1024];
+    size_t msg_len = 0;
+    va_list ap;
+    int len;
+
+    len = vsnprintf(buffer, sizeof(buffer), format, args);
+    if (len < 0) {
+        /* TODO */
+        return;
+    }
+
+    if (cm_error_message == NULL) {
+        /* CREATE MESSAGE */
+
+        cm_error_message = libc_malloc(len + 1);
+        if (cm_error_message == NULL) {
+            /* TODO */
+            return;
+        }
+    } else {
+        /* APPEND MESSAGE */
+        char *tmp;
+
+        msg_len = strlen(cm_error_message);
+        tmp = libc_realloc(cm_error_message, msg_len + len + 1);
+        if (tmp == NULL) {
+            return;
+        }
+        cm_error_message = tmp;
+    }
+
+    if (((size_t)len) <= sizeof(buffer)) {
+        memcpy(cm_error_message + msg_len, buffer, len + 1);
+    } else {
+        va_copy(ap, args);
+        vsnprintf(cm_error_message + msg_len, len + 1, format, ap);
+        va_end(ap);
+    }
+}
+
+static void vcm_free_error(char *err_msg)
+{
+    libc_free(err_msg);
+}
+
 /* Use the real malloc in this function. */
 #undef malloc
 void* _test_malloc(const size_t size, const char* file, const int line) {
@@ -1580,13 +1636,13 @@ void _test_free(void* const ptr, const char* file, const int line) {
             for (j = 0; j < MALLOC_GUARD_SIZE; j++) {
                 const char diff = guard[j] - MALLOC_GUARD_PATTERN;
                 if (diff) {
-                    print_error(SOURCE_LOCATION_FORMAT
-                                ": error: Guard block of %p size=%lu is corrupt\n"
-                                SOURCE_LOCATION_FORMAT ": note: allocated here at %p\n",
-                                file, line,
-                                ptr, (unsigned long)block_info->size,
-                                block_info->location.file, block_info->location.line,
-                                &guard[j]);
+                    cm_print_error(SOURCE_LOCATION_FORMAT
+                                   ": error: Guard block of %p size=%lu is corrupt\n"
+                                   SOURCE_LOCATION_FORMAT ": note: allocated here at %p\n",
+                                   file, line,
+                                   ptr, (unsigned long)block_info->size,
+                                   block_info->location.file, block_info->location.line,
+                                   &guard[j]);
                     _fail(file, line);
                 }
             }
@@ -1661,12 +1717,12 @@ static int display_allocated_blocks(const ListNode * const check_point) {
         assert_non_null(block_info);
 
         if (!allocated_blocks) {
-            print_error("Blocks allocated...\n");
+            cm_print_error("Blocks allocated...\n");
         }
-        print_error(SOURCE_LOCATION_FORMAT ": note: block %p allocated here\n",
-                    block_info->location.file,
-                    block_info->location.line,
-                    block_info->block);
+        cm_print_error(SOURCE_LOCATION_FORMAT ": note: block %p allocated here\n",
+                       block_info->location.file,
+                       block_info->location.line,
+                       block_info->block);
         allocated_blocks ++;
     }
     return allocated_blocks;
@@ -1696,15 +1752,15 @@ static void fail_if_blocks_allocated(const ListNode * const check_point,
     const int allocated_blocks = display_allocated_blocks(check_point);
     if (allocated_blocks) {
         free_allocated_blocks(check_point);
-        print_error("ERROR: %s leaked %d block(s)\n", test_name,
-                    allocated_blocks);
+        cm_print_error("ERROR: %s leaked %d block(s)\n", test_name,
+                       allocated_blocks);
         exit_test(1);
     }
 }
 
 
 void _fail(const char * const file, const int line) {
-  print_error(SOURCE_LOCATION_FORMAT ": error: Failure!\n", file, line);
+    cm_print_error(SOURCE_LOCATION_FORMAT ": error: Failure!\n", file, line);
     exit_test(1);
 }
 
@@ -1712,9 +1768,9 @@ void _fail(const char * const file, const int line) {
 #ifndef _WIN32
 static void exception_handler(int sig) {
 #ifdef HAVE_STRSIGNAL
-    print_error("Test failed with exception: %s\n", strsignal(sig));
+    cm_print_error("Test failed with exception: %s\n", strsignal(sig));
 #else
-    print_error("Test failed with exception: %d\n", sig);
+    cm_print_error("Test failed with exception: %d\n", sig);
 #endif
     exit_test(1);
 }
@@ -1731,10 +1787,10 @@ static LONG WINAPI exception_filter(EXCEPTION_POINTERS *exception_pointers) {
         if (code == code_info->code) {
             static int shown_debug_message = 0;
             fflush(stdout);
-            print_error("%s occurred at %p.\n", code_info->description,
+            cm_print_error("%s occurred at %p.\n", code_info->description,
                         exception_record->ExceptionAddress);
             if (!shown_debug_message) {
-                print_error(
+                cm_print_error(
                     "\n"
                     "To debug in Visual Studio...\n"
                     "1. Select menu item File->Open Project\n"
@@ -1756,6 +1812,17 @@ static LONG WINAPI exception_filter(EXCEPTION_POINTERS *exception_pointers) {
 }
 #endif /* !_WIN32 */
 
+void cm_print_error(const char * const format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    if (cm_error_message_enabled) {
+        vcm_print_error(format, args);
+    } else {
+        vprint_error(format, args);
+    }
+    va_end(args);
+}
 
 /* Standard output and error print methods. */
 void vprint_message(const char* const format, va_list args) {
@@ -2029,6 +2096,9 @@ static int cmocka_run_one_tests(struct CMUnitTestState *test_state)
         }
     }
 
+    test_state->error_message = cm_error_message;
+    cm_error_message = NULL;
+
     return rc;
 }
 
@@ -2099,17 +2169,18 @@ int _cmocka_run_group_tests(const char *group_name,
                         print_message("[  SKIPPED ] %s\n", cmtest->test->name);
                         break;
                     case CM_TEST_FAILED:
-                        print_message("[  FAILED  ] %s\n", cmtest->test->name);
+                        print_error("%s\n", cmtest->error_message);
+                        print_message("[   FAILED ] %s\n", cmtest->test->name);
                         total_failed++;
                         break;
                     default:
-                        print_message("[  ERROR   ] Internal cmocka error - %s\n",
+                        print_message("[    ERROR ] Internal cmocka error - %s\n",
                                       cmtest->test->name);
                         total_errors++;
                         break;
                 }
             } else {
-                print_message("[  ERROR   ] Internal cmocka error - %s\n",
+                print_message("[    ERROR ] Internal cmocka error - %s\n",
                               cmtest->test->name);
                 total_errors++;
             }
@@ -2136,6 +2207,9 @@ int _cmocka_run_group_tests(const char *group_name,
         print_error("[  FAILED  ] %u test(s)\n", (unsigned)total_failed);
     }
 
+    for (i = 0; i < num_tests; i++) {
+        vcm_free_error(discard_const_p(char, cm_tests[i].error_message));
+    }
     libc_free(cm_tests);
     fail_if_blocks_allocated(group_check_point, "cmocka_group_tests");
 
@@ -2162,6 +2236,8 @@ int _run_test(
 #ifdef UNIT_TESTING_DEBUG
     handle_exceptions = 0;
 #endif /* UNIT_TESTING_DEBUG */
+
+    cm_error_message_enabled = 0;
 
     if (handle_exceptions) {
 #ifndef _WIN32
