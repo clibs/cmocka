@@ -1506,6 +1506,22 @@ void *test_calloc(size_t nmemb, size_t size);
 
 #ifdef DOXYGEN
 /**
+ * @brief Test function overriding realloc which detects buffer overruns
+ *        and memoery leaks.
+ *
+ * @param[in]  ptr   The memory block which should be changed.
+ *
+ * @param[in]  size  The bytes which should be allocated.
+ *
+ * @return           The newly allocated memory block, NULL on error.
+ */
+void *test_realloc(void *ptr, size_t size);
+#else
+#define test_realloc(ptr, size) _test_realloc(ptr, size, __FILE__, __LINE__)
+#endif
+
+#ifdef DOXYGEN
+/**
  * @brief Test function overriding free(3).
  *
  * @param[in]  ptr  The pointer to the memory space to free.
@@ -1520,6 +1536,7 @@ void test_free(void *ptr);
 /* Redirect malloc, calloc and free to the unit test allocators. */
 #ifdef UNIT_TESTING
 #define malloc test_malloc
+#define realloc test_realloc
 #define calloc test_calloc
 #define free test_free
 #endif /* UNIT_TESTING */
@@ -1785,6 +1802,7 @@ void _assert_not_in_set(
     const size_t number_of_values, const char* const file, const int line);
 
 void* _test_malloc(const size_t size, const char* file, const int line);
+void* _test_realloc(void *ptr, const size_t size, const char* file, const int line);
 void* _test_calloc(const size_t number_of_elements, const size_t size,
                    const char* file, const int line);
 void _test_free(void* const ptr, const char* file, const int line);
