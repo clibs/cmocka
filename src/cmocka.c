@@ -1516,8 +1516,12 @@ void* _test_calloc(const size_t number_of_elements, const size_t size,
 void _test_free(void* const ptr, const char* file, const int line) {
     unsigned int i;
     char *block = discard_const_p(char, ptr);
-
     MallocBlockInfo *block_info;
+
+    if (ptr == NULL) {
+        return;
+    }
+
     _assert_true(cast_ptr_to_largest_integral_type(ptr), "ptr", file, line);
     block_info = (MallocBlockInfo*)(block - (MALLOC_GUARD_SIZE +
                                                sizeof(*block_info)));
