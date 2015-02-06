@@ -7,6 +7,7 @@ include_directories(
 )
 
 set(CMOCKA_TESTS
+    test_alloc
     test_fixtures
     test_group_fixtures
     test_assert_macros
