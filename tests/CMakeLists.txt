@@ -16,7 +16,8 @@ set(CMOCKA_TESTS
     test_exception_handler
     test_basics
     test_skip
-    test_setup_fail)
+    test_setup_fail
+    test_cmockery)
 
 foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
     add_cmocka_test(${_CMOCKA_TEST} ${_CMOCKA_TEST}.c ${CMOCKA_SHARED_LIBRARY})
