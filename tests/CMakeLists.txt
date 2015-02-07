@@ -8,6 +8,7 @@ include_directories(
 
 set(CMOCKA_TESTS
     test_alloc
+    test_group_setup_fail
     test_fixtures
     test_group_fixtures
     test_assert_macros
@@ -40,6 +41,13 @@ set_tests_properties(
 
 set_tests_properties(
     test_setup_fail
+        PROPERTIES
+        WILL_FAIL
+        1
+)
+
+set_tests_properties(
+    test_group_setup_fail
         PROPERTIES
         WILL_FAIL
         1
