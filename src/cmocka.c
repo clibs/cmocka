@@ -257,6 +257,7 @@ static CMOCKA_THREAD int global_running_test = 0;
 jmp_buf global_expect_assert_env;
 int global_expecting_assert = 0;
 const char *global_last_failed_assert = NULL;
+static int global_skip_test;
 
 /* Keeps a map of the values that functions will have to return to provide */
 /* mocked interfaces. */
@@ -359,6 +360,12 @@ static void exit_test(const int quit_application)
     }
 }
 
+void _skip(const char * const file, const int line)
+{
+    cm_print_error(SOURCE_LOCATION_FORMAT ": Skipped!\n", file, line);
+    global_skip_test = 1;
+    exit_test(1);
+}
 
 /* Initialize a SourceLocation structure. */
 static void initialize_source_location(SourceLocation * const location) {
@@ -1898,6 +1905,7 @@ static void cmprintf_group_finish_xml(const char *group_name,
                                       size_t total_executed,
                                       size_t total_failed,
                                       size_t total_errors,
+                                      size_t total_skipped,
                                       double total_runtime,
                                       struct CMUnitTestState *cm_tests)
 {
@@ -1928,12 +1936,13 @@ static void cmprintf_group_finish_xml(const char *group_name,
     fprintf(fp, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
     fprintf(fp, "<testsuites>\n");
     fprintf(fp, "  <testsuite name=\"%s\" time=\"%.3f\" "
-                "tests=\"%u\" failures=\"%u\" errors=\"%u\" >\n",
+                "tests=\"%u\" failures=\"%u\" errors=\"%u\" skipped=\"%u\" >\n",
                 group_name,
                 total_runtime * 1000, /* miliseconds */
                 (unsigned)total_executed,
                 (unsigned)total_failed,
-                (unsigned)total_errors);
+                (unsigned)total_errors,
+                (unsigned)total_skipped);
 
     for (i = 0; i < total_executed; i++) {
         struct CMUnitTestState *cmtest = &cm_tests[i];
@@ -2140,6 +2149,7 @@ static void cmprintf_group_finish(const char *group_name,
                                   size_t total_passed,
                                   size_t total_failed,
                                   size_t total_errors,
+                                  size_t total_skipped,
                                   double total_runtime,
                                   struct CMUnitTestState *cm_tests)
 {
@@ -2163,6 +2173,7 @@ static void cmprintf_group_finish(const char *group_name,
                                   total_executed,
                                   total_failed,
                                   total_errors,
+                                  total_skipped,
                                   total_runtime,
                                   cm_tests);
         break;
@@ -2410,7 +2421,12 @@ static int cmocka_run_one_tests(struct CMUnitTestState *test_state)
         if (rc == 0) {
             test_state->status = CM_TEST_PASSED;
         } else {
-            test_state->status = CM_TEST_FAILED;
+            if (global_skip_test) {
+                test_state->status = CM_TEST_SKIPPED;
+                global_skip_test = 0; /* Do not skip the next test */
+            } else {
+                test_state->status = CM_TEST_FAILED;
+            }
         }
         rc = 0;
     }
@@ -2450,6 +2466,7 @@ int _cmocka_run_group_tests(const char *group_name,
     size_t total_passed = 0;
     size_t total_executed = 0;
     size_t total_errors = 0;
+    size_t total_skipped = 0;
     double total_runtime = 0;
     size_t i;
     int rc;
@@ -2511,6 +2528,7 @@ int _cmocka_run_group_tests(const char *group_name,
                                  test_number,
                                  cmtest->test->name,
                                  cmtest->error_message);
+                        total_skipped++;
                         break;
                     case CM_TEST_FAILED:
                         cmprintf(PRINTF_TEST_FAILURE,
@@ -2555,6 +2573,7 @@ int _cmocka_run_group_tests(const char *group_name,
                           total_passed,
                           total_failed,
                           total_errors,
+                          total_skipped,
                           total_runtime,
                           cm_tests);
 

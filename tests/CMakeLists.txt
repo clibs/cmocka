@@ -15,6 +15,7 @@ set(CMOCKA_TESTS
     test_assert_macros_fail
     test_exception_handler
     test_basics
+    test_skip
     test_setup_fail)
 
 foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
@@ -22,6 +23,14 @@ foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
 endforeach()
 
 ### Exceptions
+
+# test_assert_macros_fail
+set_tests_properties(
+    test_skip
+        PROPERTIES
+        PASS_REGULAR_EXPRESSION
+        "\\[  SKIPPED \\] test_check_skip"
+)
 
 # test_assert_macros_fail
 set_tests_properties(

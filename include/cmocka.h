@@ -1301,6 +1301,15 @@ void fail(void);
 
 #ifdef DOXYGEN
 /**
+ * @brief Forces the test to not be executed, but marked as skipped
+ */
+void skip(void);
+#else
+#define skip() _skip(__FILE__, __LINE__)
+#endif
+
+#ifdef DOXYGEN
+/**
  * @brief Forces the test to fail immediately and quit, printing the reason.
  *
  * @code
@@ -1929,6 +1938,8 @@ void* _test_calloc(const size_t number_of_elements, const size_t size,
 void _test_free(void* const ptr, const char* file, const int line);
 
 void _fail(const char * const file, const int line);
+
+void _skip(const char * const file, const int line);
 
 int _run_test(
     const char * const function_name, const UnitTestFunction Function,
