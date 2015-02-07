@@ -33,6 +33,7 @@ The CMocka library provides:
  - Very well tested
  - Testing of memory leaks, buffer overflows and underflows.
  - A set of assert macros.
+ - Several supported output formats (stdout, jUnit XML, Subunit)
  - License: Apache License 2.0
 
 @section main-test A cmocka test
@@ -96,5 +97,21 @@ following envionment variable:
 
 With this environment variable set to '1', cmocka will call <tt>abort()</tt> if
 a test fails.
+
+@section main-output Output formats
+
+By default, cmocka prints human-readable test output to stderr. It is
+possible to configure several other output formats.  The configuration is
+done using the <tt>CMOCKA_MESSAGE_OUTPUT</tt> environment variable. The
+supported values are:
+ - <tt>STDOUT</tt> for the default standard output printer
+ - <tt>XML</tt> for jUnit XML format
+ - <tt>SUBUNIT</tt> for subunit output
+The case doesn't matter.
+
+The XML output goes to stderr by default. If the environment variable
+<tt>CMOCKA_XML_FILE</tt> exists and the file specified by this variable
+doesn't exist yet, then cmocka will put the output to this file.
+
 
 */
