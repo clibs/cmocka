@@ -33,7 +33,7 @@ The CMocka library provides:
  - Very well tested
  - Testing of memory leaks, buffer overflows and underflows.
  - A set of assert macros.
- - Several supported output formats (stdout, jUnit XML, Subunit)
+ - Several supported output formats (stdout, TAP, xUnit XML, Subunit)
  - License: Apache License 2.0
 
 @section main-test A cmocka test
@@ -105,8 +105,9 @@ possible to configure several other output formats.  The configuration is
 done using the <tt>CMOCKA_MESSAGE_OUTPUT</tt> environment variable. The
 supported values are:
  - <tt>STDOUT</tt> for the default standard output printer
- - <tt>XML</tt> for jUnit XML format
  - <tt>SUBUNIT</tt> for subunit output
+ - <tt>TAP</tt> for Test Anything Protocol (TAP) output
+ - <tt>XML</tt> for xUnit XML format
 The case doesn't matter.
 
 The XML output goes to stderr by default. If the environment variable

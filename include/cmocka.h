@@ -1955,6 +1955,7 @@ void vprint_error(const char* const format, va_list args) CMOCKA_PRINTF_ATTRIBUT
 enum cm_message_output {
     CM_OUTPUT_STDOUT,
     CM_OUTPUT_SUBUNIT,
+    CM_OUTPUT_TAP,
     CM_OUTPUT_XML,
 };
 
@@ -1964,7 +1965,7 @@ enum cm_message_output {
  * The ouput format for the test can either be set globally using this
  * function or overriden with environment variable CMOCKA_MESSAGE_OUTPUT.
  *
- * The environment variable can be set to either STDOUT or SUBUNIT.
+ * The environment variable can be set to either STDOUT, SUBUNIT, TAP or XML.
  *
  * @param[in] output    The output format to use for the test.
  *

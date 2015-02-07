@@ -1876,6 +1876,8 @@ static enum cm_message_output cm_get_output(void)
             output = CM_OUTPUT_STDOUT;
         } else if (strcasecmp(env, "SUBUNIT") == 0) {
             output = CM_OUTPUT_SUBUNIT;
+        } else if (strcasecmp(env, "TAP") == 0) {
+            output = CM_OUTPUT_TAP;
         } else if (strcasecmp(env, "XML") == 0) {
             output = CM_OUTPUT_XML;
         }
@@ -2030,6 +2032,63 @@ static void cmprintf_standard(enum cm_printf_type type,
     }
 }
 
+static void cmprintf_group_start_tap(const size_t num_tests)
+{
+    print_message("1..%u\n", (unsigned)num_tests);
+}
+
+static void cmprintf_tap(enum cm_printf_type type,
+                         uint32_t test_number,
+                         const char *test_name,
+                         const char *error_message)
+{
+    switch (type) {
+    case PRINTF_TEST_START:
+        break;
+    case PRINTF_TEST_SUCCESS:
+        print_message("ok %u - %s\n", (unsigned)test_number, test_name);
+        break;
+    case PRINTF_TEST_FAILURE:
+        print_message("not ok %u - %s\n", (unsigned)test_number, test_name);
+        if (error_message != NULL) {
+            char *msg;
+            char *p;
+
+            msg = strdup(error_message);
+            if (msg == NULL) {
+                return;
+            }
+            p = msg;
+
+            while (p[0] != '\0') {
+                char *q = p;
+
+                p = strchr(q, '\n');
+                if (p != NULL) {
+                    p[0] = '\0';
+                }
+
+                print_message("# %s\n", q);
+
+                if (p == NULL) {
+                    libc_free(msg);
+                    break;
+                }
+                p++;
+            }
+            libc_free(msg);
+        }
+        break;
+    case PRINTF_TEST_SKIPPED:
+        print_message("not ok %u # SKIP %s\n", (unsigned)test_number, test_name);
+        break;
+    case PRINTF_TEST_ERROR:
+        print_message("not ok %u - %s %s\n",
+                      (unsigned)test_number, test_name, error_message);
+        break;
+    }
+}
+
 static void cmprintf_subunit(enum cm_printf_type type,
                              const char *test_name,
                              const char *error_message)
@@ -2068,6 +2127,9 @@ static void cmprintf_group_start(const size_t num_tests)
         break;
     case CM_OUTPUT_SUBUNIT:
         break;
+    case CM_OUTPUT_TAP:
+        cmprintf_group_start_tap(num_tests);
+        break;
     case CM_OUTPUT_XML:
         break;
     }
@@ -2094,6 +2156,7 @@ static void cmprintf_group_finish(const char *group_name,
                                     cm_tests);
         break;
     case CM_OUTPUT_SUBUNIT:
+    case CM_OUTPUT_TAP:
         break;
     case CM_OUTPUT_XML:
         cmprintf_group_finish_xml(group_name,
@@ -2107,6 +2170,7 @@ static void cmprintf_group_finish(const char *group_name,
 }
 
 static void cmprintf(enum cm_printf_type type,
+                     size_t test_number,
                      const char *test_name,
                      const char *error_message)
 {
@@ -2120,6 +2184,9 @@ static void cmprintf(enum cm_printf_type type,
         break;
     case CM_OUTPUT_SUBUNIT:
         cmprintf_subunit(type, test_name, error_message);
+        break;
+    case CM_OUTPUT_TAP:
+        cmprintf_tap(type, test_number, test_name, error_message);
         break;
     case CM_OUTPUT_XML:
         break;
@@ -2420,8 +2487,9 @@ int _cmocka_run_group_tests(const char *group_name,
         /* Execute tests */
         for (i = 0; i < num_tests; i++) {
             struct CMUnitTestState *cmtest = &cm_tests[i];
+            size_t test_number = i + 1;
 
-            cmprintf(PRINTF_TEST_START, cmtest->test->name, NULL);
+            cmprintf(PRINTF_TEST_START, test_number, cmtest->test->name, NULL);
 
             if (group_state != NULL) {
                 cm_tests[i].state = group_state;
@@ -2433,23 +2501,27 @@ int _cmocka_run_group_tests(const char *group_name,
                 switch (cmtest->status) {
                     case CM_TEST_PASSED:
                         cmprintf(PRINTF_TEST_SUCCESS,
+                                 test_number,
                                  cmtest->test->name,
                                  cmtest->error_message);
                         total_passed++;
                         break;
                     case CM_TEST_SKIPPED:
                         cmprintf(PRINTF_TEST_SKIPPED,
+                                 test_number,
                                  cmtest->test->name,
                                  cmtest->error_message);
                         break;
                     case CM_TEST_FAILED:
                         cmprintf(PRINTF_TEST_FAILURE,
+                                 test_number,
                                  cmtest->test->name,
                                  cmtest->error_message);
                         total_failed++;
                         break;
                     default:
                         cmprintf(PRINTF_TEST_ERROR,
+                                 test_number,
                                  cmtest->test->name,
                                  "Internal cmocka error");
                         total_errors++;
@@ -2457,13 +2529,14 @@ int _cmocka_run_group_tests(const char *group_name,
                 }
             } else {
                 cmprintf(PRINTF_TEST_ERROR,
+                         test_number,
                          cmtest->test->name,
                          "Could not run the test - check test fixtures");
                 total_errors++;
             }
         }
     } else {
-        cmprintf(PRINTF_TEST_ERROR,
+        cmprintf(PRINTF_TEST_ERROR, 0,
                  group_name, "Group setup failed");
         total_errors++;
     }
