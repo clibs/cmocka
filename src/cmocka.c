@@ -1468,6 +1468,27 @@ static ListNode* get_allocated_blocks_list() {
     return &global_allocated_blocks;
 }
 
+static void *libc_malloc(size_t size)
+{
+#undef malloc
+    return malloc(size);
+#define malloc test_malloc
+}
+
+static void libc_free(void *ptr)
+{
+#undef free
+    free(ptr);
+#define free test_free
+}
+
+static void *libc_realloc(void *ptr, size_t size)
+{
+#undef realloc
+    return realloc(ptr, size);
+#define realloc test_realloc
+}
+
 /* Use the real malloc in this function. */
 #undef malloc
 void* _test_malloc(const size_t size, const char* file, const int line) {
