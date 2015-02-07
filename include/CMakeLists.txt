@@ -2,6 +2,7 @@ project(cmocka-headers C)
 
 set(cmocka_HDRS
   cmocka.h
+  cmocka_pbc.h
 )
 
 install(
