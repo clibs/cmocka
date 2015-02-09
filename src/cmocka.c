@@ -296,8 +296,12 @@ static const int exception_signals[] = {
     SIGFPE,
     SIGILL,
     SIGSEGV,
+#ifdef SIGBUS
     SIGBUS,
+#endif
+#ifdef SIGSYS
     SIGSYS,
+#endif
 };
 
 /* Default signal functions that should be restored after a test is complete. */
