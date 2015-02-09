@@ -94,3 +94,65 @@ set_tests_properties(
         PASS_REGULAR_EXPRESSION
         "\\[       OK \\] int_test_success"
 )
+
+### Output formats
+
+# test output of success, failure, skip, fixture failure
+set(OUTPUT_TESTS
+    test_basics
+    test_assert_macros_fail
+    test_skip
+    test_setup_fail)
+
+set(TEST_OUTPUT_FMTS
+    tap
+    subunit
+    xml)
+
+set(test_basics_tap_out
+    "^1\\.\\.2[ \n\r]+ok 1 - null_test_success")
+set(test_assert_macros_fail_tap_out
+    "^1\\.\\.1[ \n\r]+not ok 1 - test_assert_return_code_fail")
+set(test_skip_tap_out
+    "not ok 1 # SKIP")
+set(test_setup_fail_tap_out
+    "not ok 1 - int_test_ignored Could not run the test - check test fixtures")
+
+set(test_basics_subunit_out
+    "^test: null_test_success[ \n\r]+success: null_test_success")
+set(test_assert_macros_fail_subunit_out
+    "failure: test_assert_return_code_fail \\[")
+set(test_skip_subunit_out
+    "^test: test_check_skip[ \n\r]+skip: test_check_skip")
+set(test_setup_fail_subunit_out
+    "error: int_test_ignored \\[ Could not run the test - check test fixtures \\]")
+
+set(test_basics_xml_out
+    "<testsuite name=\"tests\" time=\"[0-9.]+\" tests=\"2\" failures=\"0\" errors=\"0\" skipped=\"0\" >[ \n\r]+<testcase name=\"null_test_success\" time=\"[0-9.]+\" >.*</testcase>")
+set(test_assert_macros_fail_xml_out
+    "<testcase name=\"test_assert_return_code_fail\" time=\"[0-9.]+\" >[ \n\r]+<failure>")
+set(test_skip_xml_out
+    "<testcase name=\"test_check_skip\" time=\"[0-9.]+\" >[ \n\r]+<skipped/>")
+set(test_setup_fail_xml_out
+    "<testcase name=\"int_test_ignored\" time=\"[0-9.]+\" >[ \n\r]+<failure><!\\[CDATA\\[Test setup failed\\]\\]></failure>")
+
+foreach(_TEST_OUTPUT_FMT ${TEST_OUTPUT_FMTS})
+    foreach(_OUTPUT_TEST ${OUTPUT_TESTS})
+        set(TEST_NAME ${_OUTPUT_TEST}_${_TEST_OUTPUT_FMT})
+        add_test(${TEST_NAME} ${_OUTPUT_TEST})
+
+        set_property(
+            TEST
+            ${TEST_NAME}
+            PROPERTY
+                ENVIRONMENT CMOCKA_MESSAGE_OUTPUT=${_TEST_OUTPUT_FMT}
+            )
+
+            set_tests_properties(
+                    ${TEST_NAME}
+                    PROPERTIES
+                    PASS_REGULAR_EXPRESSION
+                    ${${TEST_NAME}_out}
+            )
+    endforeach()
+endforeach()
