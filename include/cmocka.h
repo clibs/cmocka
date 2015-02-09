@@ -142,7 +142,7 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
  * real objects. Instead of calling the real objects, the tested object calls a
  * mock object that merely asserts that the correct methods were called, with
  * the expected parameters, in the correct order.
- * 
+ *
  * <ul>
  * <li><strong>will_return(function, value)</strong> - The will_return() macro
  * pushes a value onto a stack of mock values. This macro is intended to be
@@ -1278,12 +1278,12 @@ void assert_not_in_set(uintmax_t value, uintmax_t values[], size_t count);
  *
  * int main(void)
  * {
- *     const UnitTest tests[] = {
- *         unit_test(Test0),
- *         unit_test(Test1),
+ *     const struct CMUnitTest tests[] = {
+ *         cmocka_unit_test(Test0),
+ *         cmocka_unit_test(Test1),
  *     };
  *
- *     return run_tests(tests);
+ *     return cmocka_run_group_tests(tests, NULL, NULL);
  * }
  * @endcode
  *
@@ -1335,6 +1335,8 @@ void fail_msg(const char *msg, ...);
 /**
  * @brief Generic method to run a single test.
  *
+ * @deprecated This function was deprecated in favor of cmocka_run_group_tests
+ *
  * @param[in]  #function The function to test.
  *
  * @return 0 on success, 1 if an error occured.
@@ -1358,13 +1360,19 @@ static inline void _unit_test_dummy(void **state) {
     (void)state;
 }
 
-/** Initializes a UnitTest structure. */
+/** Initializes a UnitTest structure.
+ *
+ * @deprecated This function was deprecated in favor of cmocka_unit_test
+ */
 #define unit_test(f) { #f, f, UNIT_TEST_FUNCTION_TYPE_TEST }
 
 #define _unit_test_setup(test, setup) \
     { #test "_" #setup, setup, UNIT_TEST_FUNCTION_TYPE_SETUP }
 
-/** Initializes a UnitTest structure with a setup function. */
+/** Initializes a UnitTest structure with a setup function.
+ *
+ * @deprecated This function was deprecated in favor of cmocka_unit_test_setup
+ */
 #define unit_test_setup(test, setup) \
     _unit_test_setup(test, setup), \
     unit_test(test), \
@@ -1373,23 +1381,35 @@ static inline void _unit_test_dummy(void **state) {
 #define _unit_test_teardown(test, teardown) \
     { #test "_" #teardown, teardown, UNIT_TEST_FUNCTION_TYPE_TEARDOWN }
 
-/** Initializes a UnitTest structure with a teardown function. */
+/** Initializes a UnitTest structure with a teardown function.
+ *
+ * @deprecated This function was deprecated in favor of cmocka_unit_test_teardown
+ */
 #define unit_test_teardown(test, teardown) \
     _unit_test_setup(test, _unit_test_dummy), \
     unit_test(test), \
     _unit_test_teardown(test, teardown)
 
-/** Initializes a UnitTest structure for a group setup function. */
+/** Initializes a UnitTest structure for a group setup function.
+ *
+ * @deprecated This function was deprecated in favor of cmocka_run_group_tests
+ */
 #define group_test_setup(setup) \
     { "group_" #setup, setup, UNIT_TEST_FUNCTION_TYPE_GROUP_SETUP }
 
-/** Initializes a UnitTest structure for a group teardown function. */
+/** Initializes a UnitTest structure for a group teardown function.
+ *
+ * @deprecated This function was deprecated in favor of cmocka_run_group_tests
+ */
 #define group_test_teardown(teardown) \
     { "group_" #teardown, teardown, UNIT_TEST_FUNCTION_TYPE_GROUP_TEARDOWN }
 
 /**
  * Initialize an array of UnitTest structures with a setup function for a test
  * and a teardown function.  Either setup or teardown can be NULL.
+ *
+ * @deprecated This function was deprecated in favor of
+ * cmocka_unit_test_setup_teardown
  */
 #define unit_test_setup_teardown(test, setup, teardown) \
     _unit_test_setup(test, setup), \
