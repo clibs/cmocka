@@ -68,6 +68,10 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #cmakedefine HAVE_UNISTD_H 1
 
+/**************************** STRUCTS ****************************/
+
+#cmakedefine HAVE_STRUCT_TIMESPEC 1
+
 /*************************** FUNCTIONS ***************************/
 
 /* Define to 1 if you have the `calloc' function. */

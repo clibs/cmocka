@@ -2232,6 +2232,7 @@ void cmocka_set_message_output(enum cm_message_output output)
  * TIME CALCULATIONS
  ****************************************************************************/
 
+#ifdef HAVE_STRUCT_TIMESPEC
 static struct timespec cm_tspecdiff(struct timespec time1,
                                     struct timespec time0)
 {
@@ -2275,6 +2276,7 @@ static double cm_secdiff(struct timespec clock1, struct timespec clock0)
 
     return ret;
 }
+#endif /* HAVE_STRUCT_TIMESPEC */
 
 /****************************************************************************
  * CMOCKA TEST RUNNER
@@ -2401,6 +2403,7 @@ static int cmocka_run_group_fixture(const char *function_name,
 
 static int cmocka_run_one_tests(struct CMUnitTestState *test_state)
 {
+#ifdef HAVE_STRUCT_TIMESPEC
     struct timespec start = {
         .tv_sec = 0,
         .tv_nsec = 0,
@@ -2409,6 +2412,7 @@ static int cmocka_run_one_tests(struct CMUnitTestState *test_state)
         .tv_sec = 0,
         .tv_nsec = 0,
     };
+#endif
     int rc = 0;
 
     /* Run setup */
@@ -2429,7 +2433,9 @@ static int cmocka_run_one_tests(struct CMUnitTestState *test_state)
     }
 
     /* Run test */
+#ifdef HAVE_STRUCT_TIMESPEC
     CMOCKA_CLOCK_GETTIME(CLOCK_REALTIME, &start);
+#endif
 
     if (rc == 0) {
         rc = cmocka_run_one_test_or_fixture(test_state->test->name,
@@ -2451,8 +2457,12 @@ static int cmocka_run_one_tests(struct CMUnitTestState *test_state)
         rc = 0;
     }
 
+    test_state->runtime = 0.0;
+
+#ifdef HAVE_STRUCT_TIMESPEC
     CMOCKA_CLOCK_GETTIME(CLOCK_REALTIME, &finish);
     test_state->runtime = cm_secdiff(finish, start);
+#endif
 
     /* Run teardown */
     if (rc == 0 && test_state->test->teardown_func != NULL) {

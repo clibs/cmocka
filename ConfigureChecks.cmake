@@ -4,6 +4,7 @@ include(CheckFunctionExists)
 include(CheckLibraryExists)
 include(CheckTypeSize)
 include(CheckCXXSourceCompiles)
+include(CheckStructHasMember)
 include(TestBigEndian)
 
 set(PACKAGE ${APPLICATION_NAME})
@@ -64,6 +65,9 @@ check_include_file(sys/types.h HAVE_SYS_TYPES_H)
 check_include_file(time.h HAVE_TIME_H)
 check_include_file(unistd.h HAVE_UNISTD_H)
 
+if (HAVE_TIME_H)
+    check_struct_has_member("struct timespec" tv_sec "time.h" HAVE_STRUCT_TIMESPEC)
+endif (HAVE_TIME_H)
 
 # FUNCTIONS
 check_function_exists(calloc HAVE_CALLOC)
@@ -114,7 +118,7 @@ int main(void) {
 }" HAVE_MSVC_THREAD_LOCAL_STORAGE)
 endif(WIN32)
 
-if (HAVE_TIME_H AND HAVE_CLOCK_GETTIME)
+if (HAVE_TIME_H AND HAVE_STRUCT_TIMESPEC AND HAVE_CLOCK_GETTIME)
     set(CMAKE_REQUIRED_LIBRARIES ${RT_LIBRARY})
 
     message(STATUS "CMAKE_REQUIRED_INCLUDES=${CMAKE_REQUIRED_INCLUDES} CMAKE_REQUIRED_LIBRARIES=${CMAKE_REQUIRED_LIBRARIES}")
@@ -129,7 +133,7 @@ int main(void) {
     return 0;
 }" HAVE_CLOCK_GETTIME_REALTIME)
     set(CMAKE_REQUIRED_INCLUDES)
-endif (HAVE_TIME_H AND HAVE_CLOCK_GETTIME)
+endif ()
 
 # ENDIAN
 if (NOT WIN32)
