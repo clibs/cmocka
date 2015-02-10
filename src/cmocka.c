@@ -1546,6 +1546,9 @@ static void *libc_realloc(void *ptr, size_t size)
 #define realloc test_realloc
 }
 
+static void vcm_print_error(const char* const format,
+                            va_list args) CMOCKA_PRINTF_ATTRIBUTE(1, 0);
+
 /* It's important to use the libc malloc and free here otherwise
  * the automatic free of leaked blocks can reap the error messages
  */
