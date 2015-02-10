@@ -2119,7 +2119,7 @@ static void cmprintf_subunit(enum cm_printf_type type,
         print_message("skip: %s\n", test_name);
         break;
     case PRINTF_TEST_ERROR:
-        print_message("error: %s [ %s ]", test_name, error_message);
+        print_message("error: %s [ %s ]\n", test_name, error_message);
         break;
     }
 }
