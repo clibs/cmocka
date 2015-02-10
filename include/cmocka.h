@@ -35,7 +35,9 @@ int __stdcall IsDebuggerPresent();
 # endif /* _MSC_VER */
 #endif  /* _WIN32 */
 
-/*
+/**
+ * @defgroup cmocka The CMocka API
+ *
  * These headers or their equivalents should be included prior to including
  * this header file.
  *
@@ -45,6 +47,8 @@ int __stdcall IsDebuggerPresent();
  *
  * This allows test applications to use custom definitions of C standard
  * library functions and types.
+ *
+ * @{
  */
 
 /* For those who are used to __func__ from gcc. */
@@ -52,50 +56,34 @@ int __stdcall IsDebuggerPresent();
 #define __func__ __FUNCTION__
 #endif
 
-/* GCC have printf type attribute check.  */
-#ifdef __GNUC__
-#define CMOCKA_PRINTF_ATTRIBUTE(a,b) \
-    __attribute__ ((__format__ (__printf__, a, b)))
-#else
-#define CMOCKA_PRINTF_ATTRIBUTE(a,b)
-#endif /* __GNUC__ */
-
-#if defined(__GNUC__)
-#define CMOCKA_DEPRECATED __attribute__ ((deprecated))
-#elif defined(_MSC_VER)
-#define CMOCKA_DEPRECATED __declspec(deprecated)
-#else
-#define CMOCKA_DEPRECATED
-#endif
-
-/**
- * @defgroup cmocka The CMocka API
- *
- * TODO Describe cmocka.
- *
- * @{
- */
-
 /*
  * Largest integral type.  This type should be large enough to hold any
  * pointer or integer supported by the compiler.
  */
 #ifndef LargestIntegralType
-#define LargestIntegralType unsigned long long
+# if __WORDSIZE == 64
+#  define LargestIntegralType unsigned long int
+# else
+#  define LargestIntegralType unsigned long long int
+# endif
 #endif /* LargestIntegralType */
 
 /* Printf format used to display LargestIntegralType. */
 #ifndef LargestIntegralTypePrintfFormat
-#ifdef _WIN32
-#define LargestIntegralTypePrintfFormat "0x%I64x"
-#else
-#define LargestIntegralTypePrintfFormat "%#llx"
-#endif /* _WIN32 */
+# ifdef _WIN32
+#  define LargestIntegralTypePrintfFormat "0x%I64x"
+# else
+#  if __WORDSIZE == 64
+#   define LargestIntegralTypePrintfFormat "%#lx"
+#  else
+#   define LargestIntegralTypePrintfFormat "%#llx"
+#  endif
+# endif /* _WIN32 */
 #endif /* LargestIntegralTypePrintfFormat */
 
 /* Perform an unsigned cast to LargestIntegralType. */
 #define cast_to_largest_integral_type(value) \
-    ((LargestIntegralType)((size_t)(value)))
+    ((LargestIntegralType)(value))
 
 /* Smallest integral type capable of holding a pointer. */
 #if !defined(_UINTPTR_T) && !defined(_UINTPTR_T_DEFINED)
@@ -133,6 +121,22 @@ int __stdcall IsDebuggerPresent();
 /* Perform a cast of a pointer to uintmax_t */
 #define cast_ptr_to_largest_integral_type(value) \
 cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
+
+/* GCC have printf type attribute check.  */
+#ifdef __GNUC__
+#define CMOCKA_PRINTF_ATTRIBUTE(a,b) \
+    __attribute__ ((__format__ (__printf__, a, b)))
+#else
+#define CMOCKA_PRINTF_ATTRIBUTE(a,b)
+#endif /* __GNUC__ */
+
+#if defined(__GNUC__)
+#define CMOCKA_DEPRECATED __attribute__ ((deprecated))
+#elif defined(_MSC_VER)
+#define CMOCKA_DEPRECATED __declspec(deprecated)
+#else
+#define CMOCKA_DEPRECATED
+#endif
 
 /**
  * @defgroup cmocka_mock Mock Objects
