@@ -16,12 +16,15 @@ set(CMOCKA_TESTS
     test_exception_handler
     test_basics
     test_skip
-    test_setup_fail
-    test_cmockery)
+    test_setup_fail)
 
 foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
     add_cmocka_test(${_CMOCKA_TEST} ${_CMOCKA_TEST}.c ${CMOCKA_SHARED_LIBRARY})
 endforeach()
+
+### Special Cases
+set_source_files_properties(test_cmockery.c PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+add_cmocka_test(test_cmockery test_cmockery.c ${CMOCKA_SHARED_LIBRARY})
 
 ### Exceptions
 
