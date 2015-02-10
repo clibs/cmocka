@@ -2527,7 +2527,7 @@ int _cmocka_run_group_tests(const char *group_name,
 {
     struct CMUnitTestState *cm_tests;
     const ListNode *group_check_point = check_point_allocated_blocks();
-    void *group_state;
+    void *group_state = NULL;
     size_t total_failed = 0;
     size_t total_passed = 0;
     size_t total_executed = 0;
