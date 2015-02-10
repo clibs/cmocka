@@ -2405,6 +2405,7 @@ static int cmocka_run_one_tests(struct CMUnitTestState *test_state)
                                             test_state->check_point);
         if (rc != 0) {
             test_state->status = CM_TEST_ERROR;
+            cm_print_error("Test setup failed");
         }
     }
 
@@ -2444,6 +2445,7 @@ static int cmocka_run_one_tests(struct CMUnitTestState *test_state)
                                             test_state->check_point);
         if (rc != 0) {
             test_state->status = CM_TEST_ERROR;
+            cm_print_error("Test teardown failed");
         }
     }
 
