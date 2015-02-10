@@ -1578,11 +1578,12 @@ static void vcm_print_error(const char* const format, va_list args)
         cm_error_message = tmp;
     }
 
-    if (((size_t)len) <= sizeof(buffer)) {
+    if (((size_t)len) < sizeof(buffer)) {
+        /* Use len + 1 to also copy '\0' */
         memcpy(cm_error_message + msg_len, buffer, len + 1);
     } else {
         va_copy(ap, args);
-        vsnprintf(cm_error_message + msg_len, len + 1, format, ap);
+        vsnprintf(cm_error_message + msg_len, len, format, ap);
         va_end(ap);
     }
 }
