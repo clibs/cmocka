@@ -2134,7 +2134,6 @@ static void cmprintf_tap(enum cm_printf_type type,
                 print_message("# %s\n", q);
 
                 if (p == NULL) {
-                    libc_free(msg);
                     break;
                 }
                 p++;
