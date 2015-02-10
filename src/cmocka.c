@@ -47,21 +47,53 @@
 WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 
 #ifndef PRIdS
-#define PRIdS "Id"
+# define PRIdS "Id"
 #endif
 
 #ifndef PRIu64
-#define PRIu64 "I64u"
+# define PRIu64 "I64u"
+#endif
+
+#ifndef PRIuMAX
+# define PRIuMAX PRIu64
+#endif
+
+#ifndef PRIxMAX
+#define PRIxMAX "I64x"
+#endif
+
+#ifndef PRIXMAX
+#define PRIXMAX "I64X"
 #endif
 
 #else /* _WIN32 */
 
+#ifndef __PRI64_PREFIX
+# if __WORDSIZE == 64
+#  define __PRI64_PREFIX "l"
+# else
+#  define __PRI64_PREFIX "ll"
+# endif
+#endif
+
 #ifndef PRIdS
-#define PRIdS "zd"
+# define PRIdS "zd"
 #endif
 
 #ifndef PRIu64
-#define PRIu64 "llu"
+# define PRIu64 __PRI64_PREFIX "u"
+#endif
+
+#ifndef PRIuMAX
+# define PRIuMAX __PRI64_PREFIX "u"
+#endif
+
+#ifndef PRIxMAX
+#define PRIxMAX __PRI64_PREFIX "x"
+#endif
+
+#ifndef PRIXMAX
+#define PRIXMAX __PRI64_PREFIX "X"
 #endif
 
 #include <signal.h>
