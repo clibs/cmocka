@@ -67,6 +67,20 @@ WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 #include <signal.h>
 #endif /* _WIN32 */
 
+/*
+ * This allows to add a platform specific header file. Some embedded platforms
+ * sometimes miss certain types and definitions.
+ *
+ * Example:
+ *
+ * typedef unsigned long int uintptr_t
+ * #define _UINTPTR_T 1
+ * #define _UINTPTR_T_DEFINED 1
+ */
+#ifdef CMOCKA_PLATFORM_INCLUDE
+# include "cmocka_platform.h"
+#endif /* CMOCKA_PLATFORM_INCLUDE */
+
 #include <cmocka_private.h>
 #include <cmocka.h>
 

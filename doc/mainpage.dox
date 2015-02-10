@@ -83,6 +83,18 @@ the mock object to return. CMocka provides and API to easily mock code.
 
 <a href="https://lwn.net/Articles/558106/">Learn more ...</a>
 
+@section main-embedded Embedded platforms
+
+It is possible that some embedded platforms do not provide definitions for
+required types or that the guards to protect them are not defined. To address
+this issue you can create a header file name 'cmocka_platform.h' with the
+required types and definitions. After that point cmake to the include directory
+using:
+
+<pre>
+    cmake -DCMOCKA_PLATFORM_INCLUDE=/home/compiler/my/include_directory ..
+</pre>
+
 @section main-threads Threading
 
 cmocka is not fully thread safe and it is not the goal of it to be it. We have

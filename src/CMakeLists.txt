@@ -1,7 +1,10 @@
 project(cmocka-library C)
 
+set(CMOCKA_PLATFORM_INCLUDE CACHE PATH "Path to include directory for cmocka_platform.h")
+
 set(CMOCKA_PUBLIC_INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/include
+    ${CMOCKA_PLATFORM_INCLUDE}
     CACHE INTERNAL "cmocka public include directories"
 )
 
@@ -43,6 +46,9 @@ include_directories(
 )
 
 add_definitions(-DHAVE_CONFIG_H=1)
+if (CMOCKA_PLATFORM_INCLUDE)
+    add_definitions(-DCMOCKA_PLATFORM_INCLUDE=1)
+endif()
 
 add_library(${CMOCKA_SHARED_LIBRARY} SHARED ${cmocka_SRCS})
 
