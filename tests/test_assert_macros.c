@@ -27,7 +27,9 @@ static void test_assert_return_code(void **state)
     rc = stat(".", &sb);
     assert_return_code(rc, 0);
 
+#ifndef _MSC_VER
     assert_true(S_ISDIR(sb.st_mode));
+#endif
 }
 
 int main(void) {
