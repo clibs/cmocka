@@ -49,6 +49,7 @@ endif (SOLARIS)
 # HEADER FILES
 check_include_file(assert.h HAVE_ASSERT_H)
 check_include_file(inttypes.h HAVE_INTTYPES_H)
+check_include_file(io.h HAVE_IO_H)
 check_include_file(malloc.h HAVE_MALLOC_H)
 check_include_file(memory.h HAVE_MEMORY_H)
 check_include_file(setjmp.h HAVE_SETJMP_H)
