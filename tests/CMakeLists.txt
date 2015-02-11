@@ -23,7 +23,9 @@ foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
 endforeach()
 
 ### Special Cases
-set_source_files_properties(test_cmockery.c PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+if (${CMAKE_C_COMPILER_ID} MATCHES "(GNU|Clang)")
+    set_source_files_properties(test_cmockery.c PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+endif()
 add_cmocka_test(test_cmockery test_cmockery.c ${CMOCKA_SHARED_LIBRARY})
 
 ### Exceptions
