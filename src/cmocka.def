@@ -8,10 +8,12 @@ EXPORTS
     _assert_memory_not_equal
     _assert_not_in_range
     _assert_not_in_set
+    _assert_return_code
     _assert_string_equal
     _assert_string_not_equal
     _assert_true
     _check_expected
+    _cmocka_run_group_tests
     _expect_any
     _expect_check
     _expect_in_range
@@ -28,9 +30,11 @@ EXPORTS
     _mock
     _run_test
     _run_tests
+    _skip
     _test_calloc
     _test_free
     _test_malloc
+    _test_realloc
     _will_return
     global_expect_assert_env
     global_expecting_assert
