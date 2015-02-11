@@ -2319,7 +2319,7 @@ static int cmocka_run_one_test_or_fixture(const char *function_name,
                                           CMUnitTestFunction test_func,
                                           CMFixtureFunction setup_func,
                                           CMFixtureFunction teardown_func,
-                                          void **state,
+                                          void ** const volatile state,
                                           const void *const heap_check_point)
 {
     const ListNode * const volatile check_point = (const ListNode*)
@@ -2358,25 +2358,21 @@ static int cmocka_run_one_test_or_fixture(const char *function_name,
 
     global_running_test = 1;
 
-    if (state == NULL) {
-        state = &current_state;
-    }
-
     if (setjmp(global_run_test_env) == 0) {
         if (test_func != NULL) {
-            test_func(state);
+            test_func(state != NULL ? state : &current_state);
 
             fail_if_blocks_allocated(check_point, function_name);
             rc = 0;
         } else if (setup_func != NULL) {
-            rc = setup_func(state);
+            rc = setup_func(state != NULL ? state : &current_state);
 
             /*
              * For setup we can ignore any allocated blocks. We just need to
              * ensure they're deallocated on tear down.
              */
         } else if (teardown_func != NULL) {
-            rc = teardown_func(state);
+            rc = teardown_func(state != NULL ? state : &current_state);
 
             fail_if_blocks_allocated(check_point, function_name);
         } else {
@@ -2551,6 +2547,7 @@ int _cmocka_run_group_tests(const char *group_name,
         cm_tests[i] = (struct CMUnitTestState) {
             .test = &tests[i],
             .status = CM_TEST_NOT_STARTED,
+            .state = NULL,
         };
     }
 
