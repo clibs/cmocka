@@ -23,6 +23,7 @@
 #include <windows.h>
 
 # ifdef _MSC_VER
+# include <stdio.h> /* _snprintf */
 
 #  undef inline
 #  define inline __inline

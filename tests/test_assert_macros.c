@@ -1,12 +1,17 @@
+#include "config.h"
+
 #include <stdarg.h>
 #include <stddef.h>
 #include <setjmp.h>
+#include <cmocka_private.h>
 #include <cmocka.h>
 
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include <fcntl.h>
 
 /**************************************
