@@ -83,6 +83,24 @@
 /* Define to 1 if you have the `fprintf' function. */
 #cmakedefine HAVE_FPRINTF 1
 
+/* Define to 1 if you have the `snprintf' function. */
+#cmakedefine HAVE_SNPRINTF 1
+
+/* Define to 1 if you have the `_snprintf' function. */
+#cmakedefine HAVE__SNPRINTF 1
+
+/* Define to 1 if you have the `_snprintf_s' function. */
+#cmakedefine HAVE__SNPRINTF_S 1
+
+/* Define to 1 if you have the `vsnprintf' function. */
+#cmakedefine HAVE_VSNPRINTF 1
+
+/* Define to 1 if you have the `_vsnprintf' function. */
+#cmakedefine HAVE__VSNPRINTF 1
+
+/* Define to 1 if you have the `_vsnprintf_s' function. */
+#cmakedefine HAVE__VSNPRINTF_S 1
+
 /* Define to 1 if you have the `free' function. */
 #cmakedefine HAVE_FREE 1
 

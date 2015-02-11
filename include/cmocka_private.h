@@ -17,6 +17,8 @@
 #ifndef CMOCKA_PRIVATE_H_
 #define CMOCKA_PRIVATE_H_
 
+#include "config.h"
+
 #ifdef _WIN32
 #include <windows.h>
 
