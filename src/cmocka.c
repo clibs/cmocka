@@ -1379,7 +1379,7 @@ void _assert_return_code(const LargestIntegralType result,
     if (result > valmax - 1) {
         if (error > 0) {
             cm_print_error("%s < 0, errno(%" PRIu64 "): %s\n",
-                        expression, error, strerror(error));
+                           expression, error, strerror((int)error));
         } else {
             cm_print_error("%s < 0\n", expression);
         }
