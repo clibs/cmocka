@@ -26,7 +26,7 @@ extern DatabaseConnection* connect_to_product_database(void);
  * that use the imaginary database.h module. */
 DatabaseConnection* connect_to_database(const char * const url,
                                         const unsigned int port) {
-    check_expected(url);
+    check_expected_ptr(url);
     check_expected(port);
     return (DatabaseConnection*)((size_t)mock());
 }

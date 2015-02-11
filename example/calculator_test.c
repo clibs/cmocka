@@ -68,7 +68,7 @@ int example_test_fprintf(FILE* const file, const char *format, ...) {
 	va_start(args, format);
 	return_value = vsnprintf(temporary_buffer, sizeof(temporary_buffer),
 	                         format, args);
-	check_expected(temporary_buffer);
+	check_expected_ptr(temporary_buffer);
 	va_end(args);
 	return return_value;
 }
@@ -81,7 +81,7 @@ int example_test_printf(const char *format, ...) {
 	va_start(args, format);
 	return_value = vsnprintf(temporary_buffer, sizeof(temporary_buffer),
 	                         format, args);
-	check_expected(temporary_buffer);
+	check_expected_ptr(temporary_buffer);
 	va_end(args);
 	return return_value;
 }
@@ -159,7 +159,10 @@ static void test_find_operator_function_by_string_null_string(void **state) {
 static void test_find_operator_function_by_string_valid_null_functions(void **state) {
         (void) state; /* unused */
 
-  assert_int_equal(find_operator_function_by_string(0, NULL, "test"), NULL);
+  assert_int_equal(
+          cast_ptr_to_largest_integral_type(
+              find_operator_function_by_string(0, NULL, "test")),
+          0);
 }
 
 /* Ensure find_operator_function_by_string() returns NULL when searching for
@@ -173,9 +176,12 @@ static void test_find_operator_function_by_string_not_found(void **state) {
 
         (void) state; /* unused */
 
-	assert_int_equal(find_operator_function_by_string(
-	        array_length(operator_functions), operator_functions, "test"),
-	        NULL);
+    assert_int_equal(
+            cast_ptr_to_largest_integral_type(
+                find_operator_function_by_string(array_length(operator_functions),
+                                                 operator_functions,
+                                                 "test")),
+            0);
 }
 
 /* Ensure find_operator_function_by_string() returns the correct function when
@@ -189,8 +195,11 @@ static void test_find_operator_function_by_string_found(void **state) {
 
         (void) state; /* unused */
 
-	assert_int_equal(find_operator_function_by_string(
-	        array_length(operator_functions), operator_functions, "-"),
+	assert_int_equal(
+            cast_ptr_to_largest_integral_type(
+                find_operator_function_by_string(array_length(operator_functions),
+                                                 operator_functions,
+                                                 "-")),
 	    0xDEADBEEF);
 }
 
@@ -392,7 +401,7 @@ static void test_perform_operation(void **state) {
 		"1", "+", "3", "*", "10",
 	};
 	int number_of_intermediate_values;
-	int *intermediate_values;
+	int *intermediate_values = NULL;
 	int error_occurred;
 
         (void) state; /* unused */
@@ -414,7 +423,7 @@ static void test_perform_operation(void **state) {
 	    &intermediate_values, &error_occurred), 40);
 	assert_int_equal(error_occurred, 0);
 
-	assert_true(intermediate_values);
+	assert_non_null(intermediate_values);
 	assert_int_equal(intermediate_values[0], 4);
 	assert_int_equal(intermediate_values[1], 40);
 	test_free(intermediate_values);

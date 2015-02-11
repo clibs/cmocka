@@ -116,7 +116,7 @@ int __stdcall IsDebuggerPresent();
 
 /* Perform an unsigned cast to uintptr_t. */
 #define cast_to_pointer_integral_type(value) \
-    ((uintptr_t)(value))
+    ((uintptr_t)((size_t)(value)))
 
 /* Perform a cast of a pointer to uintmax_t */
 #define cast_ptr_to_largest_integral_type(value) \
@@ -946,6 +946,24 @@ void check_expected(#parameter);
 #define check_expected(parameter) \
     _check_expected(__func__, #parameter, __FILE__, __LINE__, \
                     cast_to_largest_integral_type(parameter))
+#endif
+
+#ifdef DOXYGEN
+/**
+ * @brief Determine whether a function parameter is correct.
+ *
+ * This ensures the next value queued by one of the expect_*() macros matches
+ * the specified variable.
+ *
+ * This function needs to be called in the mock object.
+ *
+ * @param[in]  #parameter  The pointer to check.
+ */
+void check_expected_ptr(#parameter);
+#else
+#define check_expected_ptr(parameter) \
+    _check_expected(__func__, #parameter, __FILE__, __LINE__, \
+                    cast_ptr_to_largest_integral_type(parameter))
 #endif
 
 /** @} */
