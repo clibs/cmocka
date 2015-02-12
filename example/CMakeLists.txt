@@ -40,6 +40,7 @@ if (NOT WIN32)
     target_link_libraries(calculator_test ${CMOCKA_SHARED_LIBRARY})
 
     add_test(calculator_test ${CMAKE_CURRENT_BINARY_DIR}/calculator_test)
+endif (NOT WIN32)
 
 ### Allocate module test
 add_executable(allocate_module_test allocate_module.c allocate_module_test.c)
@@ -47,13 +48,14 @@ target_link_libraries(allocate_module_test ${CMOCKA_SHARED_LIBRARY})
 
 # This is a test that should detect leaks and overflows and will fail for that
 add_test(allocate_module_test ${CMAKE_CURRENT_BINARY_DIR}/allocate_module_test)
+if (WIN32)
+    set_tests_properties(allocate_module_test PROPERTIES ENVIRONMENT "PATH=${DLL_PATH_ENV}")
+endif (WIN32)
 set_tests_properties(
     allocate_module_test
         PROPERTIES
-        PASS_REGULAR_EXPRESSION
-        "3 FAILED TEST"
+            WILL_FAIL 1
 )
-endif (NOT WIN32)
 
 ### Assert macro test
 add_executable(assert_macro_test assert_macro.c assert_macro_test.c)
@@ -63,8 +65,7 @@ add_test(assert_macro_test ${CMAKE_CURRENT_BINARY_DIR}/assert_macro_test)
 set_tests_properties(
     assert_macro_test
         PROPERTIES
-        PASS_REGULAR_EXPRESSION
-        "2 FAILED TEST"
+        WILL_FAIL 1
 )
 if (WIN32)
     set_tests_properties(assert_macro_test PROPERTIES ENVIRONMENT "PATH=${DLL_PATH_ENV}")
@@ -78,8 +79,7 @@ add_test(assert_module_test ${CMAKE_CURRENT_BINARY_DIR}/assert_module_test)
 set_tests_properties(
     assert_module_test
         PROPERTIES
-        PASS_REGULAR_EXPRESSION
-        "2 FAILED TEST"
+        WILL_FAIL 1
 )
 if (WIN32)
     set_tests_properties(assert_module_test PROPERTIES ENVIRONMENT "PATH=${DLL_PATH_ENV}")
