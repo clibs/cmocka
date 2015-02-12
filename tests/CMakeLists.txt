@@ -19,14 +19,14 @@ set(CMOCKA_TESTS
     test_setup_fail)
 
 foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
-    add_cmocka_test(${_CMOCKA_TEST} ${_CMOCKA_TEST}.c ${CMOCKA_SHARED_LIBRARY})
+    add_cmocka_test(${_CMOCKA_TEST} ${_CMOCKA_TEST}.c ${CMOCKA_STATIC_LIBRARY})
 endforeach()
 
 ### Special Cases
 if (${CMAKE_C_COMPILER_ID} MATCHES "(GNU|Clang)")
     set_source_files_properties(test_cmockery.c PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
 endif()
-add_cmocka_test(test_cmockery test_cmockery.c ${CMOCKA_SHARED_LIBRARY})
+add_cmocka_test(test_cmockery test_cmockery.c ${CMOCKA_STATIC_LIBRARY})
 
 ### Exceptions
 
