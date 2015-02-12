@@ -47,12 +47,20 @@ set_tests_properties(
 )
 
 # test_exception_handler
-set_tests_properties(
-    test_exception_handler
-        PROPERTIES
-        PASS_REGULAR_EXPRESSION
-        "Test failed with exception: (Segmentation fault|Segmentation Fault|11)"
-)
+if (WIN32)
+    set_tests_properties(
+        test_exception_handler
+            PROPERTIES
+            PASS_REGULAR_EXPRESSION
+            "EXCEPTION_ACCESS_VIOLATION occurred at")
+else()
+    set_tests_properties(
+        test_exception_handler
+            PROPERTIES
+            PASS_REGULAR_EXPRESSION
+            "Test failed with exception: (Segmentation fault|Segmentation Fault|11)"
+    )
+endif (WIN32)
 
 set_tests_properties(
     test_setup_fail
