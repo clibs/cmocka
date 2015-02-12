@@ -35,13 +35,11 @@ if (WIN32)
 endif (WIN32)
 
 ### Calulator test
-add_executable(calculator_test calculator.c calculator_test.c)
-target_link_libraries(calculator_test ${CMOCKA_SHARED_LIBRARY})
+if (NOT WIN32)
+    add_executable(calculator_test calculator.c calculator_test.c)
+    target_link_libraries(calculator_test ${CMOCKA_SHARED_LIBRARY})
 
-add_test(calculator_test ${CMAKE_CURRENT_BINARY_DIR}/calculator_test)
-if (WIN32)
-    set_tests_properties(calculator_test PROPERTIES ENVIRONMENT "PATH=${DLL_PATH_ENV}")
-endif (WIN32)
+    add_test(calculator_test ${CMAKE_CURRENT_BINARY_DIR}/calculator_test)
 
 ### Allocate module test
 add_executable(allocate_module_test allocate_module.c allocate_module_test.c)
@@ -53,11 +51,9 @@ set_tests_properties(
     allocate_module_test
         PROPERTIES
         PASS_REGULAR_EXPRESSION
-        "\\[  FAILED  \\] 3 test"
+        "3 FAILED TEST"
 )
-if (WIN32)
-    set_tests_properties(allocate_module_test PROPERTIES ENVIRONMENT "PATH=${DLL_PATH_ENV}")
-endif (WIN32)
+endif (NOT WIN32)
 
 ### Assert macro test
 add_executable(assert_macro_test assert_macro.c assert_macro_test.c)
@@ -68,7 +64,7 @@ set_tests_properties(
     assert_macro_test
         PROPERTIES
         PASS_REGULAR_EXPRESSION
-        "\\[  FAILED  \\] 2 test"
+        "2 FAILED TEST"
 )
 if (WIN32)
     set_tests_properties(assert_macro_test PROPERTIES ENVIRONMENT "PATH=${DLL_PATH_ENV}")
@@ -83,7 +79,7 @@ set_tests_properties(
     assert_module_test
         PROPERTIES
         PASS_REGULAR_EXPRESSION
-        "\\[  FAILED  \\] 2 test"
+        "2 FAILED TEST"
 )
 if (WIN32)
     set_tests_properties(assert_module_test PROPERTIES ENVIRONMENT "PATH=${DLL_PATH_ENV}")
