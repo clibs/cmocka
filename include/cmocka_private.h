@@ -19,6 +19,8 @@
 
 #include "config.h"
 
+#include <stdint.h>
+
 #ifdef _WIN32
 #include <windows.h>
 
