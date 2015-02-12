@@ -53,6 +53,14 @@ endif()
 add_library(${CMOCKA_SHARED_LIBRARY} SHARED ${cmocka_SRCS})
 
 target_link_libraries(${CMOCKA_SHARED_LIBRARY} ${CMOCKA_LINK_LIBRARIES})
+set_target_properties(
+    ${CMOCKA_SHARED_LIBRARY}
+        PROPERTIES
+            OUTPUT_NAME
+                cmocka
+            DEFINE_SYMBOL
+                CMOCKA_EXPORTS
+)
 
 if (NOT WIN32)
     set_target_properties(
@@ -62,10 +70,6 @@ if (NOT WIN32)
                     ${LIBRARY_VERSION}
                 SOVERSION
                     ${LIBRARY_SOVERSION}
-                OUTPUT_NAME
-                    cmocka
-                DEFINE_SYMBOL
-                    CMOCKA_EXPORTS
     )
 endif (NOT WIN32)
 
