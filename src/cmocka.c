@@ -54,8 +54,8 @@
 # include "cmocka_platform.h"
 #endif /* CMOCKA_PLATFORM_INCLUDE */
 
-#include <cmocka_private.h>
 #include <cmocka.h>
+#include <cmocka_private.h>
 
 /* Size of guard bytes around dynamically allocated blocks. */
 #define MALLOC_GUARD_SIZE 16

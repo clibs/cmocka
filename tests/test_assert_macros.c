@@ -3,8 +3,8 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <setjmp.h>
-#include <cmocka_private.h>
 #include <cmocka.h>
+#include <cmocka_private.h>
 
 #include <errno.h>
 #include <sys/types.h>
