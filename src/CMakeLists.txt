@@ -54,18 +54,20 @@ add_library(${CMOCKA_SHARED_LIBRARY} SHARED ${cmocka_SRCS})
 
 target_link_libraries(${CMOCKA_SHARED_LIBRARY} ${CMOCKA_LINK_LIBRARIES})
 
-set_target_properties(
-    ${CMOCKA_SHARED_LIBRARY}
-        PROPERTIES
-            VERSION
-                ${LIBRARY_VERSION}
-            SOVERSION
-                ${LIBRARY_SOVERSION}
-            OUTPUT_NAME
-                cmocka
-            DEFINE_SYMBOL
-                CMOCKA_EXPORTS
-)
+if (NOT WIN32)
+    set_target_properties(
+        ${CMOCKA_SHARED_LIBRARY}
+            PROPERTIES
+                VERSION
+                    ${LIBRARY_VERSION}
+                SOVERSION
+                    ${LIBRARY_SOVERSION}
+                OUTPUT_NAME
+                    cmocka
+                DEFINE_SYMBOL
+                    CMOCKA_EXPORTS
+    )
+endif (NOT WIN32)
 
 install(
     TARGETS ${CMOCKA_SHARED_LIBRARY}
@@ -96,3 +98,17 @@ if (WITH_STATIC_LIB)
     )
 endif (WITH_STATIC_LIB)
 
+if (POLICY CMP0026)
+    cmake_policy(SET CMP0026 OLD)
+endif()
+
+#
+# In order to run tests we will need to set the approriate environment
+# variable so that the test program can locate its dependent DLL's. First
+# we want to know what directory our dependent DLL was installed into:
+#
+get_target_property(_cmocka_dir cmocka_shared LOCATION_${CMOCKA_BUILD_TYPE})
+get_filename_component(_cmocka_path "${_cmocka_dir}" PATH)
+file(TO_NATIVE_PATH "${_cmocka_path}" _cmocka_path_native)
+
+set(CMOCKA_DLL_PATH "${_cmocka_path_native}" PARENT_SCOPE)
