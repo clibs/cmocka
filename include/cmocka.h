@@ -40,10 +40,11 @@ int __stdcall IsDebuggerPresent();
  *
  * These headers or their equivalents should be included prior to including
  * this header file.
- *
+ * @code
  * #include <stdarg.h>
  * #include <stddef.h>
  * #include <setjmp.h>
+ * @endcode
  *
  * This allows test applications to use custom definitions of C standard
  * library functions and types.
