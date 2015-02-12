@@ -27,6 +27,10 @@
 #include <inttypes.h>
 #endif
 
+#ifdef HAVE_SIGNAL_H
+#include <signal.h>
+#endif
+
 #include <stdint.h>
 #include <setjmp.h>
 #include <stdarg.h>

@@ -118,7 +118,6 @@ WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 #define PRIXMAX __PRI64_PREFIX "X"
 #endif
 
-#include <signal.h>
 #endif /* _WIN32 */
 
 /** Free memory space */
