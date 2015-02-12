@@ -159,10 +159,7 @@ static void test_find_operator_function_by_string_null_string(void **state) {
 static void test_find_operator_function_by_string_valid_null_functions(void **state) {
         (void) state; /* unused */
 
-  assert_int_equal(
-          cast_ptr_to_largest_integral_type(
-              find_operator_function_by_string(0, NULL, "test")),
-          0);
+	assert_null(find_operator_function_by_string(0, NULL, "test"));
 }
 
 /* Ensure find_operator_function_by_string() returns NULL when searching for
@@ -176,12 +173,8 @@ static void test_find_operator_function_by_string_not_found(void **state) {
 
         (void) state; /* unused */
 
-    assert_int_equal(
-            cast_ptr_to_largest_integral_type(
-                find_operator_function_by_string(array_length(operator_functions),
-                                                 operator_functions,
-                                                 "test")),
-            0);
+	assert_null(find_operator_function_by_string(
+	        array_length(operator_functions), operator_functions, "test"));
 }
 
 /* Ensure find_operator_function_by_string() returns the correct function when
