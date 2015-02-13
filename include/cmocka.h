@@ -57,11 +57,6 @@ int __stdcall IsDebuggerPresent();
 #define __func__ __FUNCTION__
 #endif
 
-/*
- * Largest integral type.  This type should be large enough to hold any
- * pointer or integer supported by the compiler.
- */
-
 /* If __WORDSIZE is not set, try to figure it out and default to 32 bit. */
 #ifndef __WORDSIZE
 # if defined(__x86_64__) && !defined(__ILP32__)
@@ -71,6 +66,13 @@ int __stdcall IsDebuggerPresent();
 # endif
 #endif
 
+#ifdef DOXYGEN
+/**
+ * Largest integral type.  This type should be large enough to hold any
+ * pointer or integer supported by the compiler.
+ */
+typedef uintmax_t LargestIntegralType;
+#else /* DOXGEN */
 #ifndef LargestIntegralType
 # if __WORDSIZE == 64
 #  define LargestIntegralType unsigned long int
@@ -78,6 +80,7 @@ int __stdcall IsDebuggerPresent();
 #  define LargestIntegralType unsigned long long int
 # endif
 #endif /* LargestIntegralType */
+#endif /* DOXYGEN */
 
 /* Printf format used to display LargestIntegralType. */
 #ifndef LargestIntegralTypePrintfFormat
@@ -129,7 +132,7 @@ int __stdcall IsDebuggerPresent();
 #define cast_to_pointer_integral_type(value) \
     ((uintptr_t)((size_t)(value)))
 
-/* Perform a cast of a pointer to uintmax_t */
+/* Perform a cast of a pointer to LargestIntegralType */
 #define cast_ptr_to_largest_integral_type(value) \
 cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
 
@@ -205,7 +208,7 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
  *
  * @see will_return()
  */
-uintmax_t mock(void);
+LargestIntegralType mock(void);
 #else
 #define mock() _mock(__func__, __FILE__, __LINE__)
 #endif
@@ -289,7 +292,7 @@ type mock_ptr_type(#type);
  * @see mock()
  * @see will_return_count()
  */
-void will_return(#function, uintmax_t value);
+void will_return(#function, LargestIntegralType value);
 #else
 #define will_return(function, value) \
     _will_return(#function, __FILE__, __LINE__, \
@@ -310,7 +313,7 @@ void will_return(#function, uintmax_t value);
  *
  * @see mock()
  */
-void will_return_count(#function, uintmax_t value, int count);
+void will_return_count(#function, LargestIntegralType value, int count);
 #else
 #define will_return_count(function, value, count) \
     _will_return(#function, __FILE__, __LINE__, \
@@ -333,7 +336,7 @@ void will_return_count(#function, uintmax_t value, int count);
  * @see will_return_count()
  * @see mock()
  */
-void will_return_always(#function, uintmax_t value);
+void will_return_always(#function, LargestIntegralType value);
 #else
 #define will_return_always(function, value) \
     will_return_count(function, (value), -1)
@@ -430,7 +433,7 @@ void expect_check(#function, #parameter, #check_function, const void *check_data
  *
  * @see check_expected().
  */
-void expect_in_set(#function, #parameter, uintmax_t value_array[]);
+void expect_in_set(#function, #parameter, LargestIntegralType value_array[]);
 #else
 #define expect_in_set(function, parameter, value_array) \
     expect_in_set_count(function, parameter, value_array, 1)
@@ -455,7 +458,7 @@ void expect_in_set(#function, #parameter, uintmax_t value_array[]);
  *
  * @see check_expected().
  */
-void expect_in_set_count(#function, #parameter, uintmax_t value_array[], size_t count);
+void expect_in_set_count(#function, #parameter, LargestIntegralType value_array[], size_t count);
 #else
 #define expect_in_set_count(function, parameter, value_array, count) \
     _expect_in_set(#function, #parameter, __FILE__, __LINE__, value_array, \
@@ -477,7 +480,7 @@ void expect_in_set_count(#function, #parameter, uintmax_t value_array[], size_t 
  *
  * @see check_expected().
  */
-void expect_not_in_set(#function, #parameter, uintmax_t value_array[]);
+void expect_not_in_set(#function, #parameter, LargestIntegralType value_array[]);
 #else
 #define expect_not_in_set(function, parameter, value_array) \
     expect_not_in_set_count(function, parameter, value_array, 1)
@@ -502,7 +505,7 @@ void expect_not_in_set(#function, #parameter, uintmax_t value_array[]);
  *
  * @see check_expected().
  */
-void expect_not_in_set_count(#function, #parameter, uintmax_t value_array[], size_t count);
+void expect_not_in_set_count(#function, #parameter, LargestIntegralType value_array[], size_t count);
 #else
 #define expect_not_in_set_count(function, parameter, value_array, count) \
     _expect_not_in_set( \
@@ -528,7 +531,7 @@ void expect_not_in_set_count(#function, #parameter, uintmax_t value_array[], siz
  *
  * @see check_expected().
  */
-void expect_in_range(#function, #parameter, uintmax_t minimum, uintmax_t maximum);
+void expect_in_range(#function, #parameter, LargestIntegralType minimum, LargestIntegralType maximum);
 #else
 #define expect_in_range(function, parameter, minimum, maximum) \
     expect_in_range_count(function, parameter, minimum, maximum, 1)
@@ -555,7 +558,7 @@ void expect_in_range(#function, #parameter, uintmax_t minimum, uintmax_t maximum
  *
  * @see check_expected().
  */
-void expect_in_range_count(#function, #parameter, uintmax_t minimum, uintmax_t maximum, size_t count);
+void expect_in_range_count(#function, #parameter, LargestIntegralType minimum, LargestIntegralType maximum, size_t count);
 #else
 #define expect_in_range_count(function, parameter, minimum, maximum, count) \
     _expect_in_range(#function, #parameter, __FILE__, __LINE__, minimum, \
@@ -579,7 +582,7 @@ void expect_in_range_count(#function, #parameter, uintmax_t minimum, uintmax_t m
  *
  * @see check_expected().
  */
-void expect_not_in_range(#function, #parameter, uintmax_t minimum, uintmax_t maximum);
+void expect_not_in_range(#function, #parameter, LargestIntegralType minimum, LargestIntegralType maximum);
 #else
 #define expect_not_in_range(function, parameter, minimum, maximum) \
     expect_not_in_range_count(function, parameter, minimum, maximum, 1)
@@ -606,7 +609,7 @@ void expect_not_in_range(#function, #parameter, uintmax_t minimum, uintmax_t max
  *
  * @see check_expected().
  */
-void expect_not_in_range_count(#function, #parameter, uintmax_t minimum, uintmax_t maximum, size_t count);
+void expect_not_in_range_count(#function, #parameter, LargestIntegralType minimum, LargestIntegralType maximum, size_t count);
 #else
 #define expect_not_in_range_count(function, parameter, minimum, maximum, \
                                   count) \
@@ -628,7 +631,7 @@ void expect_not_in_range_count(#function, #parameter, uintmax_t minimum, uintmax
  *
  * @see check_expected().
  */
-void expect_value(#function, #parameter, uintmax_t value);
+void expect_value(#function, #parameter, LargestIntegralType value);
 #else
 #define expect_value(function, parameter, value) \
     expect_value_count(function, parameter, value, 1)
@@ -652,7 +655,7 @@ void expect_value(#function, #parameter, uintmax_t value);
  *
  * @see check_expected().
  */
-void expect_value_count(#function, #parameter, uintmax_t value, size_t count);
+void expect_value_count(#function, #parameter, LargestIntegralType value, size_t count);
 #else
 #define expect_value_count(function, parameter, value, count) \
     _expect_value(#function, #parameter, __FILE__, __LINE__, \
@@ -673,7 +676,7 @@ void expect_value_count(#function, #parameter, uintmax_t value, size_t count);
  *
  * @see check_expected().
  */
-void expect_not_value(#function, #parameter, uintmax_t value);
+void expect_not_value(#function, #parameter, LargestIntegralType value);
 #else
 #define expect_not_value(function, parameter, value) \
     expect_not_value_count(function, parameter, value, 1)
@@ -697,7 +700,7 @@ void expect_not_value(#function, #parameter, uintmax_t value);
  *
  * @see check_expected().
  */
-void expect_not_value_count(#function, #parameter, uintmax_t value, size_t count);
+void expect_not_value_count(#function, #parameter, LargestIntegralType value, size_t count);
 #else
 #define expect_not_value_count(function, parameter, value, count) \
     _expect_not_value(#function, #parameter, __FILE__, __LINE__, \
@@ -1225,7 +1228,7 @@ void assert_memory_not_equal(const void *a, const void *b, size_t size);
  *
  * @param[in]  maximum  The maximum value allowed.
  */
-void assert_in_range(uintmax_t value, uintmax_t minimum, uintmax_t maximum);
+void assert_in_range(LargestIntegralType value, LargestIntegralType minimum, LargestIntegralType maximum);
 #else
 #define assert_in_range(value, minimum, maximum) \
     _assert_in_range( \
@@ -1248,7 +1251,7 @@ void assert_in_range(uintmax_t value, uintmax_t minimum, uintmax_t maximum);
  *
  * @param[in]  maximum  The maximum value to compare.
  */
-void assert_not_in_range(uintmax_t value, uintmax_t minimum, uintmax_t maximum);
+void assert_not_in_range(LargestIntegralType value, LargestIntegralType minimum, LargestIntegralType maximum);
 #else
 #define assert_not_in_range(value, minimum, maximum) \
     _assert_not_in_range( \
@@ -1270,7 +1273,7 @@ void assert_not_in_range(uintmax_t value, uintmax_t minimum, uintmax_t maximum);
  *
  * @param[in]  count  The size of the values array.
  */
-void assert_in_set(uintmax_t value, uintmax_t values[], size_t count);
+void assert_in_set(LargestIntegralType value, LargestIntegralType values[], size_t count);
 #else
 #define assert_in_set(value, values, number_of_values) \
     _assert_in_set(value, values, number_of_values, __FILE__, __LINE__)
@@ -1289,7 +1292,7 @@ void assert_in_set(uintmax_t value, uintmax_t values[], size_t count);
  *
  * @param[in]  count  The size of the values array.
  */
-void assert_not_in_set(uintmax_t value, uintmax_t values[], size_t count);
+void assert_not_in_set(LargestIntegralType value, LargestIntegralType values[], size_t count);
 #else
 #define assert_not_in_set(value, values, number_of_values) \
     _assert_not_in_set(value, values, number_of_values, __FILE__, __LINE__)
