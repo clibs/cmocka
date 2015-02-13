@@ -205,7 +205,7 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
  *
  * @see will_return()
  */
-void *mock(void);
+uintmax_t mock(void);
 #else
 #define mock() _mock(__func__, __FILE__, __LINE__)
 #endif
@@ -231,7 +231,7 @@ void *mock(void);
  * @see mock()
  * @see mock_ptr_type()
  */
-void *mock_type(#type);
+#type mock_type(#type);
 #else
 #define mock_type(type) ((type) mock())
 #endif
@@ -258,7 +258,7 @@ void *mock_type(#type);
  * @see mock()
  * @see mock_type()
  */
-void *mock_ptr_type(#type);
+type mock_ptr_type(#type);
 #else
 #define mock_ptr_type(type) ((type) (uintptr_t) mock())
 #endif
@@ -289,7 +289,7 @@ void *mock_ptr_type(#type);
  * @see mock()
  * @see will_return_count()
  */
-void will_return(#function, void *value);
+void will_return(#function, uintmax_t value);
 #else
 #define will_return(function, value) \
     _will_return(#function, __FILE__, __LINE__, \
@@ -310,7 +310,7 @@ void will_return(#function, void *value);
  *
  * @see mock()
  */
-void will_return_count(#function, void *value, int count);
+void will_return_count(#function, uintmax_t value, int count);
 #else
 #define will_return_count(function, value, count) \
     _will_return(#function, __FILE__, __LINE__, \
@@ -323,7 +323,7 @@ void will_return_count(#function, void *value, int count);
  *
  * @param[in]  #function  The function which should return the given value.
  *
- * @param[in]  value The value to be returned by mock().
+ * @param[in]  #value The value to be returned by mock().
  *
  * This is equivalent to:
  * @code
@@ -333,7 +333,7 @@ void will_return_count(#function, void *value, int count);
  * @see will_return_count()
  * @see mock()
  */
-void will_return_always(#function, void *value);
+void will_return_always(#function, uintmax_t value);
 #else
 #define will_return_always(function, value) \
     will_return_count(function, (value), -1)
