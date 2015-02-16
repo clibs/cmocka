@@ -1,21 +1,27 @@
-cmocka
-======
+CMOCKA
+=======
 
-cmocka is an elegant unit testing framework for C with support for mock
-objects. It only requires the standard C library, works on a range of computing
-platforms (including embedded) and with different compilers.
+Mirror of [git://git.cryptomilk.org/projects/cmocka.git](git://git.cryptomilk.org/projects/cmocka.git)
+
+INSTALLATION
+------------
+
+    $ clib install cmocka
+
+cmocka is a fork for Google's cmockery unit testing framework to fix bugs and
+support it in future.
+See https://code.google.com/p/cmockery/
 
 For information about how to use the cmocka unit testing framework see
-doc/index.html or https://api.cmocka.org/.
+doc/index.html.
 
-Compiling
+COMPILING
 ---------
-
 To compile the cmocka library and example applications run, create a build dir,
 and in the build dir call 'cmake /path/to/cmocka' followed by 'make'. On
 Windows you can use the cmake gui. More details can be found in the INSTALL file.
 
-Website
+LICENSE
 -------
 
-https://cmocka.org
+Apache
