@@ -1,0 +1,9 @@
+{
+  "name": "cmocka",
+  "version": "1.0.0",
+  "repo": "clibs/cmocka",
+  "description": "An elegant unit testing framework for C with support for mock objects.",
+  "keywords": ["mock", "unit", "test"],
+  "install": "mkdir -p build && cd build && cmake .. && make && make install"
+}
+
