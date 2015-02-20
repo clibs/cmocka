@@ -1093,6 +1093,44 @@ __FILE__, __LINE__)
 
 #ifdef DOXYGEN
 /**
+ * @brief Assert that the two given pointers are equal.
+ *
+ * The function prints an error message and terminates the test by calling
+ * fail() if the pointers are not equal.
+ *
+ * @param[in]  a        The first pointer to compare.
+ *
+ * @param[in]  b        The pointer to compare against the first one.
+ */
+void assert_ptr_equal(void *a, void *b);
+#else
+#define assert_ptr_equal(a, b) \
+    _assert_int_equal(cast_ptr_to_largest_integral_type(a), \
+                      cast_ptr_to_largest_integral_type(b), \
+                      __FILE__, __LINE__)
+#endif
+
+#ifdef DOXYGEN
+/**
+ * @brief Assert that the two given pointers are not equal.
+ *
+ * The function prints an error message and terminates the test by calling
+ * fail() if the pointers are equal.
+ *
+ * @param[in]  a        The first pointer to compare.
+ *
+ * @param[in]  b        The pointer to compare against the first one.
+ */
+void assert_ptr_not_equal(void *a, void *b);
+#else
+#define assert_ptr_not_equal(a, b) \
+    _assert_int_not_equal(cast_ptr_to_largest_integral_type(a), \
+                          cast_ptr_to_largest_integral_type(b), \
+                          __FILE__, __LINE__)
+#endif
+
+#ifdef DOXYGEN
+/**
  * @brief Assert that the two given integers are equal.
  *
  * The function prints an error message to standard error and terminates the
