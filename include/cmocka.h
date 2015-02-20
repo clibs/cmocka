@@ -19,6 +19,8 @@
 #ifdef _WIN32
 # ifdef _MSC_VER
 
+#define __func__ __FUNCTION__
+
 # ifndef inline
 #define inline __inline
 # endif /* inline */
@@ -51,11 +53,6 @@ int __stdcall IsDebuggerPresent();
  *
  * @{
  */
-
-/* For those who are used to __func__ from gcc. */
-#ifndef __func__
-#define __func__ __FUNCTION__
-#endif
 
 /* If __WORDSIZE is not set, try to figure it out and default to 32 bit. */
 #ifndef __WORDSIZE
