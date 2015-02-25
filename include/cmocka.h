@@ -1533,7 +1533,7 @@ static inline void _unit_test_dummy(void **state) {
  *      return 0;
  * }
  *
- * static void teardown(void **state) {
+ * static int teardown(void **state) {
  *      free(*state);
  *
  *      return 0;
@@ -1601,7 +1601,7 @@ int cmocka_run_group_tests(const struct CMUnitTest group_tests[],
  *      return 0;
  * }
  *
- * static void teardown(void **state) {
+ * static int teardown(void **state) {
  *      free(*state);
  *
  *      return 0;
