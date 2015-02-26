@@ -1676,6 +1676,7 @@ void *_test_realloc(void *ptr,
     }
 
     if (size == 0) {
+        _test_free(ptr, file, line);
         return NULL;
     }
 
