@@ -1,3 +1,10 @@
+Thu Mar 12 2015 Andreas Schneider <asn@cryptomilk.org>
+    * cmocka: version 1.0.1
+    * Added a macro for assert_ptr_equal().
+    * Fixed test_realloc() if 0 size is passed.
+    * Fixed objects packaging bug.
+    * Fixed building with newer gcc versions.
+
 Sun Feb 16 2015 Andreas Schneider <asn@cryptomilk.org>
     * cmocka: version 1.0.0
     * Added new test runner with group fixtures. The old runner is deprecated
