@@ -123,9 +123,10 @@ set(TEST_OUTPUT_FMTS
     xml)
 
 set(test_basics_tap_out
-    "^1\\.\\.2[ \n\r]+ok 1 - null_test_success")
+    "^\t1\\.\\.2[ \n\r]+\tok 1 - null_test_success[ \n\r]+\tok 2 - int_test_success[ \n\r]+ok - tests")
 set(test_assert_macros_fail_tap_out
-    "^1\\.\\.1[ \n\r]+not ok 1 - test_assert_return_code_fail")
+    "^\t1\\.\\.1[ \n\r]+\tnot ok 1 - test_assert_return_code_fail[ \n\r]+\t#[^\n\r]+[\n\r]\t#[^\n\r]+[\n\r]not ok - tests")
+
 set(test_skip_tap_out
     "not ok 1 # SKIP")
 set(test_setup_fail_tap_out
