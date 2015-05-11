@@ -1986,6 +1986,7 @@ static void cmprintf_group_finish_standard(size_t total_executed,
                                            size_t total_passed,
                                            size_t total_failed,
                                            size_t total_errors,
+                                           size_t total_skipped,
                                            struct CMUnitTestState *cm_tests)
 {
     size_t i;
@@ -1993,6 +1994,18 @@ static void cmprintf_group_finish_standard(size_t total_executed,
     print_message("[==========] %u test(s) run.\n", (unsigned)total_executed);
     print_error("[  PASSED  ] %u test(s).\n",
                 (unsigned)(total_passed));
+
+    if (total_skipped) {
+        print_error("[  SKIPPED ] %"PRIdS " test(s), listed below:\n", total_skipped);
+        for (i = 0; i < total_executed; i++) {
+            struct CMUnitTestState *cmtest = &cm_tests[i];
+
+            if (cmtest->status == CM_TEST_SKIPPED) {
+                print_error("[  SKIPPED ] %s\n", cmtest->test->name);
+            }
+        }
+        print_error("\n %u SKIPPED TEST(S)\n", (unsigned)(total_skipped));
+    }
 
     if (total_failed) {
         print_error("[  FAILED  ] %"PRIdS " test(s), listed below:\n", total_failed);
@@ -2170,6 +2183,7 @@ static void cmprintf_group_finish(const char *group_name,
                                     total_passed,
                                     total_failed,
                                     total_errors,
+                                    total_skipped,
                                     cm_tests);
         break;
     case CM_OUTPUT_SUBUNIT:
