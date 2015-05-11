@@ -1,7 +1,7 @@
 *.swp
 *~$
 build
-obj
+obj*
 tags
 cscope.*
 .ycm_extra_conf.pyc
