@@ -30,6 +30,10 @@
 #  undef inline
 #  define inline __inline
 
+#  ifndef va_copy
+#   define va_copy(dest, src) (dest = src)
+#  endif
+
 #  define strcasecmp _stricmp
 #  define strncasecmp _strnicmp
 
