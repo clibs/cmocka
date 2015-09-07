@@ -2493,6 +2493,7 @@ int _cmocka_run_group_tests(const char *group_name,
     struct CMUnitTestState *cm_tests;
     const ListNode *group_check_point = check_point_allocated_blocks();
     void *group_state = NULL;
+    size_t total_tests = 0;
     size_t total_failed = 0;
     size_t total_passed = 0;
     size_t total_executed = 0;
@@ -2510,16 +2511,22 @@ int _cmocka_run_group_tests(const char *group_name,
         return -1;
     }
 
-    cmprintf_group_start(num_tests);
-
     /* Setup cmocka test array */
     for (i = 0; i < num_tests; i++) {
-        cm_tests[i] = (struct CMUnitTestState) {
-            .test = &tests[i],
-            .status = CM_TEST_NOT_STARTED,
-            .state = NULL,
-        };
+        if (tests[i].name != NULL &&
+            (tests[i].test_func != NULL
+             || tests[i].setup_func != NULL
+             || tests[i].teardown_func != NULL)) {
+            cm_tests[i] = (struct CMUnitTestState) {
+                .test = &tests[i],
+                .status = CM_TEST_NOT_STARTED,
+                .state = NULL,
+            };
+            total_tests++;
+        }
     }
+
+    cmprintf_group_start(total_tests);
 
     rc = 0;
 
@@ -2534,7 +2541,7 @@ int _cmocka_run_group_tests(const char *group_name,
 
     if (rc == 0) {
         /* Execute tests */
-        for (i = 0; i < num_tests; i++) {
+        for (i = 0; i < total_tests; i++) {
             struct CMUnitTestState *cmtest = &cm_tests[i];
             size_t test_number = i + 1;
 
@@ -2609,7 +2616,7 @@ int _cmocka_run_group_tests(const char *group_name,
                           total_runtime,
                           cm_tests);
 
-    for (i = 0; i < num_tests; i++) {
+    for (i = 0; i < total_tests; i++) {
         vcm_free_error(discard_const_p(char, cm_tests[i].error_message));
     }
     libc_free(cm_tests);
