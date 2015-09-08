@@ -110,6 +110,9 @@
 /* Define to 1 if you have the `longjmp' function. */
 #cmakedefine HAVE_LONGJMP 1
 
+/* Define to 1 if you have the `siglongjmp' function. */
+#cmakedefine HAVE_SIGLONGJMP 1
+
 /* Define to 1 if you have the `malloc' function. */
 #cmakedefine HAVE_MALLOC 1
 

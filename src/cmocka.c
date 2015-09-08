@@ -84,6 +84,20 @@
 #define CMOCKA_CLOCK_GETTIME(clock_id, ts)
 #endif
 
+/**
+ * POSIX has sigsetjmp/siglongjmp, while Windows only has setjmp/longjmp.
+ */
+#ifdef HAVE_SIGLONGJMP
+# define cm_jmp_buf             sigjmp_buf
+# define cm_setjmp(env)         sigsetjmp(env, 1)
+# define cm_longjmp(env, val)   siglongjmp(env, val)
+#else
+# define cm_jmp_buf             jmp_buf
+# define cm_setjmp(env)         setjmp(env)
+# define cm_longjmp(env, val)   longjmp(env, val)
+#endif
+
+
 /*
  * Declare and initialize the pointer member of ValuePointer variable name
  * with ptr.
@@ -238,7 +252,7 @@ void cm_print_error(const char * const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2
  * Keeps track of the calling context returned by setenv() so that the fail()
  * method can jump out of a test.
  */
-static CMOCKA_THREAD jmp_buf global_run_test_env;
+static CMOCKA_THREAD cm_jmp_buf global_run_test_env;
 static CMOCKA_THREAD int global_running_test = 0;
 
 /* Keeps track of the calling context returned by setenv() so that */
@@ -347,7 +361,7 @@ static void exit_test(const int quit_application)
         print_error("%s", cm_error_message);
         abort();
     } else if (global_running_test) {
-        longjmp(global_run_test_env, 1);
+        cm_longjmp(global_run_test_env, 1);
     } else if (quit_application) {
         exit(-1);
     }
@@ -2339,7 +2353,7 @@ static int cmocka_run_one_test_or_fixture(const char *function_name,
 
     global_running_test = 1;
 
-    if (setjmp(global_run_test_env) == 0) {
+    if (cm_setjmp(global_run_test_env) == 0) {
         if (test_func != NULL) {
             test_func(state != NULL ? state : &current_state);
 
@@ -2677,7 +2691,7 @@ int _run_test(
     }
     initialize_testing(function_name);
     global_running_test = 1;
-    if (setjmp(global_run_test_env) == 0) {
+    if (cm_setjmp(global_run_test_env) == 0) {
         Function(state ? state : &current_state);
         fail_if_leftover_values(function_name);
 
