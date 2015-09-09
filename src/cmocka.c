@@ -227,6 +227,8 @@ static void initialize_testing(const char *test_name);
 /* This must be called at the end of a test to free() allocated structures. */
 static void teardown_testing(const char *test_name);
 
+static enum cm_message_output cm_get_output(void);
+
 static int cm_error_message_enabled = 1;
 static CMOCKA_THREAD char *cm_error_message;
 
@@ -1765,7 +1767,16 @@ static void fail_if_blocks_allocated(const ListNode * const check_point,
 
 
 void _fail(const char * const file, const int line) {
-    cm_print_error(SOURCE_LOCATION_FORMAT ": error: Failure!\n", file, line);
+    enum cm_message_output output = cm_get_output();
+
+    switch(output) {
+        case CM_OUTPUT_STDOUT:
+            cm_print_error("[   LINE   ] --- " SOURCE_LOCATION_FORMAT ": error: Failure!", file, line);
+            break;
+        default:
+            cm_print_error(SOURCE_LOCATION_FORMAT ": error: Failure!", file, line);
+            break;
+    }
     exit_test(1);
 }
 
@@ -2034,7 +2045,7 @@ static void cmprintf_standard(enum cm_printf_type type,
         break;
     case PRINTF_TEST_FAILURE:
         if (error_message != NULL) {
-            print_error("%s\n", error_message);
+            print_error("[  ERROR   ] --- %s\n", error_message);
         }
         print_message("[  FAILED  ] %s\n", test_name);
         break;
