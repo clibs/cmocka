@@ -1797,11 +1797,14 @@ void _fail(const char * const file, const int line) {
 
 #ifndef _WIN32
 static void exception_handler(int sig) {
+    const char *sig_strerror = "";
+
 #ifdef HAVE_STRSIGNAL
-    cm_print_error("Test failed with exception: %s\n", strsignal(sig));
-#else
-    cm_print_error("Test failed with exception: %d\n", sig);
+    sig_strerror = strsignal(sig);
 #endif
+
+    cm_print_error("Test failed with exception: %s(%d)",
+                   sig_strerror, sig);
     exit_test(1);
 }
 
