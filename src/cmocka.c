@@ -2577,7 +2577,10 @@ int _cmocka_run_group_tests(const char *group_name,
 
             if (group_state != NULL) {
                 cm_tests[i].state = group_state;
+            } else if (cm_tests[i].test->initial_state != NULL) {
+                cm_tests[i].state = cm_tests[i].test->initial_state;
             }
+
             rc = cmocka_run_one_tests(cmtest);
             total_executed++;
             total_runtime += cmtest->runtime;
