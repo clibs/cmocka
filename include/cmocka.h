@@ -1504,18 +1504,20 @@ static inline void _unit_test_dummy(void **state) {
 #define cmocka_unit_test_setup_teardown(f, setup, teardown) { #f, f, setup, teardown, NULL }
 
 /**
- * Initialize a CMUnitTest structure with given initial state. It will be passed to test
- * function as an argument later. It can be used when test state does not need special initialization
- * or was initialized already.
- * If group state was initialized for this unit test, it won't be overrided by initial state defined here.
+ * Initialize a CMUnitTest structure with given initial state. It will be passed
+ * to test function as an argument later. It can be used when test state does
+ * not need special initialization or was initialized already.
+ * @note If the group setup function initialized the state already, it won't be
+ * overridden by the initial state defined here.
  */
 #define cmocka_unit_test_prestate(f, state) { #f, f, NULL, NULL, state }
 
 /**
- * Initialize a CMUnitTest structure with given initial state, setup and teardown function. Any of
- * these values can be NULL. Initial state is passed later to setup function, or directly to test if
- * none was given.
- * If group state was initialized for this unit test, it won't be overrided by initial state defined here.
+ * Initialize a CMUnitTest structure with given initial state, setup and
+ * teardown function. Any of these values can be NULL. Initial state is passed
+ * later to setup function, or directly to test if none was given.
+ * @note If the group setup function initialized the state already, it won't be
+ * overridden by the initial state defined here.
  */
 #define cmocka_unit_test_prestate_setup_teardown(f, setup, teardown, state) { #f, f, setup, teardown, state }
 
