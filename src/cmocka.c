@@ -975,8 +975,8 @@ static int memory_equal_display_error(const char* const a, const char* const b,
         }
     }
     if (differences) {
-        cm_print_error("%d bytes of %p and %p differ\n", differences,
-                    a, b);
+        cm_print_error("%d bytes of %p and %p differ\n",
+                       differences, (void *)a, (void *)b);
         return 0;
     }
     return 1;
@@ -1000,8 +1000,8 @@ static int memory_not_equal_display_error(
         }
     }
     if (same == size) {
-        cm_print_error("%"PRIdS "bytes of %p and %p the same\n", same,
-                    a, b);
+        cm_print_error("%"PRIdS "bytes of %p and %p the same\n",
+                       same, (void *)a, (void *)b);
         return 0;
     }
     return 1;
@@ -1662,7 +1662,7 @@ void _test_free(void* const ptr, const char* file, const int line) {
                                    file, line,
                                    ptr, (unsigned long)block_info->size,
                                    block_info->location.file, block_info->location.line,
-                                   &guard[j]);
+                                   (void *)&guard[j]);
                     _fail(file, line);
                 }
             }
