@@ -71,6 +71,28 @@ The cmocka library can be found in the `build/src` directory.
 You can run the binaries in `build/examples/*` which is a
 are exsample tests.
 
+## Testing
+
+As mention above you can turn on the unit tests and make it possible to easily
+execute them:
+
+`cmake -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTING=ON ..`
+
+After that you can simply call `make test` in the build directory or if you
+want more output simply call `ctest -V`.
+
+If you want to enable the generation of coverage files you can do this by
+using the following options:
+
+`cmake -DCMAKE_BUILD_TYPE=Profiling -DUNIT_TESTING=ON ..`
+
+After building it you will see that you have several coverage options in
+
+`make help`
+
+You should have `make ExperimentalCoverage` and running it will create
+coverage files. The result is stored in Testing directory.
+
 ## About this document
 
 This document is written using [Markdown][] syntax, making it possible to
