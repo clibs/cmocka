@@ -16,6 +16,7 @@ EXPORTS
     _cmocka_run_group_tests
     _expect_any
     _expect_check
+    _expect_function_call
     _expect_in_range
     _expect_in_set
     _expect_memory
@@ -27,6 +28,7 @@ EXPORTS
     _expect_string
     _expect_value
     _fail
+    _function_called
     _mock
     _run_test
     _run_tests

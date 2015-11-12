@@ -1336,6 +1336,138 @@ void assert_not_in_set(LargestIntegralType value, LargestIntegralType values[], 
 /** @} */
 
 /**
+ * @defgroup cmocka_call_order Call Ordering
+ * @ingroup cmocka
+ *
+ * It is often beneficial to  make sure that functions are called in an
+ * order. This is independent of mock returns and parameter checking as both
+ * of the aforementioned do not check the order in which they are called from
+ * different functions.
+ *
+ * <ul>
+ * <li><strong>expect_function_call(function)</strong> - The
+ * expect_function_call() macro pushes an expectation onto the stack of
+ * expected calls.</li>
+ *
+ * <li><strong>function_called()</strong> - pops a value from the stack of
+ * expected calls. function_called() is invoked within the mock object
+ * that uses it.
+ * </ul>
+ *
+ * expect_function_call() and function_called() are intended to be used in
+ * pairs. Cmocka will fail a test if there are more or less expected calls
+ * created (e.g. expect_function_call()) than consumed with function_called().
+ * There are provisions such as ignore_function_calls() which allow this
+ * restriction to be circumvented in tests where mock calls for the code under
+ * test are not the focus of the test.
+ *
+ * The following example illustrates how a unit test instructs cmocka
+ * to expect a function_called() from a particular mock,
+ * <strong>chef_sing()</strong>:
+ *
+ * @code
+ * void chef_sing(void);
+ *
+ * void code_under_test()
+ * {
+ *   chef_sing();
+ * }
+ *
+ * void some_test(void **state)
+ * {
+ *     expect_function_call(chef_sing);
+ *     code_under_test();
+ * }
+ * @endcode
+ *
+ * The implementation of the mock then must check whether it was meant to
+ * be called by invoking <strong>function_called()</strong>:
+ *
+ * @code
+ * void chef_sing()
+ * {
+ *     function_called();
+ * }
+ * @endcode
+ *
+ * @{
+ */
+
+#ifdef DOXYGEN
+/**
+ * @brief Check that current mocked function is being called in the expected
+ *        order
+ *
+ * @see expect_function_call()
+ */
+void function_called(void);
+#else
+#define function_called() _function_called(__func__, __FILE__, __LINE__)
+#endif
+
+#ifdef DOXYGEN
+/**
+ * @brief Store expected call(s) to a mock to be checked by function_called()
+ *        later.
+ *
+ * @param[in]  #function  The function which should should be called
+ *
+ * @param[in]  times number of times this mock must be called
+ *
+ * @see function_called()
+ */
+void expect_function_calls(#function, const int times);
+#else
+#define expect_function_calls(function, times) \
+    _expect_function_call(#function, __FILE__, __LINE__, times)
+#endif
+
+#ifdef DOXYGEN
+/**
+ * @brief Store expected single call to a mock to be checked by
+ *        function_called() later.
+ *
+ * @param[in]  #function  The function which should should be called
+ *
+ * @see function_called()
+ */
+void expect_function_call(#function);
+#else
+#define expect_function_call(function) \
+    _expect_function_call(#function, __FILE__, __LINE__, 1)
+#endif
+
+#ifdef DOXYGEN
+/**
+ * @brief Expects function_called() from given mock at least once
+ *
+ * @param[in]  #function  The function which should should be called
+ *
+ * @see function_called()
+ */
+void expect_function_call_any(#function);
+#else
+#define expect_function_call_any(function) \
+    _expect_function_call(#function, __FILE__, __LINE__, -1)
+#endif
+
+#ifdef DOXYGEN
+/**
+ * @brief Ignores function_called() invocations from given mock function.
+ *
+ * @param[in]  #function  The function which should should be called
+ *
+ * @see function_called()
+ */
+void ignore_function_calls(#function);
+#else
+#define ignore_function_calls(function) \
+    _expect_function_call(#function, __FILE__, __LINE__, -2)
+#endif
+
+/** @} */
+
+/**
  * @defgroup cmocka_exec Running Tests
  * @ingroup cmocka
  *
@@ -1936,6 +2068,15 @@ extern const char * global_last_failed_assert;
 
 /* Retrieves a value for the given function, as set by "will_return". */
 LargestIntegralType _mock(const char * const function, const char* const file,
+                          const int line);
+
+void _expect_function_call(
+    const char * const function_name,
+    const char * const file,
+    const int line,
+    const int count);
+
+void _function_called(const char * const function, const char* const file,
                           const int line);
 
 void _expect_check(

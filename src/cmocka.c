@@ -174,6 +174,12 @@ typedef struct SymbolMapValue {
     ListNode symbol_values_list_head;
 } SymbolMapValue;
 
+/* Where a particular ordering was located and its symbol name */
+typedef struct FuncOrderingValue {
+    SourceLocation location;
+    const char * function;
+} FuncOrderingValue;
+
 /* Used by list_free() to deallocate values referenced by list nodes. */
 typedef void (*CleanupListValue)(const void *value, void *cleanup_value_data);
 
@@ -229,9 +235,16 @@ static void free_symbol_map_value(
     const void *value, void *cleanup_value_data);
 static void remove_always_return_values(ListNode * const map_head,
                                         const size_t number_of_symbol_names);
+
+static int check_for_leftover_values_list(const ListNode * head,
+    const char * const error_message);
+
 static int check_for_leftover_values(
     const ListNode * const map_head, const char * const error_message,
     const size_t number_of_symbol_names);
+
+static void remove_always_return_values_from_list(ListNode * const map_head);
+
 /*
  * This must be called at the beginning of a test to initialize some data
  * structures.
@@ -273,6 +286,11 @@ static CMOCKA_THREAD SourceLocation global_last_mock_value_location;
 static CMOCKA_THREAD ListNode global_function_parameter_map_head;
 /* Location of last parameter value checked was declared. */
 static CMOCKA_THREAD SourceLocation global_last_parameter_location;
+
+/* List (acting as FIFO) of call ordering. */
+static CMOCKA_THREAD ListNode global_call_ordering_head;
+/* Location of last call ordering that was declared. */
+static CMOCKA_THREAD SourceLocation global_last_call_ordering_location;
 
 /* List of all currently allocated blocks. */
 static CMOCKA_THREAD ListNode global_allocated_blocks;
@@ -401,17 +419,19 @@ static void set_source_location(
 
 /* Create function results and expected parameter lists. */
 void initialize_testing(const char *test_name) {
-	(void)test_name;
+    (void)test_name;
     list_initialize(&global_function_result_map_head);
     initialize_source_location(&global_last_mock_value_location);
     list_initialize(&global_function_parameter_map_head);
+    initialize_source_location(&global_last_parameter_location);
+    list_initialize(&global_call_ordering_head);
     initialize_source_location(&global_last_parameter_location);
 }
 
 
 static void fail_if_leftover_values(const char *test_name) {
     int error_occurred = 0;
-	(void)test_name;
+    (void)test_name;
     remove_always_return_values(&global_function_result_map_head, 1);
     if (check_for_leftover_values(
             &global_function_result_map_head,
@@ -425,6 +445,12 @@ static void fail_if_leftover_values(const char *test_name) {
             "%s parameter still has values that haven't been checked.\n", 2)) {
         error_occurred = 1;
     }
+
+    remove_always_return_values_from_list(&global_call_ordering_head);
+    if (check_for_leftover_values_list(&global_call_ordering_head,
+        "%s function was expected to be called but was not not.\n")) {
+        error_occurred = 1;
+    }
     if (error_occurred) {
         exit_test(1);
     }
@@ -432,13 +458,16 @@ static void fail_if_leftover_values(const char *test_name) {
 
 
 static void teardown_testing(const char *test_name) {
-	(void)test_name;
+    (void)test_name;
     list_free(&global_function_result_map_head, free_symbol_map_value,
               (void*)0);
     initialize_source_location(&global_last_mock_value_location);
     list_free(&global_function_parameter_map_head, free_symbol_map_value,
               (void*)1);
     initialize_source_location(&global_last_parameter_location);
+    list_free(&global_call_ordering_head, free_value,
+              (void*)0);
+    initialize_source_location(&global_last_call_ordering_location);
 }
 
 /* Initialize a list node. */
@@ -557,7 +586,7 @@ static int list_first(ListNode * const head, ListNode **output) {
 
 /* Deallocate a value referenced by a list. */
 static void free_value(const void *value, void *cleanup_value_data) {
-	(void)cleanup_value_data;
+    (void)cleanup_value_data;
     assert_non_null(value);
     free((void*)value);
 }
@@ -584,7 +613,6 @@ static int symbol_names_match(const void *map_value, const void *symbol) {
     return !strcmp(((SymbolMapValue*)map_value)->symbol_name,
                    (const char*)symbol);
 }
-
 
 /*
  * Adds a value to the queue of values associated with the given hierarchy of
@@ -675,6 +703,26 @@ static int get_symbol_value(
     return 0;
 }
 
+/**
+ * Taverse a list of nodes and remove first symbol value in list that has a
+ * refcount < -1 (i.e. should always be returned and has been returned at
+ * least once).
+ */
+
+static void remove_always_return_values_from_list(ListNode * const map_head)
+{
+    ListNode * current = NULL;
+    ListNode * next = NULL;
+    assert_non_null(map_head);
+
+    for (current = map_head->next, next = current->next;
+            current != map_head;
+            current = next, next = current->next) {
+        if (current->refcount < -1) {
+            list_remove_free(current, free_value, NULL);
+        }
+    }
+}
 
 /*
  * Traverse down a tree of symbol values and remove the first symbol value
@@ -712,6 +760,26 @@ static void remove_always_return_values(ListNode * const map_head,
         }
         current = next;
     }
+}
+
+static int check_for_leftover_values_list(const ListNode * head,
+                                          const char * const error_message)
+{
+    ListNode *child_node;
+    int leftover_count = 0;
+    if (!list_empty(head))
+    {
+        for (child_node = head->next; child_node != head;
+                 child_node = child_node->next, ++leftover_count) {
+            const FuncOrderingValue *const o =
+                    (const FuncOrderingValue*) child_node->value;
+            cm_print_error(error_message, o->function);
+            cm_print_error(SOURCE_LOCATION_FORMAT
+                    ": note: remaining item was declared here\n",
+                    o->location.file, o->location.line);
+        }
+    }
+    return leftover_count;
 }
 
 /*
@@ -790,13 +858,87 @@ LargestIntegralType _mock(const char * const function, const char* const file,
     return 0;
 }
 
+/* Ensure that function is being called in proper order */
+void _function_called(const char *const function,
+                      const char *const file,
+                      const int line)
+{
+    ListNode *first_value_node = NULL;
+    ListNode *value_node = NULL;
+    FuncOrderingValue *expected_call;
+    int rc;
+
+    rc = list_first(&global_call_ordering_head, &value_node);
+    first_value_node = value_node;
+    if (rc) {
+        int cmp;
+
+        expected_call = (FuncOrderingValue *)value_node->value;
+        cmp = strcmp(expected_call->function, function);
+        if (value_node->refcount < -1) {
+            /*
+             * Search through value nodes until either function is found or
+             * encounter a non-zero refcount greater than -2
+             */
+            if (cmp != 0) {
+                value_node = value_node->next;
+                expected_call = (FuncOrderingValue *)value_node->value;
+
+                cmp = strcmp(expected_call->function, function);
+                while (value_node->refcount < -1 &&
+                       cmp != 0 &&
+                       value_node != first_value_node->prev) {
+                    value_node = value_node->next;
+                    if (value_node == NULL) {
+                        break;
+                    }
+                    expected_call = (FuncOrderingValue *)value_node->value;
+                    if (expected_call == NULL) {
+                        continue;
+                    }
+                    cmp = strcmp(expected_call->function, function);
+                }
+
+                if (value_node == first_value_node->prev) {
+                    cm_print_error(SOURCE_LOCATION_FORMAT
+                                   ": error: No expected mock calls matching "
+                                   "called() invocation in %s",
+                                   file, line,
+                                   function);
+                    exit_test(1);
+                }
+            }
+        }
+
+        if (cmp == 0) {
+            if (value_node->refcount > -2 && --value_node->refcount == 0) {
+                list_remove_free(value_node, free_value, NULL);
+            }
+        } else {
+            cm_print_error(SOURCE_LOCATION_FORMAT
+                           ": error: Expected call to %s but received called() "
+                           "in %s\n",
+                           file, line,
+                           expected_call->function,
+                           function);
+            exit_test(1);
+        }
+    } else {
+        cm_print_error(SOURCE_LOCATION_FORMAT
+                       ": error: No mock calls expected but called() was "
+                       "invoked in %s\n",
+                       file, line,
+                       function);
+        exit_test(1);
+    }
+}
 
 /* Add a return value for the specified mock function name. */
 void _will_return(const char * const function_name, const char * const file,
                   const int line, const LargestIntegralType value,
                   const int count) {
     SymbolValue * const return_value =
-	    (SymbolValue*)malloc(sizeof(*return_value));
+        (SymbolValue*)malloc(sizeof(*return_value));
     assert_true(count > 0 || count == -1);
     return_value->value = value;
     set_source_location(&return_value->location, file, line);
@@ -828,6 +970,31 @@ void _expect_check(
                      count);
 }
 
+/*
+ * Add an call expectations that a particular function is called correctly.
+ * This is used for code under test that makes calls to several functions
+ * in depended upon components (mocks).
+ */
+
+void _expect_function_call(
+    const char * const function_name,
+    const char * const file,
+    const int line,
+    const int count)
+{
+    FuncOrderingValue *ordering;
+
+    assert_non_null(function_name);
+    assert_non_null(file);
+    assert_true(count != 0);
+
+    ordering = (FuncOrderingValue *)malloc(sizeof(*ordering));
+
+    set_source_location(&ordering->location, file, line);
+    ordering->function = function_name;
+
+    list_add_value(&global_call_ordering_head, ordering, count);
+}
 
 /* Returns 1 if the specified values are equal.  If the values are not equal
  * an error is displayed and 0 is returned. */
@@ -1234,7 +1401,7 @@ static void expect_memory_setup(
         const void * const memory, const size_t size,
         const CheckParameterValue check_function, const int count) {
     CheckMemoryData * const check_data =
-	    (CheckMemoryData*)malloc(sizeof(*check_data) + size);
+	(CheckMemoryData*)malloc(sizeof(*check_data) + size);
     void * const mem = (void*)(check_data + 1);
     declare_initialize_value_pointer_pointer(check_data_pointer, check_data);
     assert_non_null(memory);
@@ -1266,7 +1433,7 @@ static int check_not_memory(const LargestIntegralType value,
     assert_non_null(check);
     return memory_not_equal_display_error(
         cast_largest_integral_type_to_pointer(const char*, value),
-	(const char*)check->memory,
+        (const char*)check->memory,
         check->size);
 }
 
@@ -1284,8 +1451,8 @@ void _expect_not_memory(
 /* CheckParameterValue callback that always returns 1. */
 static int check_any(const LargestIntegralType value,
                      const LargestIntegralType check_value_data) {
-	(void)value;
-	(void)check_value_data;
+    (void)value;
+    (void)check_value_data;
     return 1;
 }
 
@@ -1734,7 +1901,7 @@ static int display_allocated_blocks(const ListNode * const check_point) {
 
     for (node = check_point->next; node != head; node = node->next) {
         const MallocBlockInfo * const block_info =
-		(const MallocBlockInfo*)node->value;
+	    (const MallocBlockInfo*)node->value;
         assert_non_null(block_info);
 
         if (!allocated_blocks) {
@@ -2762,7 +2929,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
      * when a test setup occurs and popped on tear down.
      */
     TestState* test_states =
-	    (TestState*)malloc(number_of_tests * sizeof(*test_states));
+	(TestState*)malloc(number_of_tests * sizeof(*test_states));
     /* The number of test states which should be 0 at the end */
     long number_of_test_states = 0;
     /* Names of the tests that failed. */
