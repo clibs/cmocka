@@ -79,7 +79,7 @@ typedef uintmax_t LargestIntegralType;
 #endif /* LargestIntegralType */
 #endif /* DOXYGEN */
 
-/* Printf format used to display LargestIntegralType. */
+/* Printf format used to display LargestIntegralType as a hexidecimal. */
 #ifndef LargestIntegralTypePrintfFormat
 # ifdef _WIN32
 #  define LargestIntegralTypePrintfFormat "0x%I64x"
@@ -88,6 +88,19 @@ typedef uintmax_t LargestIntegralType;
 #   define LargestIntegralTypePrintfFormat "%#lx"
 #  else
 #   define LargestIntegralTypePrintfFormat "%#llx"
+#  endif
+# endif /* _WIN32 */
+#endif /* LargestIntegralTypePrintfFormat */
+
+/* Printf format used to display LargestIntegralType as a decimal. */
+#ifndef LargestIntegralTypePrintfFormatDecimal
+# ifdef _WIN32
+#  define LargestIntegralTypePrintfFormatDecimal "%I64u"
+# else
+#  if __WORDSIZE == 64
+#   define LargestIntegralTypePrintfFormatDecimal "%lu"
+#  else
+#   define LargestIntegralTypePrintfFormatDecimal "%llu"
 #  endif
 # endif /* _WIN32 */
 #endif /* LargestIntegralTypePrintfFormat */
