@@ -31,6 +31,10 @@
 #include <signal.h>
 #endif
 
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
+
 #include <stdint.h>
 #include <setjmp.h>
 #include <stdarg.h>
