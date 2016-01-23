@@ -34,6 +34,7 @@ include(DefineCompilerFlags)
 include(DefineInstallationPaths)
 include(DefineOptions.cmake)
 include(CPackConfig.cmake)
+include(CheckSymbolExists)
 
 # disallow in-source build
 include(MacroEnsureOutOfSourceBuild)
