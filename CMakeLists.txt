@@ -44,6 +44,11 @@ macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source buil
 include(ConfigureChecks.cmake)
 configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
+# MinGW DLL Naming Workaround
+if (MINGW)
+    set(CMAKE_SHARED_LIBRARY_PREFIX "")
+endif (MINGW)
+
 # check subdirectories
 add_subdirectory(doc)
 add_subdirectory(include)
