@@ -689,8 +689,10 @@ static int get_symbol_value(
             assert_true(return_value);
             *output = (void*) value_node->value;
             return_value = value_node->refcount;
-            if (--value_node->refcount == 0) {
+            if (value_node->refcount - 1 == 0) {
                 list_remove_free(value_node, NULL, NULL);
+            } else if (value_node->refcount > -2) {
+                --value_node->refcount;
             }
         } else {
             return_value = get_symbol_value(
@@ -943,7 +945,7 @@ void _will_return(const char * const function_name, const char * const file,
                   const int count) {
     SymbolValue * const return_value =
         (SymbolValue*)malloc(sizeof(*return_value));
-    assert_true(count > 0 || count == -1);
+    assert_true(count != 0);
     return_value->value = value;
     set_source_location(&return_value->location, file, line);
     add_symbol_value(&global_function_result_map_head, &function_name, 1,

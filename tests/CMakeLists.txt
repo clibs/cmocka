@@ -19,7 +19,9 @@ set(CMOCKA_TESTS
     test_skip
     test_setup_fail
     test_ordering
-    test_ordering_fail)
+    test_ordering_fail
+    test_returns
+    test_returns_fail)
 
 foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
     add_cmocka_test(${_CMOCKA_TEST} ${_CMOCKA_TEST}.c ${CMOCKA_STATIC_LIBRARY})
@@ -33,7 +35,7 @@ add_cmocka_test(test_cmockery test_cmockery.c ${CMOCKA_STATIC_LIBRARY})
 
 ### Exceptions
 
-# test_assert_macros_fail
+# test_skip
 set_tests_properties(
     test_skip
         PROPERTIES
@@ -55,6 +57,14 @@ set_tests_properties(
         PROPERTIES
         PASS_REGULAR_EXPRESSION
         "\\[  FAILED  \\] 7 test"
+)
+
+# test_returns_fail ensure proper failures
+set_tests_properties(
+    test_returns_fail
+        PROPERTIES
+        PASS_REGULAR_EXPRESSION
+        "\\[  FAILED  \\] 3 test"
 )
 
 # test_exception_handler

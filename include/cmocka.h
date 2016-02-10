@@ -304,9 +304,11 @@ void will_return(#function, LargestIntegralType value);
  *
  * @param[in]  value The value to be returned by mock().
  *
- * @param[in]  count The parameter returns the number of times the value should
- *                   be returned by mock(). If count is set to -1 the value will
- *                   always be returned.
+ * @param[in]  count The parameter indicates the number of times the value should
+ *                   be returned by mock(). If count is set to -1, the value
+ *                   will always be returned but must be returned at least once.
+ *                   If count is set to -2, the value will always be returned
+ *                   by mock(), but is not required to be returned.
  *
  * @see mock()
  */
@@ -339,6 +341,33 @@ void will_return_always(#function, LargestIntegralType value);
     will_return_count(function, (value), -1)
 #endif
 
+#ifdef DOXYGEN
+/**
+ * @brief Store a value that may be always returned by mock().
+ *
+ * This stores a value which will always be returned by mock() but is not
+ * required to be returned by at least one call to mock(). Therefore,
+ * in contrast to will_return_always() which causes a test failure if it
+ * is not returned at least once, will_return_maybe() will never cause a test
+ * to fail if its value is not returned.
+ *
+ * @param[in]  #function  The function which should return the given value.
+ *
+ * @param[in]  #value The value to be returned by mock().
+ *
+ * This is equivalent to:
+ * @code
+ * will_return_count(function, value, -2);
+ * @endcode
+ *
+ * @see will_return_count()
+ * @see mock()
+ */
+void will_return_maybe(#function, LargestIntegralType value);
+#else
+#define will_return_maybe(function, value) \
+    will_return_count(function, (value), -2)
+#endif
 /** @} */
 
 /**
