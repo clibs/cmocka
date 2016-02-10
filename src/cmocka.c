@@ -1405,7 +1405,7 @@ static void expect_memory_setup(
         const void * const memory, const size_t size,
         const CheckParameterValue check_function, const int count) {
     CheckMemoryData * const check_data =
-	(CheckMemoryData*)malloc(sizeof(*check_data) + size);
+        (CheckMemoryData*)malloc(sizeof(*check_data) + size);
     void * const mem = (void*)(check_data + 1);
     declare_initialize_value_pointer_pointer(check_data_pointer, check_data);
     assert_non_null(memory);
@@ -1905,7 +1905,7 @@ static int display_allocated_blocks(const ListNode * const check_point) {
 
     for (node = check_point->next; node != head; node = node->next) {
         const MallocBlockInfo * const block_info =
-	    (const MallocBlockInfo*)node->value;
+            (const MallocBlockInfo*)node->value;
         assert_non_null(block_info);
 
         if (!allocated_blocks) {
@@ -2947,7 +2947,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
      * when a test setup occurs and popped on tear down.
      */
     TestState* test_states =
-	(TestState*)malloc(number_of_tests * sizeof(*test_states));
+       (TestState*)malloc(number_of_tests * sizeof(*test_states));
     /* The number of test states which should be 0 at the end */
     long number_of_test_states = 0;
     /* Names of the tests that failed. */
