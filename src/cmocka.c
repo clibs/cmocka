@@ -2791,8 +2791,13 @@ int _cmocka_run_group_tests(const char *group_name,
             }
         }
     } else {
+        if (cm_error_message != NULL) {
+            print_error("[  ERROR   ] --- %s\n", cm_error_message);
+            vcm_free_error(cm_error_message);
+            cm_error_message = NULL;
+        }
         cmprintf(PRINTF_TEST_ERROR, 0,
-                 group_name, "Group setup failed");
+                 group_name, "[  FAILED  ] GROUP SETUP");
         total_errors++;
     }
 
@@ -2803,6 +2808,15 @@ int _cmocka_run_group_tests(const char *group_name,
                                       group_teardown,
                                       &group_state,
                                       group_check_point);
+        if (rc != 0) {
+            if (cm_error_message != NULL) {
+                print_error("[  ERROR   ] --- %s\n", cm_error_message);
+                vcm_free_error(cm_error_message);
+                cm_error_message = NULL;
+            }
+            cmprintf(PRINTF_TEST_ERROR, 0,
+                     group_name, "[  FAILED  ] GROUP TEARDOWN");
+        }
     }
 
     cmprintf_group_finish(group_name,
