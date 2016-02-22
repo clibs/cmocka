@@ -60,6 +60,13 @@ int __stdcall IsDebuggerPresent();
 #define cast_to_intmax_type(value) \
     ((intmax_t)(value))
 
+#if __GNUC__ < 5
+/* For those who are used to __func__ from gcc. */
+# ifndef __func__
+#  define __func__ __FUNCTION__
+# endif
+#endif
+
 /* Perform an unsigned cast to uintmax_t. */
 #define cast_to_uintmax_type(value) \
     ((uintmax_t)(value))
