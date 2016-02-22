@@ -52,9 +52,11 @@ int __stdcall IsDebuggerPresent();
  * @{
  */
 
+#if __GNUC__ < 5
 /* For those who are used to __func__ from gcc. */
-#ifndef __func__
-#define __func__ __FUNCTION__
+# ifndef __func__
+#  define __func__ __FUNCTION__
+# endif
 #endif
 
 /* If __WORDSIZE is not set, try to figure it out and default to 32 bit. */
