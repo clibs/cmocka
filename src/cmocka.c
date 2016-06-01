@@ -1720,11 +1720,12 @@ static void vcm_print_error(const char* const format, va_list args)
     size_t msg_len = 0;
     va_list ap;
     int len;
+    va_copy(ap, args);
 
     len = vsnprintf(buffer, sizeof(buffer), format, args);
     if (len < 0) {
         /* TODO */
-        return;
+        goto end;
     }
 
     if (cm_error_message == NULL) {
@@ -1733,7 +1734,7 @@ static void vcm_print_error(const char* const format, va_list args)
         cm_error_message = libc_malloc(len + 1);
         if (cm_error_message == NULL) {
             /* TODO */
-            return;
+            goto end;
         }
     } else {
         /* APPEND MESSAGE */
@@ -1742,7 +1743,7 @@ static void vcm_print_error(const char* const format, va_list args)
         msg_len = strlen(cm_error_message);
         tmp = libc_realloc(cm_error_message, msg_len + len + 1);
         if (tmp == NULL) {
-            return;
+            goto end;
         }
         cm_error_message = tmp;
     }
@@ -1751,10 +1752,11 @@ static void vcm_print_error(const char* const format, va_list args)
         /* Use len + 1 to also copy '\0' */
         memcpy(cm_error_message + msg_len, buffer, len + 1);
     } else {
-        va_copy(ap, args);
         vsnprintf(cm_error_message + msg_len, len, format, ap);
-        va_end(ap);
     }
+end:
+    va_end(ap);
+
 }
 
 static void vcm_free_error(char *err_msg)
