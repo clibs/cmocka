@@ -88,6 +88,10 @@
 #define CMOCKA_CLOCK_GETTIME(clock_id, ts)
 #endif
 
+#ifndef MAX
+#define MAX(a,b) ((a) < (b) ? (b) : (a))
+#endif
+
 /**
  * POSIX has sigsetjmp/siglongjmp, while Windows only has setjmp/longjmp.
  */
@@ -420,6 +424,41 @@ static void set_source_location(
     location->line = line;
 }
 
+
+static int c_strreplace(char *src,
+                        size_t src_len,
+                        const char *pattern,
+                        const char *repl)
+{
+    char *p = NULL;
+
+    p = strstr(src, pattern);
+    if (p == NULL) {
+        return -1;
+    }
+
+    do {
+        size_t of = p - src;
+        size_t l  = strlen(src);
+        size_t pl = strlen(pattern);
+        size_t rl = strlen(repl);
+
+        /* overflow check */
+        if (src_len <= l + MAX(pl, rl) + 1) {
+            return -1;
+        }
+
+        if (rl != pl) {
+            memmove(src + of + rl, src + of + pl, l - of - pl + 1);
+        }
+
+        strncpy(src + of, repl, rl);
+
+        p = strstr(src, pattern);
+    } while (p != NULL);
+
+    return 0;
+}
 
 /* Create function results and expected parameter lists. */
 void initialize_testing(const char *test_name) {
@@ -2124,7 +2163,14 @@ static void cmprintf_group_finish_xml(const char *group_name,
     env = getenv("CMOCKA_XML_FILE");
     if (env != NULL) {
         char buf[1024];
+        int rc;
+
         snprintf(buf, sizeof(buf), "%s", env);
+
+        rc = c_strreplace(buf, sizeof(buf), "%g", group_name);
+        if (rc < 0) {
+            snprintf(buf, sizeof(buf), "%s", env);
+        }
 
         fp = fopen(buf, "r");
         if (fp == NULL) {
