@@ -149,6 +149,9 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
 #define CMOCKA_DEPRECATED
 #endif
 
+#define WILL_RETURN_ALWAYS -1
+#define WILL_RETURN_ONCE -2
+
 /**
  * @defgroup cmocka_mock Mock Objects
  * @ingroup cmocka
@@ -338,7 +341,7 @@ void will_return_count(#function, LargestIntegralType value, int count);
 void will_return_always(#function, LargestIntegralType value);
 #else
 #define will_return_always(function, value) \
-    will_return_count(function, (value), -1)
+    will_return_count(function, (value), WILL_RETURN_ALWAYS)
 #endif
 
 #ifdef DOXYGEN
@@ -366,7 +369,7 @@ void will_return_always(#function, LargestIntegralType value);
 void will_return_maybe(#function, LargestIntegralType value);
 #else
 #define will_return_maybe(function, value) \
-    will_return_count(function, (value), -2)
+    will_return_count(function, (value), WILL_RETURN_ONCE)
 #endif
 /** @} */
 

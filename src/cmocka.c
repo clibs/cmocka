@@ -691,7 +691,7 @@ static int get_symbol_value(
             return_value = value_node->refcount;
             if (value_node->refcount - 1 == 0) {
                 list_remove_free(value_node, NULL, NULL);
-            } else if (value_node->refcount > -2) {
+            } else if (value_node->refcount > WILL_RETURN_ONCE) {
                 --value_node->refcount;
             }
         } else {
