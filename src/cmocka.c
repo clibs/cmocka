@@ -428,7 +428,8 @@ static void set_source_location(
 static int c_strreplace(char *src,
                         size_t src_len,
                         const char *pattern,
-                        const char *repl)
+                        const char *repl,
+                        int *str_replaced)
 {
     char *p = NULL;
 
@@ -454,6 +455,9 @@ static int c_strreplace(char *src,
 
         strncpy(src + of, repl, rl);
 
+        if (str_replaced != NULL) {
+            *str_replaced = 1;
+        }
         p = strstr(src, pattern);
     } while (p != NULL);
 
@@ -2147,6 +2151,9 @@ enum cm_printf_type {
     PRINTF_TEST_SKIPPED,
 };
 
+static int xml_printed;
+static int file_append;
+
 static void cmprintf_group_finish_xml(const char *group_name,
                                       size_t total_executed,
                                       size_t total_failed,
@@ -2157,6 +2164,7 @@ static void cmprintf_group_finish_xml(const char *group_name,
 {
     FILE *fp = stdout;
     int file_opened = 0;
+    int multiple_files = 0;
     char *env;
     size_t i;
 
@@ -2167,7 +2175,7 @@ static void cmprintf_group_finish_xml(const char *group_name,
 
         snprintf(buf, sizeof(buf), "%s", env);
 
-        rc = c_strreplace(buf, sizeof(buf), "%g", group_name);
+        rc = c_strreplace(buf, sizeof(buf), "%g", group_name, &multiple_files);
         if (rc < 0) {
             snprintf(buf, sizeof(buf), "%s", env);
         }
@@ -2176,17 +2184,34 @@ static void cmprintf_group_finish_xml(const char *group_name,
         if (fp == NULL) {
             fp = fopen(buf, "w");
             if (fp != NULL) {
+                file_append = 1;
                 file_opened = 1;
             } else {
                 fp = stderr;
             }
         } else {
             fclose(fp);
-            fp = stderr;
+            if (file_append) {
+                fp = fopen(buf, "a");
+                if (fp != NULL) {
+                    file_opened = 1;
+                    xml_printed = 1;
+                } else {
+                    fp = stderr;
+                }
+            } else {
+                fp = stderr;
+            }
         }
     }
 
-    fprintf(fp, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
+    if (!xml_printed || (file_opened && !file_append)) {
+        fprintf(fp, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
+        if (!file_opened) {
+            xml_printed = 1;
+        }
+    }
+
     fprintf(fp, "<testsuites>\n");
     fprintf(fp, "  <testsuite name=\"%s\" time=\"%.3f\" "
                 "tests=\"%u\" failures=\"%u\" errors=\"%u\" skipped=\"%u\" >\n",
