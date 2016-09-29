@@ -71,7 +71,7 @@ int __stdcall IsDebuggerPresent();
 typedef uintmax_t LargestIntegralType;
 #else /* DOXGEN */
 #ifndef LargestIntegralType
-# if __WORDSIZE == 64
+# if __WORDSIZE == 64 && !defined(_WIN64)
 #  define LargestIntegralType unsigned long int
 # else
 #  define LargestIntegralType unsigned long long int
