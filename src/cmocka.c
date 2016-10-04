@@ -2216,7 +2216,7 @@ static void cmprintf_group_finish_xml(const char *group_name,
     fprintf(fp, "  <testsuite name=\"%s\" time=\"%.3f\" "
                 "tests=\"%u\" failures=\"%u\" errors=\"%u\" skipped=\"%u\" >\n",
                 group_name,
-                total_runtime * 1000, /* miliseconds */
+                total_runtime, /* seconds */
                 (unsigned)total_executed,
                 (unsigned)total_failed,
                 (unsigned)total_errors,
@@ -2226,7 +2226,7 @@ static void cmprintf_group_finish_xml(const char *group_name,
         struct CMUnitTestState *cmtest = &cm_tests[i];
 
         fprintf(fp, "    <testcase name=\"%s\" time=\"%.3f\" >\n",
-                cmtest->test->name, cmtest->runtime * 1000);
+                cmtest->test->name, cmtest->runtime);
 
         switch (cmtest->status) {
         case CM_TEST_ERROR:
