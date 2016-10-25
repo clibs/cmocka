@@ -19,7 +19,7 @@
 #include <cmocka.h>
 #include <database.h>
 
-extern DatabaseConnection* connect_to_customer_database();
+extern DatabaseConnection* connect_to_customer_database(void);
 extern unsigned int get_customer_id_by_name(
     DatabaseConnection * const connection, const char * const customer_name);
 

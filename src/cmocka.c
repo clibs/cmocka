@@ -1730,7 +1730,7 @@ void _assert_not_in_set(const LargestIntegralType value,
 
 
 /* Get the list of allocated blocks. */
-static ListNode* get_allocated_blocks_list() {
+static ListNode* get_allocated_blocks_list(void) {
     /* If it initialized, initialize the list of allocated blocks. */
     if (!global_allocated_blocks.value) {
         list_initialize(&global_allocated_blocks);
@@ -1945,7 +1945,7 @@ void *_test_realloc(void *ptr,
 #define realloc test_realloc
 
 /* Crudely checkpoint the current heap state. */
-static const ListNode* check_point_allocated_blocks() {
+static const ListNode* check_point_allocated_blocks(void) {
     return get_allocated_blocks_list()->prev;
 }
 
