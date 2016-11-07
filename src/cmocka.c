@@ -914,15 +914,16 @@ void _function_called(const char *const function,
 {
     ListNode *first_value_node = NULL;
     ListNode *value_node = NULL;
-    FuncOrderingValue *expected_call;
     int rc;
 
     rc = list_first(&global_call_ordering_head, &value_node);
     first_value_node = value_node;
     if (rc) {
+        FuncOrderingValue *expected_call;
         int cmp;
 
         expected_call = (FuncOrderingValue *)value_node->value;
+
         cmp = strcmp(expected_call->function, function);
         if (value_node->refcount < -1) {
             /*
@@ -948,7 +949,7 @@ void _function_called(const char *const function,
                     cmp = strcmp(expected_call->function, function);
                 }
 
-                if (value_node == first_value_node->prev) {
+                if (expected_call == NULL || value_node == first_value_node->prev) {
                     cm_print_error(SOURCE_LOCATION_FORMAT
                                    ": error: No expected mock calls matching "
                                    "called() invocation in %s",
