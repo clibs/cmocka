@@ -58,7 +58,7 @@ PROJECT_LOGO           =
 # entered, it will be relative to the location where doxygen was started. If
 # left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = @CMAKE_CURRENT_BINARY_DIR@
+OUTPUT_DIRECTORY       = "@CMAKE_CURRENT_BINARY_DIR@"
 
 # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create 4096 sub-
 # directories (in 2 levels) under the output directory of each output format and
@@ -162,7 +162,7 @@ FULL_PATH_NAMES        = YES
 # will be relative from the directory where doxygen is started.
 # This tag requires that the tag FULL_PATH_NAMES is set to YES.
 
-STRIP_FROM_PATH        = @CMAKE_SOURCE_DIR@
+STRIP_FROM_PATH        = "@CMAKE_SOURCE_DIR@"
 
 # The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part of the
 # path mentioned in the documentation of a class, which tells the reader which
@@ -171,7 +171,7 @@ STRIP_FROM_PATH        = @CMAKE_SOURCE_DIR@
 # specify the list of include paths that are normally passed to the compiler
 # using the -I flag.
 
-STRIP_FROM_INC_PATH    = @CMAKE_SOURCE_DIR@
+STRIP_FROM_INC_PATH    = "@CMAKE_SOURCE_DIR@"
 
 # If the SHORT_NAMES tag is set to YES, doxygen will generate much shorter (but
 # less readable) file names. This can be useful is your file systems doesn't
@@ -763,9 +763,9 @@ WARN_LOGFILE           =
 # spaces.
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = @CMAKE_SOURCE_DIR@/include \
-                         @CMAKE_SOURCE_DIR@/src \
-                         @CMAKE_SOURCE_DIR@/doc
+INPUT                  = "@CMAKE_SOURCE_DIR@/include" \
+                         "@CMAKE_SOURCE_DIR@/src" \
+                         "@CMAKE_SOURCE_DIR@/doc"
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -841,7 +841,7 @@ EXCLUDE_SYMBOLS        =
 # that contain example code fragments that are included (see the \include
 # command).
 
-EXAMPLE_PATH           = @CMAKE_SOURCE_DIR@/example
+EXAMPLE_PATH           = "@CMAKE_SOURCE_DIR@/example"
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp and
@@ -2025,7 +2025,7 @@ TAGFILES               =
 # tag file that is based on the input files it reads. See section "Linking to
 # external documentation" for more information about the usage of tag files.
 
-GENERATE_TAGFILE       = @CMAKE_CURRENT_BINARY_DIR@/html/@PROJECT_NAME@.TAGFILE
+GENERATE_TAGFILE       = "@CMAKE_CURRENT_BINARY_DIR@/html/@PROJECT_NAME@.TAGFILE"
 
 # If the ALLEXTERNALS tag is set to YES all external class will be listed in the
 # class index. If set to NO only the inherited external classes will be listed.
