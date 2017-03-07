@@ -126,7 +126,7 @@ The XML output goes to stderr by default. If the environment variable
 <tt>CMOCKA_XML_FILE</tt> exists and the file specified by this variable
 doesn't exist yet, then cmocka will put the output to this file. Note
 that if you are have several groups you should set <tt>CMOCKA_XML_FILE</tt>
-to <tt>CMOCKA_XML_FILE=cm_%g.xml</tt>. In this %g will be replaced by
+to <tt>CMOCKA_XML_FILE=cm_%%g.xml</tt>. In this %g will be replaced by
 the group_name of the test and a file will be created for each group,
 othwerwise all groups will be printed into the same file.
 
