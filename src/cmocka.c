@@ -2335,7 +2335,7 @@ static void cmprintf_standard(enum cm_printf_type type,
 
 static void cmprintf_group_start_tap(const size_t num_tests)
 {
-    print_message("\t1..%u\n", (unsigned)num_tests);
+    print_message("1..%u\n", (unsigned)num_tests);
 }
 
 static void cmprintf_group_finish_tap(const char *group_name,
@@ -2347,7 +2347,7 @@ static void cmprintf_group_finish_tap(const char *group_name,
     if (total_passed + total_skipped == total_executed) {
         status = "ok";
     }
-    print_message("%s - %s\n", status, group_name);
+    print_message("# %s - %s\n", status, group_name);
 }
 
 static void cmprintf_tap(enum cm_printf_type type,
@@ -2359,10 +2359,10 @@ static void cmprintf_tap(enum cm_printf_type type,
     case PRINTF_TEST_START:
         break;
     case PRINTF_TEST_SUCCESS:
-        print_message("\tok %u - %s\n", (unsigned)test_number, test_name);
+        print_message("ok %u - %s\n", (unsigned)test_number, test_name);
         break;
     case PRINTF_TEST_FAILURE:
-        print_message("\tnot ok %u - %s\n", (unsigned)test_number, test_name);
+        print_message("not ok %u - %s\n", (unsigned)test_number, test_name);
         if (error_message != NULL) {
             char *msg;
             char *p;
@@ -2381,7 +2381,7 @@ static void cmprintf_tap(enum cm_printf_type type,
                     p[0] = '\0';
                 }
 
-                print_message("\t# %s\n", q);
+                print_message("# %s\n", q);
 
                 if (p == NULL) {
                     break;
@@ -2392,10 +2392,10 @@ static void cmprintf_tap(enum cm_printf_type type,
         }
         break;
     case PRINTF_TEST_SKIPPED:
-        print_message("\tnot ok %u # SKIP %s\n", (unsigned)test_number, test_name);
+        print_message("not ok %u # SKIP %s\n", (unsigned)test_number, test_name);
         break;
     case PRINTF_TEST_ERROR:
-        print_message("\tnot ok %u - %s %s\n",
+        print_message("not ok %u - %s %s\n",
                       (unsigned)test_number, test_name, error_message);
         break;
     }
