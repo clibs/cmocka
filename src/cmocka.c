@@ -1912,7 +1912,7 @@ void *_test_realloc(void *ptr,
     MallocBlockInfo *block_info;
     char *block = ptr;
     size_t block_size = size;
-    void *new;
+    void *new_block;
 
     if (ptr == NULL) {
         return _test_malloc(size, file, line);
@@ -1926,8 +1926,8 @@ void *_test_realloc(void *ptr,
     block_info = (MallocBlockInfo*)(block - (MALLOC_GUARD_SIZE +
                                              sizeof(*block_info)));
 
-    new = _test_malloc(size, file, line);
-    if (new == NULL) {
+    new_block = _test_malloc(size, file, line);
+    if (new_block == NULL) {
         return NULL;
     }
 
@@ -1935,12 +1935,12 @@ void *_test_realloc(void *ptr,
         block_size = block_info->size;
     }
 
-    memcpy(new, ptr, block_size);
+    memcpy(new_block, ptr, block_size);
 
     /* Free previous memory */
     _test_free(ptr, file, line);
 
-    return new;
+    return new_block;
 }
 #define realloc test_realloc
 
