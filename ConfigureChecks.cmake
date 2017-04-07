@@ -135,7 +135,7 @@ int main(void) {
     clock_gettime(CLOCK_REALTIME, &ts);
 
     return 0;
-}" HAVE_CLOCK_GETTIME_REALTIME)
+}" HAVE_CLOCK_REALTIME)
 
     # reset cmake requirements
     set(CMAKE_REQUIRED_INCLUDES)

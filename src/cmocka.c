@@ -82,7 +82,7 @@
 # define CMOCKA_THREAD
 #endif
 
-#ifdef HAVE_CLOCK_GETTIME_REALTIME
+#ifdef HAVE_CLOCK_REALTIME
 #define CMOCKA_CLOCK_GETTIME(clock_id, ts) clock_gettime((clock_id), (ts))
 #else
 #define CMOCKA_CLOCK_GETTIME(clock_id, ts)

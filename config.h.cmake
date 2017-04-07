@@ -158,7 +158,7 @@
 #cmakedefine HAVE_MSVC_THREAD_LOCAL_STORAGE 1
 
 /* Check if we have CLOCK_REALTIME for clock_gettime() */
-#cmakedefine HAVE_CLOCK_GETTIME_REALTIME 1
+#cmakedefine HAVE_CLOCK_REALTIME 1
 
 /*************************** ENDIAN *****************************/
 
