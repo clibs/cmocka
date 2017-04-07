@@ -1,3 +1,9 @@
+Fri Apr 07 2016 Andreas Schneider <asn@cryptomilk.org>
+    * cmocka: version 1.1.1
+    * Fixed TAP output
+    * Fixed cmocka on Windows x64
+    * Fixed xUnit output durations
+
 Wed Sep 21 2016 Andreas Schneider <asn@cryptomilk.org>
     * cmocka: version 1.1.0
     * Added support to catch multiple exceptions
