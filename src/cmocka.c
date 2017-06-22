@@ -3167,7 +3167,7 @@ int _run_group_tests(const UnitTest * const tests, const size_t number_of_tests)
     const char *setup_name;
     size_t num_setups = 0;
     UnitTestFunction teardown = NULL;
-    const char *teardown_name;
+    const char *teardown_name = NULL;
     size_t num_teardowns = 0;
     size_t current_test = 0;
     size_t i;
