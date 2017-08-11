@@ -2871,10 +2871,16 @@ int _cmocka_run_group_tests(const char *group_name,
                         break;
                 }
             } else {
+                char err_msg[2048] = {0};
+
+                snprintf(err_msg, sizeof(err_msg),
+                         "Could not run test: %s",
+                         cmtest->error_message);
+
                 cmprintf(PRINTF_TEST_ERROR,
                          test_number,
                          cmtest->test->name,
-                         "Could not run the test - check test fixtures");
+                         err_msg);
                 total_errors++;
             }
         }

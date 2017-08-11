@@ -171,7 +171,7 @@ set(test_groups_tap_out
 set(test_skip_tap_out
     "not ok 1 # SKIP")
 set(test_setup_fail_tap_out
-    "not ok 1 - int_test_ignored Could not run the test - check test fixtures")
+    "not ok 1 - int_test_ignored Could not run test: Test setup failed")
 
 set(test_basics_subunit_out
     "^test: null_test_success"
@@ -185,7 +185,7 @@ set(test_skip_subunit_out
     "^test: test_check_skip"
     "skip: test_check_skip")
 set(test_setup_fail_subunit_out
-    "error: int_test_ignored \\[ Could not run the test - check test fixtures \\]")
+    "error: int_test_ignored \\[ Could not run test: Test setup failed \\]")
 
 set(test_basics_xml_out
     "<testsuite name=\"tests\" time=\"[0-9.]+\" tests=\"2\" failures=\"0\" errors=\"0\" skipped=\"0\" >"
