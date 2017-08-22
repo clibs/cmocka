@@ -24,7 +24,7 @@ set(LIBRARY_SOVERSION "0")
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH
-  ${CMAKE_SOURCE_DIR}/cmake/Modules
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules
 )
 
 # add definitions
