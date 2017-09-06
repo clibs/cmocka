@@ -1698,8 +1698,8 @@ static inline void _unit_test_dummy(void **state) {
  */
 #define cmocka_unit_test_prestate_setup_teardown(f, setup, teardown, state) { #f, f, setup, teardown, state }
 
-#define run_tests(tests) _run_tests(tests, sizeof(tests) / sizeof(tests)[0])
-#define run_group_tests(tests) _run_group_tests(tests, sizeof(tests) / sizeof(tests)[0])
+#define run_tests(tests) _run_tests(tests, sizeof(tests) / sizeof((tests)[0]))
+#define run_group_tests(tests) _run_group_tests(tests, sizeof(tests) / sizeof((tests)[0]))
 
 #ifdef DOXYGEN
 /**
@@ -1763,7 +1763,7 @@ int cmocka_run_group_tests(const struct CMUnitTest group_tests[],
                            CMFixtureFunction group_teardown);
 #else
 # define cmocka_run_group_tests(group_tests, group_setup, group_teardown) \
-        _cmocka_run_group_tests(#group_tests, group_tests, sizeof(group_tests) / sizeof(group_tests)[0], group_setup, group_teardown)
+        _cmocka_run_group_tests(#group_tests, group_tests, sizeof(group_tests) / sizeof((group_tests)[0]), group_setup, group_teardown)
 #endif
 
 #ifdef DOXYGEN
@@ -1832,7 +1832,7 @@ int cmocka_run_group_tests_name(const char *group_name,
                                 CMFixtureFunction group_teardown);
 #else
 # define cmocka_run_group_tests_name(group_name, group_tests, group_setup, group_teardown) \
-        _cmocka_run_group_tests(group_name, group_tests, sizeof(group_tests) / sizeof(group_tests)[0], group_setup, group_teardown)
+        _cmocka_run_group_tests(group_name, group_tests, sizeof(group_tests) / sizeof((group_tests)[0]), group_setup, group_teardown)
 #endif
 
 /** @} */
