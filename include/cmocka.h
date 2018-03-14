@@ -156,7 +156,7 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
  * @defgroup cmocka_mock Mock Objects
  * @ingroup cmocka
  *
- * Mock objects mock objects are simulated objects that mimic the behavior of
+ * Mock objects are simulated objects that mimic the behavior of
  * real objects. Instead of calling the real objects, the tested object calls a
  * mock object that merely asserts that the correct methods were called, with
  * the expected parameters, in the correct order.
