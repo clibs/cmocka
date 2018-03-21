@@ -244,8 +244,8 @@ static void free_symbol_map_value(
 static void remove_always_return_values(ListNode * const map_head,
                                         const size_t number_of_symbol_names);
 
-static int check_for_leftover_values_list(const ListNode * head,
-    const char * const error_message);
+static size_t check_for_leftover_values_list(const ListNode * head,
+                                             const char * const error_message);
 
 static int check_for_leftover_values(
     const ListNode * const map_head, const char * const error_message,
@@ -811,11 +811,11 @@ static void remove_always_return_values(ListNode * const map_head,
     }
 }
 
-static int check_for_leftover_values_list(const ListNode * head,
-                                          const char * const error_message)
+static size_t check_for_leftover_values_list(const ListNode * head,
+                                             const char * const error_message)
 {
     ListNode *child_node;
-    int leftover_count = 0;
+    size_t leftover_count = 0;
     if (!list_empty(head))
     {
         for (child_node = head->next; child_node != head;
