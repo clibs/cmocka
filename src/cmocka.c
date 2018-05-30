@@ -3184,10 +3184,19 @@ int _run_group_tests(const UnitTest * const tests, const size_t number_of_tests)
     size_t total_failed = 0;
     /* Check point of the heap state. */
     const ListNode * const check_point = check_point_allocated_blocks();
-    const char** failed_names = (const char**)malloc(number_of_tests *
-                                       sizeof(*failed_names));
+    const char **failed_names = NULL;
     void **current_state = NULL;
     TestState group_state;
+
+    if (number_of_tests == 0) {
+        return -1;
+    }
+
+    failed_names = (const char **)malloc(number_of_tests *
+                                         sizeof(*failed_names));
+    if (failed_names == NULL) {
+        return -2;
+    }
 
     /* Find setup and teardown function */
     for (i = 0; i < number_of_tests; i++) {
