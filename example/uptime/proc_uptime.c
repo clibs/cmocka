@@ -74,5 +74,5 @@ int uptime(const char *uptime_path, double *uptime_secs, double *idle_secs)
         *idle_secs = idle;
     }
 
-    return up;
+    return (int)up;
 }
