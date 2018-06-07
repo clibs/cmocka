@@ -6,7 +6,7 @@ objects. It only requires the standard C library, works on a range of computing
 platforms (including embedded) and with different compilers.
 
 For information about how to use the cmocka unit testing framework see
-doc/index.html.
+doc/index.html or https://api.cmocka.org/.
 
 Compiling
 ---------
