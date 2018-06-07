@@ -95,6 +95,15 @@ if (WITH_STATIC_LIB)
                     cmocka
     )
 
+    if (NOT WIN32)
+        set_target_properties(
+            ${CMOCKA_STATIC_LIBRARY}
+                PROPERTIES
+                    OUTPUT_NAME
+                        cmocka
+        )
+    endif()
+
     install(
         TARGETS ${CMOCKA_STATIC_LIBRARY}
         DESTINATION ${LIB_INSTALL_DIR}
