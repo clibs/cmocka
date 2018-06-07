@@ -1193,12 +1193,17 @@ static int memory_equal_display_error(const char* const a, const char* const b,
         const char l = a[i];
         const char r = b[i];
         if (l != r) {
-            cm_print_error("difference at offset %" PRIdS " 0x%02x 0x%02x\n",
-                           i, l, r);
+            if (differences < 16) {
+                cm_print_error("difference at offset %" PRIdS " 0x%02x 0x%02x\n",
+                               i, l, r);
+            }
             differences ++;
         }
     }
-    if (differences) {
+    if (differences > 0) {
+        if (differences >= 16) {
+            cm_print_error("...\n");
+        }
         cm_print_error("%d bytes of %p and %p differ\n",
                        differences, (void *)a, (void *)b);
         return 0;
