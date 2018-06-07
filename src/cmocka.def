@@ -38,6 +38,7 @@ EXPORTS
     _test_malloc
     _test_realloc
     _will_return
+    cm_print_error
     cmocka_set_message_output
     global_expect_assert_env
     global_expecting_assert
