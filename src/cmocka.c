@@ -2805,7 +2805,7 @@ int _cmocka_run_group_tests(const char *group_name,
             (tests[i].test_func != NULL
              || tests[i].setup_func != NULL
              || tests[i].teardown_func != NULL)) {
-            cm_tests[i] = (struct CMUnitTestState) {
+            cm_tests[total_tests] = (struct CMUnitTestState) {
                 .test = &tests[i],
                 .status = CM_TEST_NOT_STARTED,
                 .state = NULL,
