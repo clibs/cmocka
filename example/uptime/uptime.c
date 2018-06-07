@@ -51,8 +51,7 @@ static char *calc_uptime(void)
 
     if (up_years > 0) {
         pos += snprintf(buf + pos, sizeof(buf) - pos,
-                        "%s%u %s",
-                        comma > 0 ? ", " : "",
+                        "%u %s",
                         up_years,
                         up_years > 1 ? "years" : "year");
         comma++;
