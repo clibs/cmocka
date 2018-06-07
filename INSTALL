@@ -70,7 +70,7 @@ If you want to install cmocka after compilation run:
 
 The cmocka library can be found in the `build/src` directory.
 You can run the binaries in `build/examples/*` which is a
-are exsample tests.
+are example tests.
 
 ## Testing
 
