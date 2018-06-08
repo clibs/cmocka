@@ -23,7 +23,8 @@ set(CMOCKA_TESTS
     test_ordering
     test_ordering_fail
     test_returns
-    test_returns_fail)
+    test_returns_fail
+    test_wildcard)
 
 foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
     add_cmocka_test(${_CMOCKA_TEST} ${_CMOCKA_TEST}.c ${CMOCKA_STATIC_LIBRARY})
