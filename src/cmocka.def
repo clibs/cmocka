@@ -40,6 +40,7 @@ EXPORTS
     _will_return
     cm_print_error
     cmocka_set_message_output
+    cmocka_set_test_filter
     global_expect_assert_env
     global_expecting_assert
     global_last_failed_assert

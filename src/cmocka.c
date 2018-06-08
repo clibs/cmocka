@@ -305,6 +305,8 @@ static CMOCKA_THREAD ListNode global_allocated_blocks;
 
 static enum cm_message_output global_msg_output = CM_OUTPUT_STDOUT;
 
+static const char *global_test_filter_pattern;
+
 #ifndef _WIN32
 /* Signals caught by exception_handler(). */
 static const int exception_signals[] = {
@@ -2578,6 +2580,11 @@ void cmocka_set_message_output(enum cm_message_output output)
     global_msg_output = output;
 }
 
+void cmocka_set_test_filter(const char *pattern)
+{
+    global_test_filter_pattern = pattern;
+}
+
 /****************************************************************************
  * TIME CALCULATIONS
  ****************************************************************************/
@@ -2863,6 +2870,14 @@ int _cmocka_run_group_tests(const char *group_name,
             (tests[i].test_func != NULL
              || tests[i].setup_func != NULL
              || tests[i].teardown_func != NULL)) {
+            if (global_test_filter_pattern != NULL) {
+                int ok;
+
+                ok = c_strmatch(tests[i].name, global_test_filter_pattern);
+                if (!ok) {
+                    continue;
+                }
+            }
             cm_tests[total_tests] = (struct CMUnitTestState) {
                 .test = &tests[i],
                 .status = CM_TEST_NOT_STARTED,

@@ -2279,6 +2279,19 @@ enum cm_message_output {
  */
 void cmocka_set_message_output(enum cm_message_output output);
 
+
+/**
+ * @brief Set a pattern to only run the test matching the pattern.
+ *
+ * This allows to filter tests and only run the ones matching the pattern. Thep
+ * pattern can include two wildards. The first is '*', a wildcard that matches
+ * zero or more characters, or ‘?’, a wildcard that matches exactly one
+ * character.
+ *
+ * @param[in]  pattern    The pattern to match, e.g. "test_wurst*"
+ */
+void cmocka_set_test_filter(const char *pattern);
+
 /** @} */
 
 #endif /* CMOCKA_H_ */
