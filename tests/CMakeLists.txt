@@ -18,6 +18,7 @@ set(CMOCKA_TESTS
     test_exception_handler
     test_basics
     test_skip
+    test_strmatch
     test_setup_fail
     test_ordering
     test_ordering_fail

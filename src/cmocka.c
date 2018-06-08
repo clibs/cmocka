@@ -464,6 +464,64 @@ static int c_strreplace(char *src,
     return 0;
 }
 
+static int c_strmatch(const char *str, const char *pattern)
+{
+    int ok;
+
+    if (str == NULL || pattern == NULL) {
+        return 0;
+    }
+
+    for (;;) {
+        /* Check if pattern is done */
+        if (*pattern == '\0') {
+            /* If string is at the end, we're good */
+            if (*str == '\0') {
+                return 1;
+            }
+
+            return 0;
+        }
+
+        if (*pattern == '*') {
+            /* Move on */
+            pattern++;
+
+            /* If we are at the end, everything is fine */
+            if (*pattern == '\0') {
+                return 1;
+            }
+
+            /* Try to match each position */
+            for (; *str != '\0'; str++) {
+                ok = c_strmatch(str, pattern);
+                if (ok) {
+                    return 1;
+                }
+            }
+
+            /* No match */
+            return 0;
+        }
+
+        /* If we are at the end, leave */
+        if (*str == '\0') {
+            return 0;
+        }
+
+        /* Check if we have a single wildcard or matching char */
+        if (*pattern != '?' && *str != *pattern) {
+            return 0;
+        }
+
+        /* Move string and pattern */
+        str++;
+        pattern++;
+    }
+
+    return 0;
+}
+
 /* Create function results and expected parameter lists. */
 void initialize_testing(const char *test_name) {
     (void)test_name;
