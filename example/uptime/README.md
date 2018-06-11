@@ -3,9 +3,12 @@ The uptime mock example
 
 This is a very simple example to explain the mocking feature of cmocka. It
 implement the 'uptime' unix command in a very simple way to demonstrate how to
-test the time calculation on a system which e.g. doesn't provide /proc/uptime.
+test the time calculation.
 
-This could be a jailed build environment for example!
+The problem with testing the uptime command is that /proc/uptime constantly
+ticks. The result is random whenever you call the test. To actually test it
+we need to make sure that we work with fixed values. The mocking features
+of cmocka allows us to test it anyway!
 
 Source files
 ------------
