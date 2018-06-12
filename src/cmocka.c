@@ -549,7 +549,8 @@ static void fail_if_leftover_values(const char *test_name) {
     remove_always_return_values(&global_function_parameter_map_head, 2);
     if (check_for_leftover_values(
             &global_function_parameter_map_head,
-            "%s parameter still has values that haven't been checked.\n", 2)) {
+            "'%s' parameter still has values that haven't been checked.\n",
+            2)) {
         error_occurred = 1;
     }
 
@@ -925,7 +926,7 @@ static int check_for_leftover_values(
                                    location->file, location->line);
                 }
             } else {
-                cm_print_error("%s.", value->symbol_name);
+                cm_print_error("%s: ", value->symbol_name);
                 check_for_leftover_values(child_list, error_message,
                                           number_of_symbol_names - 1);
             }
