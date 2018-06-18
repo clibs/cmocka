@@ -1885,12 +1885,17 @@ static void vcm_free_error(char *err_msg)
 /* Use the real malloc in this function. */
 #undef malloc
 void* _test_malloc(const size_t size, const char* file, const int line) {
-    char* ptr;
-    MallocBlockInfo *block_info;
+    char *ptr = NULL;
+    MallocBlockInfo *block_info = NULL;
     ListNode * const block_list = get_allocated_blocks_list();
-    const size_t allocate_size = size + (MALLOC_GUARD_SIZE * 2) +
-        sizeof(*block_info) + MALLOC_ALIGNMENT;
-    char* const block = (char*)malloc(allocate_size);
+    size_t allocate_size;
+    char *block = NULL;
+
+    allocate_size = size + (MALLOC_GUARD_SIZE * 2) +
+                    sizeof(MallocBlockInfo) + MALLOC_ALIGNMENT;
+    assert_true(allocate_size > size);
+
+    block = (char *)malloc(allocate_size);
     assert_non_null(block);
 
     /* Calculate the returned address. */
