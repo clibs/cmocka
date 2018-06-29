@@ -20,7 +20,6 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
-#include <utmp.h>
 
 #include "proc_uptime.h"
 
