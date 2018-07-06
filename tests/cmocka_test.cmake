@@ -152,9 +152,12 @@ else()
     set_ifndef(CTEST_CONFIGURATION_TYPE "Debug")
 endif()
 
-# Add default options
+### Add project default build options here !!!
+
 add_cmake_cache_entry(UNIT_TESTING ON)
 add_cmake_cache_entry(WITH_CMOCKERY_SUPPORT ON)
+
+### Add project default build options here ^^^
 
 add_cmake_cache_entry("ENABLE_CTEST" TYPE "BOOL" "ON")
 
