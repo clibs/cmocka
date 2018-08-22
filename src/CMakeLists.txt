@@ -51,7 +51,7 @@ if (CMOCKA_PLATFORM_INCLUDE)
 endif()
 
 add_library(${CMOCKA_SHARED_LIBRARY} SHARED ${cmocka_SRCS})
-
+target_compile_options(${CMOCKA_SHARED_LIBRARY} PRIVATE ${DEFAULT_C_COMPILE_FLAGS})
 target_link_libraries(${CMOCKA_SHARED_LIBRARY} ${CMOCKA_LINK_LIBRARIES})
 set_target_properties(
     ${CMOCKA_SHARED_LIBRARY}
@@ -83,6 +83,7 @@ install(
 
 if (WITH_STATIC_LIB)
     add_library(${CMOCKA_STATIC_LIBRARY} STATIC ${cmocka_SRCS})
+    target_compile_options(${CMOCKA_STATIC_LIBRARY} PRIVATE ${DEFAULT_C_COMPILE_FLAGS})
 
     set_target_properties(
         ${CMOCKA_STATIC_LIBRARY}
