@@ -1107,7 +1107,7 @@ void assert_return_code(int rc, int error);
  * @brief Assert that the given pointer is non-NULL.
  *
  * The function prints an error message to standard error and terminates the
- * test by calling fail() if the pointer is non-NULL.
+ * test by calling fail() if the pointer is NULL.
  *
  * @param[in]  pointer  The pointer to evaluate.
  *
