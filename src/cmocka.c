@@ -455,7 +455,7 @@ static int c_strreplace(char *src,
             memmove(src + of + rl, src + of + pl, l - of - pl + 1);
         }
 
-        strncpy(src + of, repl, rl);
+        memcpy(src + of, repl, rl);
 
         if (str_replaced != NULL) {
             *str_replaced = 1;
