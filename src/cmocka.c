@@ -1248,7 +1248,7 @@ static int string_not_equal_display_error(
  */
 static int memory_equal_display_error(const char* const a, const char* const b,
                                       const size_t size) {
-    int differences = 0;
+    size_t differences = 0;
     size_t i;
     for (i = 0; i < size; i++) {
         const char l = a[i];
@@ -1265,7 +1265,7 @@ static int memory_equal_display_error(const char* const a, const char* const b,
         if (differences >= 16) {
             cm_print_error("...\n");
         }
-        cm_print_error("%d bytes of %p and %p differ\n",
+        cm_print_error("%"PRIdS " bytes of %p and %p differ\n",
                        differences, (void *)a, (void *)b);
         return 0;
     }
