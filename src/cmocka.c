@@ -148,12 +148,17 @@ typedef struct ListNode {
 } ListNode;
 
 /* Debug information for malloc(). */
-typedef struct MallocBlockInfo {
+struct MallocBlockInfoData {
     void* block;              /* Address of the block returned by malloc(). */
     size_t allocated_size;    /* Total size of the allocated block. */
     size_t size;              /* Request block size. */
     SourceLocation location;  /* Where the block was allocated. */
     ListNode node;            /* Node within list of all allocated blocks. */
+};
+
+typedef union {
+    struct MallocBlockInfoData *data;
+    char *ptr;
 } MallocBlockInfo;
 
 /* State of each test. */
@@ -1886,20 +1891,21 @@ static void vcm_free_error(char *err_msg)
 #undef malloc
 void* _test_malloc(const size_t size, const char* file, const int line) {
     char *ptr = NULL;
-    MallocBlockInfo *block_info = NULL;
+    MallocBlockInfo block_info;
     ListNode * const block_list = get_allocated_blocks_list();
     size_t allocate_size;
     char *block = NULL;
 
     allocate_size = size + (MALLOC_GUARD_SIZE * 2) +
-                    sizeof(MallocBlockInfo) + MALLOC_ALIGNMENT;
+                    sizeof(struct MallocBlockInfoData) + MALLOC_ALIGNMENT;
     assert_true(allocate_size > size);
 
     block = (char *)malloc(allocate_size);
     assert_non_null(block);
 
     /* Calculate the returned address. */
-    ptr = (char*)(((size_t)block + MALLOC_GUARD_SIZE + sizeof(*block_info) +
+    ptr = (char*)(((size_t)block + MALLOC_GUARD_SIZE +
+                  sizeof(struct MallocBlockInfoData) +
                   MALLOC_ALIGNMENT) & ~(MALLOC_ALIGNMENT - 1));
 
     /* Initialize the guard blocks. */
@@ -1907,14 +1913,14 @@ void* _test_malloc(const size_t size, const char* file, const int line) {
     memset(ptr + size, MALLOC_GUARD_PATTERN, MALLOC_GUARD_SIZE);
     memset(ptr, MALLOC_ALLOC_PATTERN, size);
 
-    block_info = (MallocBlockInfo*)(ptr - (MALLOC_GUARD_SIZE +
-                                             sizeof(*block_info)));
-    set_source_location(&block_info->location, file, line);
-    block_info->allocated_size = allocate_size;
-    block_info->size = size;
-    block_info->block = block;
-    block_info->node.value = block_info;
-    list_add(block_list, &block_info->node);
+    block_info.ptr = ptr - (MALLOC_GUARD_SIZE +
+                            sizeof(struct MallocBlockInfoData));
+    set_source_location(&block_info.data->location, file, line);
+    block_info.data->allocated_size = allocate_size;
+    block_info.data->size = size;
+    block_info.data->block = block;
+    block_info.data->node.value = block_info.ptr;
+    list_add(block_list, &block_info.data->node);
     return ptr;
 }
 #define malloc test_malloc
@@ -1935,19 +1941,19 @@ void* _test_calloc(const size_t number_of_elements, const size_t size,
 void _test_free(void* const ptr, const char* file, const int line) {
     unsigned int i;
     char *block = discard_const_p(char, ptr);
-    MallocBlockInfo *block_info;
+    MallocBlockInfo block_info;
 
     if (ptr == NULL) {
         return;
     }
 
     _assert_true(cast_ptr_to_largest_integral_type(ptr), "ptr", file, line);
-    block_info = (MallocBlockInfo*)(block - (MALLOC_GUARD_SIZE +
-                                               sizeof(*block_info)));
+    block_info.ptr = block - (MALLOC_GUARD_SIZE +
+                              sizeof(struct MallocBlockInfoData));
     /* Check the guard blocks. */
     {
         char *guards[2] = {block - MALLOC_GUARD_SIZE,
-                           block + block_info->size};
+                           block + block_info.data->size};
         for (i = 0; i < ARRAY_SIZE(guards); i++) {
             unsigned int j;
             char * const guard = guards[i];
@@ -1957,19 +1963,22 @@ void _test_free(void* const ptr, const char* file, const int line) {
                     cm_print_error(SOURCE_LOCATION_FORMAT
                                    ": error: Guard block of %p size=%lu is corrupt\n"
                                    SOURCE_LOCATION_FORMAT ": note: allocated here at %p\n",
-                                   file, line,
-                                   ptr, (unsigned long)block_info->size,
-                                   block_info->location.file, block_info->location.line,
+                                   file,
+                                   line,
+                                   ptr,
+                                   (unsigned long)block_info.data->size,
+                                   block_info.data->location.file,
+                                   block_info.data->location.line,
                                    (void *)&guard[j]);
                     _fail(file, line);
                 }
             }
         }
     }
-    list_remove(&block_info->node, NULL, NULL);
+    list_remove(&block_info.data->node, NULL, NULL);
 
-    block = discard_const_p(char, block_info->block);
-    memset(block, MALLOC_FREE_PATTERN, block_info->allocated_size);
+    block = discard_const_p(char, block_info.data->block);
+    memset(block, MALLOC_FREE_PATTERN, block_info.data->allocated_size);
     free(block);
 }
 #define free test_free
@@ -1980,7 +1989,7 @@ void *_test_realloc(void *ptr,
                    const char *file,
                    const int line)
 {
-    MallocBlockInfo *block_info;
+    MallocBlockInfo block_info;
     char *block = ptr;
     size_t block_size = size;
     void *new_block;
@@ -1994,16 +2003,16 @@ void *_test_realloc(void *ptr,
         return NULL;
     }
 
-    block_info = (MallocBlockInfo*)(block - (MALLOC_GUARD_SIZE +
-                                             sizeof(*block_info)));
+    block_info.ptr = block - (MALLOC_GUARD_SIZE +
+                              sizeof(struct MallocBlockInfoData));
 
     new_block = _test_malloc(size, file, line);
     if (new_block == NULL) {
         return NULL;
     }
 
-    if (block_info->size < size) {
-        block_size = block_info->size;
+    if (block_info.data->size < size) {
+        block_size = block_info.data->size;
     }
 
     memcpy(new_block, ptr, block_size);
@@ -2031,17 +2040,18 @@ static size_t display_allocated_blocks(const ListNode * const check_point) {
     assert_non_null(check_point->next);
 
     for (node = check_point->next; node != head; node = node->next) {
-        const MallocBlockInfo * const block_info =
-            (const MallocBlockInfo*)node->value;
-        assert_non_null(block_info);
+        const MallocBlockInfo block_info = {
+            .ptr = discard_const(node->value),
+        };
+        assert_non_null(block_info.ptr);
 
         if (allocated_blocks == 0) {
             cm_print_error("Blocks allocated...\n");
         }
         cm_print_error(SOURCE_LOCATION_FORMAT ": note: block %p allocated here\n",
-                       block_info->location.file,
-                       block_info->location.line,
-                       block_info->block);
+                       block_info.data->location.file,
+                       block_info.data->location.line,
+                       block_info.data->block);
         allocated_blocks++;
     }
     return allocated_blocks;
@@ -2058,9 +2068,13 @@ static void free_allocated_blocks(const ListNode * const check_point) {
     assert_non_null(node);
 
     while (node != head) {
-        MallocBlockInfo * const block_info = (MallocBlockInfo*)node->value;
+        const MallocBlockInfo block_info = {
+            .ptr = discard_const(node->value),
+        };
         node = node->next;
-        free(discard_const_p(char, block_info) + sizeof(*block_info) + MALLOC_GUARD_SIZE);
+        free(discard_const_p(char, block_info.data) +
+             sizeof(struct MallocBlockInfoData) +
+             MALLOC_GUARD_SIZE);
     }
 }
 
