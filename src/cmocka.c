@@ -252,7 +252,7 @@ static void remove_always_return_values(ListNode * const map_head,
 static size_t check_for_leftover_values_list(const ListNode * head,
                                              const char * const error_message);
 
-static int check_for_leftover_values(
+static size_t check_for_leftover_values(
     const ListNode * const map_head, const char * const error_message,
     const size_t number_of_symbol_names);
 
@@ -901,11 +901,11 @@ static size_t check_for_leftover_values_list(const ListNode * head,
  * Checks if there are any leftover values set up by the test that were never
  * retrieved through execution, and fail the test if that is the case.
  */
-static int check_for_leftover_values(
+static size_t check_for_leftover_values(
         const ListNode * const map_head, const char * const error_message,
         const size_t number_of_symbol_names) {
     const ListNode *current;
-    int symbols_with_leftover_values = 0;
+    size_t symbols_with_leftover_values = 0;
     assert_non_null(map_head);
     assert_true(number_of_symbol_names);
 
