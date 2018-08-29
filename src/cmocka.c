@@ -1,6 +1,6 @@
 /*
  * Copyright 2008 Google Inc.
- * Copyright 2014-2015 Andreas Schneider <asn@cryptomilk.org>
+ * Copyright 2014-2018 Andreas Schneider <asn@cryptomilk.org>
  * Copyright 2015      Jakub Hrozek <jakub.hrozek@posteo.se>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
