@@ -3,7 +3,7 @@ project(tests C)
 include_directories(
   ${CMAKE_BINARY_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_SOURCE_DIR}/include
+  ${cmocka-headers_SOURCE_DIR}
 )
 
 set(CMOCKA_TESTS
