@@ -2500,7 +2500,7 @@ static void cmprintf_subunit(enum cm_printf_type type,
     case PRINTF_TEST_FAILURE:
         print_message("failure: %s", test_name);
         if (error_message != NULL) {
-            print_message(" [\n%s]\n", error_message);
+            print_message(" [\n%s\n]\n", error_message);
         }
         break;
     case PRINTF_TEST_SKIPPED:
