@@ -1,0 +1,121 @@
+/*
+ * The line at the bottom
+ */
+
+.navpath {
+    ul {
+        font-size: 11px;
+        background-image: none;
+        height: 30px;
+        line-height: 30px;
+        color: black;
+        border: none;
+        border-top: 1px solid #808080;
+        overflow: hidden;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    /* intermediate navelems */
+    li:not(:first-child) {
+        list-style-type: none;
+        float: left;
+        padding-left: 18px;
+        padding-right: 10px;
+        color: black;
+        background-color: white;
+        background-image: url('nav_edge_inter.svg');
+        background-repeat: no-repeat;
+        background-position: left -1px;
+        background-size: auto 100%;
+    }
+
+    /* first navelem */
+    li:first-child {
+        list-style-type: none;
+        float: left;
+        padding-left: 15px;
+        padding-right: 10px;
+        color: black;
+        background-color: white;
+        background-image: none;
+    }
+
+    /* last navelem */
+    li:nth-last-child(2) {
+        list-style-type: none;
+        float: left;
+        padding-left:10px;
+        padding-right:15px;
+        color: white;
+        background-color: $primary-color;
+        background-image: url('nav_edge_right.svg');
+        background-repeat: no-repeat;
+        background-position: right -1px;
+        background-size: auto 100%;
+
+    }
+
+    li:nth-last-child(2):not(:first-child) {
+        list-style-type: none;
+        float: left;
+        padding-left:15px;
+        padding-right:15px;
+        color: white;
+        background-color: $primary-color;
+        background-image: url('nav_edge_left.svg'), url('nav_edge_right.svg');
+        background-repeat: no-repeat;
+        background-position: -1px -1px, right -1px;
+        background-size: auto 100%;
+    }
+
+    li.navelem a, .navpath li.navelem b {
+        height:32px;
+        display:block;
+        text-decoration: none;
+        outline: none;
+        color: inherit;
+        font-family: Roboto,sans-serif;
+        text-shadow: none;
+        text-decoration: none;
+        font-weight: normal;
+    }
+
+    li.navelem a:hover {
+        color: inherit;
+        text-decoration: underline;
+    }
+
+    // the "doxygen" logo at the right
+    li.footer {
+        list-style-type: none;
+        float: right;
+        padding-left: 0;
+        padding-right: 10px;
+        background-color: #d5d5d5;
+        background-image: none;
+        color: black;
+        font-size: 8pt;
+
+        // show the edge image
+        &:before {
+            content: "";
+            width: 13px;
+            height: 30px;
+            display: inline-block;
+            float: left;
+            background-image: url("nav_edge_right.svg");
+            background-repeat: no-repeat;
+            background-position: right 0;
+            background-size: auto 100%;
+
+            /* flip the element horizontally */
+            -moz-transform:    scaleX(-1);
+            -o-transform:      scaleX(-1);
+            -webkit-transform: scaleX(-1);
+            transform:         scaleX(-1);
+            filter: FlipH;
+            -ms-filter: "FlipH";
+        }
+    }
+}

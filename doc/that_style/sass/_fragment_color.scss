@@ -1,0 +1,80 @@
+// colours of code view
+
+div.fragment {
+    color: #bebebe;
+    background-color: #323232;
+}
+
+div.fragment::before {
+    background-color: #1a1a1a;
+    border-right: 1px solid #3e3e3e;
+}
+
+div.line:hover {
+    background-color: #1a1a1a;
+}
+
+span.lineno {
+    color: #969696;
+    background-color: #1a1a1a;
+    border-right: 1px solid #3e3e3e;
+}
+
+span.lineno a, span.lineno a:visited {
+    background-color: inherit;
+    color: #dcdcdc;
+}
+
+span.lineno a:hover {
+    background-color: #323232;
+}
+
+
+// syntax highlighting
+
+a.code, a.code:visited {
+    color: #6cc7eb;
+}
+
+a.codeRef, a.codeRef:visited {
+    color: #3d95e6;
+}
+ 
+span.keyword {
+    color: #98f77a;
+    font-weight: bold;
+}
+
+span.keywordtype {
+    color: #ffa0a0;
+}
+
+span.keywordflow {
+    color: #98f77a;
+    font-weight: bold;
+}
+
+span.comment {
+    // color: #dadbb1;
+    color: #999;
+    font-style: oblique;
+}
+
+span.preprocessor {
+    color: #cd5c57;
+}
+
+span.stringliteral {
+    color: #64b041;
+}
+
+span.charliteral {
+    color: #64b041;
+}
+
+blockquote {
+    background-color: #F7F8FB;
+    border-left: 2px solid #9CAFD4;
+    margin: 0 24px 0 4px;
+    padding: 0 12px 0 16px;
+}

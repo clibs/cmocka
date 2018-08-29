@@ -1,0 +1,89 @@
+/*
+ * The search box
+ */
+
+.sm-dox > li:last-child {
+    margin-right: 10pt;
+}
+
+#MSearchBox {
+    border: 2px inset black;
+    display: table;
+    width: 350px;
+    height: 26px;
+    background: white;
+    margin-top: 5px;
+    
+    .left {
+        background-image: none;
+        display: table-cell;
+        width: 100%;
+        height: inherit;
+        left: 0;
+    }
+    
+    // don't need this element
+    .right {
+        background-image: none;
+        width: 0;
+        display: none;
+        visibility: hidden;
+    }
+}
+
+// override for when there is no main menu
+nav > #MSearchBox {
+    border: 2px solid #666666;
+    margin: 5px 10pt 0 0;
+    height: 22px;
+}
+
+#MSearchSelect, .left #MSearchSelect {
+    left: 0;
+    background-image: url("mag_glass.svg");
+    width: 22px;
+    height: 22px;
+    padding: 22px 22px 0 0 ;
+    margin: 0 4px 0 4px;
+    box-sizing: border-box;
+}
+
+#MSearchField {
+    background-image: none;
+    display: table-cell;
+    margin: 0;
+    // leave room for #MSearchSelect and a bit more for the border
+    margin-left: 30px;
+    width: calc(100% - 34px);
+    height: 22px;
+    font: 11pt sans-serif;
+}
+
+#MSearchSelectWindow {
+    background-color: $background-color-dark;
+    padding: 0;
+    border: solid 1px black;
+    @include border-radius(0);
+    @include box-shadow(0 0 4px rgba(0,0,0,0.35), 0 0 8px rgba(0,0,0,0.2));
+}
+
+a.SelectItem {
+    color: white;
+    padding: 3px 4px;
+    font: 10pt sans-serif;
+    letter-spacing: 1px;
+
+    &:hover {
+        background-color: $primary-color;
+        color: white;
+    }
+
+    &:focus, &:active {
+        color: white;
+    }    
+}
+
+#MSearchResultsWindow {
+    background-color: white;
+    @include box-shadow(0 0 4px rgba(0,0,0,0.35), 0 0 8px rgba(0,0,0,0.2));
+}
