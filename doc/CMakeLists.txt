@@ -1,6 +1,8 @@
 #
 # Build the documentation
 #
+if (${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.9.0")
+
 find_package(Doxygen)
 
 if (DOXYGEN_FOUND)
@@ -39,3 +41,5 @@ if (DOXYGEN_FOUND)
                      ${cmocka-headers_SOURCE_DIR}
                      ${CMAKE_CURRENT_SOURCE_DIR})
 endif(DOXYGEN_FOUND)
+
+endif() # CMAKE_VERSION
