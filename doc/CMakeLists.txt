@@ -1,7 +1,7 @@
 #
 # Build the documentation
 #
-if (${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.9.0")
+if (${CMAKE_VERSION} VERSION_GREATER "3.8.99")
 
 find_package(Doxygen)
 
