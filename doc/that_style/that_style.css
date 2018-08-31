@@ -152,10 +152,14 @@ a.elRef, a.elRef:visited {
   letter-spacing: 1px;
   font-size: 11pt;
   text-transform: uppercase; }
-.sm-dox > li:not(:last-child) > a:hover, .sm-dox > li:not(:last-child) > a.highlighted {
+
+.sm-dox > li:not(:last-child) > a:hover,
+.sm-dox > li:not(:last-child) > a.highlighted {
   background-color: #5f082b; }
+
 .sm-dox a span.sub-arrow {
   border-color: white transparent transparent; }
+
 .sm-dox ul {
   border: none;
   -moz-border-radius: 0 !important;
@@ -262,7 +266,7 @@ img.footer {
  Basic styling for fragments shared by all themes.
 */
 div.fragment {
-  padding: 0;
+  padding: 4px;
   margin: 4px 8px 4px 2px;
   color: #bebebe;
   background-color: #323232;
@@ -302,7 +306,7 @@ span.lineno {
   height: 100px;
   white-space: pre;
   border-right: 3px solid #1d7567;
-  background-color: #a0a0a0; }
+  background-color: #323232; }
 
 span.lineno a, span.lineno a:visited {
   background-color: inherit;
@@ -333,7 +337,7 @@ div.line:hover {
 
 span.lineno {
   color: #969696;
-  background-color: #1a1a1a;
+  background-color: #323232;
   border-right: 1px solid #3e3e3e; }
 
 span.lineno a, span.lineno a:visited {
@@ -539,9 +543,9 @@ th.markdownTableHeadCenter, th.markdownTableHeadNone {
   width: 100%; }
 
 .memTemplParams {
-  color: #4665A2;
+  color: black;
   white-space: nowrap;
-  font-size: 80%; }
+  font-size: 100%; }
 
 /* Styles for detailed member documentation */
 .memtitle {
@@ -1406,25 +1410,18 @@ div.toc {
 @media print {
   #top {
     display: none; }
-
   #side-nav {
     display: none; }
-
   #nav-path {
     display: none; }
-
   body {
     overflow: visible; }
-
   h1, h2, h3, h4, h5, h6 {
     page-break-after: avoid; }
-
   .summary {
     display: none; }
-
   .memitem {
     page-break-inside: avoid; }
-
   #doc-content {
     margin-left: 0 !important;
     height: auto !important;
@@ -1432,5 +1429,3 @@ div.toc {
     overflow: inherit;
     display: inline;
     background-color: white; } }
-
-/*# sourceMappingURL=that_style.css.map */
