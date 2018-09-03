@@ -73,6 +73,11 @@ if (UNIX)
         endif()
     endif (WITH_STACK_PROTECTOR_STRONG)
 
+    check_c_compiler_flag_ssp("-fstack-clash-protection" WITH_STACK_CLASH_PROTECTION)
+    if (WITH_STACK_CLASH_PROTECTION)
+        list(APPEND SUPPORTED_COMPILER_FLAGS "-fstack-clash-protection")
+    endif()
+
     if (PICKY_DEVELOPER)
         add_c_compiler_flag("-Wno-error=deprecated-declarations" SUPPORTED_COMPILER_FLAGS)
         add_c_compiler_flag("-Wno-error=tautological-compare" SUPPORTED_COMPILER_FLAGS)
