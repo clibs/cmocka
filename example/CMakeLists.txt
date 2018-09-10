@@ -1,11 +1,5 @@
 project(cmocka-examples C)
 
-include_directories(
-    ${CMAKE_BINARY_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMOCKA_PUBLIC_INCLUDE_DIRS}
-)
-
 set_source_files_properties(
     calculator.c
     allocate_module.c
