@@ -1,7 +1,20 @@
-project(cmocka C)
-
 # Required cmake version
-cmake_minimum_required(VERSION 3.3.0)
+cmake_minimum_required(VERSION 3.5.0)
+cmake_policy(SET CMP0048 NEW)
+
+# Specify search path for CMake modules to be loaded by include() 
+# and find_package()
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
+
+### Add defaults for cmake
+# These defaults need to be included before the project() call.
+include(DefineCMakeDefaults)
+
+# This will provide -DCMAKE_BUILD_TYPE=Profiling
+# and -DCMAKE_BUILD_TYPE=AddressSanitizer
+include(DefineCompilerFlags)
+
+project(cmocka C)
 
 # global needed variables
 set(APPLICATION_NAME ${PROJECT_NAME})
