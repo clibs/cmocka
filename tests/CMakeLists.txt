@@ -1,11 +1,5 @@
 project(tests C)
 
-include_directories(
-  ${CMAKE_BINARY_DIR}
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${cmocka-headers_SOURCE_DIR}
-)
-
 set(CMOCKA_TESTS
     test_alloc
     test_group_setup_assert
@@ -28,6 +22,7 @@ set(CMOCKA_TESTS
 
 foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
     add_cmocka_test(${_CMOCKA_TEST} ${_CMOCKA_TEST}.c ${CMOCKA_STATIC_LIBRARY})
+    target_include_directories(${_CMOCKA_TEST} PRIVATE ${cmocka_BINARY_DIR})
     target_compile_options(${_CMOCKA_TEST} PRIVATE ${DEFAULT_C_COMPILE_FLAGS})
 endforeach()
 
