@@ -14,16 +14,10 @@ include(DefineCMakeDefaults)
 # and -DCMAKE_BUILD_TYPE=AddressSanitizer
 include(DefineCompilerFlags)
 
-project(cmocka C)
+project(cmocka VERSION 1.1.2 LANGUAGES C)
 
 # global needed variables
 set(APPLICATION_NAME ${PROJECT_NAME})
-
-set(APPLICATION_VERSION_MAJOR "1")
-set(APPLICATION_VERSION_MINOR "1")
-set(APPLICATION_VERSION_PATCH "2")
-
-set(APPLICATION_VERSION "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}.${APPLICATION_VERSION_PATCH}")
 
 # SOVERSION scheme: CURRENT.AGE.REVISION
 #   If there was an incompatible interface change:

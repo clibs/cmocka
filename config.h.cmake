@@ -1,8 +1,8 @@
 /* Name of package */
-#cmakedefine PACKAGE "${APPLICATION_NAME}"
+#cmakedefine PACKAGE "${PROJECT_NAME}"
 
 /* Version number of package */
-#cmakedefine VERSION "${APPLICATION_VERSION}"
+#cmakedefine VERSION "${PROJECT_VERSION}"
 
 #cmakedefine LOCALEDIR "${LOCALE_INSTALL_DIR}"
 #cmakedefine DATADIR "${DATADIR}"
