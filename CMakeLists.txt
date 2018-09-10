@@ -31,7 +31,7 @@ set(LIBRARY_SOVERSION "0")
 
 # add definitions
 include(DefinePlatformDefaults)
-include(DefineInstallationPaths)
+include(GNUInstallDirs)
 include(DefineOptions.cmake)
 include(CPackConfig.cmake)
 include(CompilerChecks.cmake)

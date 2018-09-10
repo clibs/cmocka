@@ -4,7 +4,7 @@ install(FILES
             cmocka.h
             cmocka_pbc.h
         DESTINATION
-            ${INCLUDE_INSTALL_DIR}
+            ${CMAKE_INSTALL_INCLUDEDIR}
         COMPONENT
             ${PROJECT_NAME})
 
@@ -13,7 +13,7 @@ if (WITH_CMOCKERY_SUPPORT)
                 cmockery/cmockery.h
                 cmockery/pbc.h
             DESTINATION
-                ${INCLUDE_INSTALL_DIR}/cmockery
+                ${CMAKE_INSTALL_INCLUDEDIR}/cmockery
             COMPONENT
                 ${PROJECT_NAME})
 endif()

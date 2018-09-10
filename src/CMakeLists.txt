@@ -72,13 +72,12 @@ if (NOT WIN32)
     )
 endif (NOT WIN32)
 
-install(
-    TARGETS ${CMOCKA_SHARED_LIBRARY}
-    RUNTIME DESTINATION ${BIN_INSTALL_DIR}
-    LIBRARY DESTINATION ${LIB_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
-    COMPONENT libraries
-)
+install(TARGETS
+            ${CMOCKA_SHARED_LIBRARY}
+        LIBRARY DESTINATION
+            ${CMAKE_INSTALL_LIBDIR}
+        COMPONENT
+            ${PROJECT_NAME})
 
 if (WITH_STATIC_LIB)
     add_library(${CMOCKA_STATIC_LIBRARY} STATIC ${cmocka_SRCS})
@@ -120,11 +119,12 @@ if (WITH_STATIC_LIB)
         )
     endif()
 
-    install(
-        TARGETS ${CMOCKA_STATIC_LIBRARY}
-        DESTINATION ${LIB_INSTALL_DIR}
-        COMPONENT libraries
-    )
+    install(TARGETS
+                ${CMOCKA_STATIC_LIBRARY}
+            ARCHIVE DESTINATION
+                ${CMAKE_INSTALL_LIBDIR}
+            COMPONENT
+                ${PROJECT_NAME})
 endif (WITH_STATIC_LIB)
 
 if (WIN32)
