@@ -67,7 +67,7 @@ install(
   FILES
     ${CMAKE_CURRENT_BINARY_DIR}/cmocka.pc
   DESTINATION
-    ${LIB_INSTALL_DIR}/pkgconfig
+  ${CMAKE_INSTALL_LIBDIR}/pkgconfig
   COMPONENT
     pkgconfig
 )
@@ -82,7 +82,7 @@ install(
         ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
     DESTINATION
-        ${CMAKE_INSTALL_DIR}/${PROJECT_NAME}
+        ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
     COMPONENT
         devel
 )
