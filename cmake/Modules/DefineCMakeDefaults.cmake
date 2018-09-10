@@ -14,23 +14,5 @@ set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
 # since cmake 2.4.0
 set(CMAKE_COLOR_MAKEFILE ON)
 
-# Define the generic version of the libraries here
-set(GENERIC_LIB_VERSION "0.1.0")
-set(GENERIC_LIB_SOVERSION "0")
-
-# Set the default build type to release with debug info
-if (NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE RelWithDebInfo
-    CACHE STRING
-      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
-  )
-endif (NOT CMAKE_BUILD_TYPE)
-
 # Create the compile command database for clang by default
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-if (APPLE)
-    set(CMAKE_MACOSX_RPATH ON)
-    set(CMAKE_SKIP_BUILD_RPATH  FALSE)
-    set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-endif(APPLE)
