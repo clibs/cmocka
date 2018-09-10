@@ -1,6 +1,7 @@
 project(cmocka-library C)
 
 set(CMOCKA_PLATFORM_INCLUDE CACHE PATH "Path to include directory for cmocka_platform.h")
+mark_as_advanced(CMOCKA_PLATFORM_INCLUDE)
 
 set(CMOCKA_PUBLIC_INCLUDE_DIRS
     ${cmocka_SOURCE_DIR}/include
