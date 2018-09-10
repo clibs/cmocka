@@ -34,7 +34,6 @@ include(DefinePlatformDefaults)
 include(DefineInstallationPaths)
 include(DefineOptions.cmake)
 include(CPackConfig.cmake)
-include(CheckSymbolExists)
 include(CompilerChecks.cmake)
 
 # disallow in-source build
