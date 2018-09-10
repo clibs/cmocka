@@ -13,6 +13,7 @@ include(DefineCMakeDefaults)
 # This will provide -DCMAKE_BUILD_TYPE=Profiling
 # and -DCMAKE_BUILD_TYPE=AddressSanitizer
 include(DefineCompilerFlags)
+include(DefinePlatformDefaults)
 
 project(cmocka VERSION 1.1.2 LANGUAGES C)
 
@@ -29,8 +30,7 @@ set(APPLICATION_NAME ${PROJECT_NAME})
 set(LIBRARY_VERSION "0.5.0")
 set(LIBRARY_SOVERSION "0")
 
-# add definitions
-include(DefinePlatformDefaults)
+# include cmake files
 include(GNUInstallDirs)
 include(DefineOptions.cmake)
 include(CPackConfig.cmake)
