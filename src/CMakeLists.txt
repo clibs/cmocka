@@ -3,16 +3,6 @@ project(cmocka-library C)
 set(CMOCKA_PLATFORM_INCLUDE CACHE PATH "Path to include directory for cmocka_platform.h")
 mark_as_advanced(CMOCKA_PLATFORM_INCLUDE)
 
-set(CMOCKA_PUBLIC_INCLUDE_DIRS
-    ${cmocka_SOURCE_DIR}/include
-    ${CMOCKA_PLATFORM_INCLUDE}
-    CACHE INTERNAL "cmocka public include directories"
-)
-
-set(CMOCKA_PRIVATE_INCLUDE_DIRS
-    ${cmocka_BINARY_DIR}
-)
-
 set(CMOCKA_SHARED_LIBRARY
     cmocka_shared
     CACHE INTERNAL "cmocka shared library"
@@ -41,18 +31,26 @@ if (WIN32)
     )
 endif (WIN32)
 
-include_directories(
-    ${CMOCKA_PUBLIC_INCLUDE_DIRS}
-    ${CMOCKA_PRIVATE_INCLUDE_DIRS}
-)
+add_library(${CMOCKA_SHARED_LIBRARY} SHARED ${cmocka_SRCS})
 
-add_definitions(-DHAVE_CONFIG_H=1)
+target_include_directories(${CMOCKA_SHARED_LIBRARY}
+                           PRIVATE
+                               ${CMOCKA_PLATFORM_INCLUDE}
+                               ${cmocka_BINARY_DIR}
+                           PUBLIC
+                               ${cmocka-header_SOURCE_DIR})
+
+
+target_compile_options(${CMOCKA_SHARED_LIBRARY}
+                       PRIVATE
+                           ${DEFAULT_C_COMPILE_FLAGS}
+                           -DHAVE_CONFIG_H)
 if (CMOCKA_PLATFORM_INCLUDE)
-    add_definitions(-DCMOCKA_PLATFORM_INCLUDE=1)
+    target_compile_options(${CMOCKA_SHARED_LIBRARY}
+                           PRIVATE
+                               -DCMOCKA_PLATFORM_INCLUDE)
 endif()
 
-add_library(${CMOCKA_SHARED_LIBRARY} SHARED ${cmocka_SRCS})
-target_compile_options(${CMOCKA_SHARED_LIBRARY} PRIVATE ${DEFAULT_C_COMPILE_FLAGS})
 target_link_libraries(${CMOCKA_SHARED_LIBRARY} ${CMOCKA_LINK_LIBRARIES})
 set_target_properties(
     ${CMOCKA_SHARED_LIBRARY}
@@ -84,7 +82,23 @@ install(
 
 if (WITH_STATIC_LIB)
     add_library(${CMOCKA_STATIC_LIBRARY} STATIC ${cmocka_SRCS})
-    target_compile_options(${CMOCKA_STATIC_LIBRARY} PRIVATE ${DEFAULT_C_COMPILE_FLAGS})
+
+    target_include_directories(${CMOCKA_STATIC_LIBRARY}
+                               PRIVATE
+                                   ${CMOCKA_PLATFORM_INCLUDE}
+                                   ${cmocka_BINARY_DIR}
+                               PUBLIC
+                                   ${cmocka-header_SOURCE_DIR})
+
+    target_compile_options(${CMOCKA_STATIC_LIBRARY}
+                           PRIVATE
+                               ${DEFAULT_C_COMPILE_FLAGS}
+                               -DHAVE_CONFIG_H)
+    if (CMOCKA_PLATFORM_INCLUDE)
+        target_compile_options(${CMOCKA_STATIC_LIBRARY}
+                               PRIVATE
+                                   -DCMOCKA_PLATFORM_INCLUDE)
+    endif()
 
     set_target_properties(
         ${CMOCKA_STATIC_LIBRARY}
