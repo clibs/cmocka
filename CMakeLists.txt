@@ -29,13 +29,7 @@ set(APPLICATION_NAME ${PROJECT_NAME})
 set(LIBRARY_VERSION "0.5.0")
 set(LIBRARY_SOVERSION "0")
 
-# where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
-set(CMAKE_MODULE_PATH
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules
-)
-
 # add definitions
-include(DefineCMakeDefaults)
 include(DefinePlatformDefaults)
 include(DefineInstallationPaths)
 include(DefineOptions.cmake)
