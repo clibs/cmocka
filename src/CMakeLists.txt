@@ -52,14 +52,17 @@ if (CMOCKA_PLATFORM_INCLUDE)
 endif()
 
 target_link_libraries(${CMOCKA_SHARED_LIBRARY} ${CMOCKA_LINK_LIBRARIES})
-set_target_properties(
-    ${CMOCKA_SHARED_LIBRARY}
-        PROPERTIES
-            OUTPUT_NAME
-                cmocka
-            DEFINE_SYMBOL
-                CMOCKA_EXPORTS
-)
+set_property(TARGET
+                 ${CMOCKA_SHARED_LIBRARY}
+             PROPERTY
+                 OUTPUT_NAME
+                    cmocka
+             PROPERTY
+                 DEFINE_SYMBOL
+                     CMOCKA_EXPORTS
+             PROPERTY
+                 LINKER_FLAGS
+                     "${DEFAULT_LINK_FLAGS}")
 
 if (NOT WIN32)
     set_target_properties(
@@ -99,16 +102,17 @@ if (WITH_STATIC_LIB)
                                    -DCMOCKA_PLATFORM_INCLUDE)
     endif()
 
-    set_target_properties(
-        ${CMOCKA_STATIC_LIBRARY}
-            PROPERTIES
-                VERSION
-                    ${LIBRARY_VERSION}
-                SOVERSION
-                    ${LIBRARY_SOVERSION}
-                OUTPUT_NAME
-                    cmocka
-    )
+    set_property(TARGET
+                     ${CMOCKA_STATIC_LIBRARY}
+                 PROPERTY
+                     OUTPUT_NAME
+                        cmocka
+                 PROPERTY
+                     DEFINE_SYMBOL
+                         CMOCKA_EXPORTS
+                 PROPERTY
+                     LINK_FLAGS
+                        "${DEFAULT_LINK_FLAGS}")
 
     if (NOT WIN32)
         set_target_properties(

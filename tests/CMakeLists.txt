@@ -24,6 +24,11 @@ foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
     add_cmocka_test(${_CMOCKA_TEST} ${_CMOCKA_TEST}.c ${CMOCKA_STATIC_LIBRARY})
     target_include_directories(${_CMOCKA_TEST} PRIVATE ${cmocka_BINARY_DIR})
     target_compile_options(${_CMOCKA_TEST} PRIVATE ${DEFAULT_C_COMPILE_FLAGS})
+    set_property(TARGET
+                     ${_CMOCKA_TEST}
+                 PROPERTY
+                     LINK_FLAGS
+                         "${DEFAULT_LINK_FLAGS}")
 endforeach()
 
 ### Special Cases

@@ -65,10 +65,18 @@ if (UNIX)
     check_c_compiler_flag_ssp("-fstack-protector-strong" WITH_STACK_PROTECTOR_STRONG)
     if (WITH_STACK_PROTECTOR_STRONG)
         list(APPEND SUPPORTED_COMPILER_FLAGS "-fstack-protector-strong")
+        # This is needed as Solaris has a seperate libssp
+        if (SOLARIS)
+            list(APPEND SUPPORTED_LINKER_FLAGS "-fstack-protector-strong")
+        endif()
     else (WITH_STACK_PROTECTOR_STRONG)
         check_c_compiler_flag_ssp("-fstack-protector" WITH_STACK_PROTECTOR)
         if (WITH_STACK_PROTECTOR)
             list(APPEND SUPPORTED_COMPILER_FLAGS "-fstack-protector")
+            # This is needed as Solaris has a seperate libssp
+            if (SOLARIS)
+                list(APPEND SUPPORTED_LINKER_FLAGS "-fstack-protector")
+            endif()
         endif()
     endif (WITH_STACK_PROTECTOR_STRONG)
 
@@ -100,3 +108,4 @@ if (OSX)
 endif()
 
 set(DEFAULT_C_COMPILE_FLAGS ${SUPPORTED_COMPILER_FLAGS} CACHE INTERNAL "Default C Compiler Flags" FORCE)
+set(DEFAULT_LINK_FLAGS ${SUPPORTED_LINKER_FLAGS} CACHE INTERNAL "Default C Linker Flags" FORCE)
