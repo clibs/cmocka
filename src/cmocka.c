@@ -388,9 +388,15 @@ struct CMUnitTestState {
 /* Exit the currently executing test. */
 static void exit_test(const int quit_application)
 {
-    const char *abort_test = getenv("CMOCKA_TEST_ABORT");
+    const char *env = getenv("CMOCKA_TEST_ABORT");
+    int abort_test = 0;
 
-    if (abort_test != NULL && abort_test[0] == '1') {
+    if (env != NULL && strlen(env) == 1) {
+        abort_test = (env[0] == '1');
+    }
+
+    if (global_skip_test == 0 &&
+        abort_test == 1) {
         print_error("%s", cm_error_message);
         abort();
     } else if (global_running_test) {
