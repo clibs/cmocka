@@ -32,6 +32,7 @@ set(LIBRARY_SOVERSION "0")
 
 # include cmake files
 include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
 include(DefineOptions.cmake)
 include(CPackConfig.cmake)
 include(CompilerChecks.cmake)
@@ -75,8 +76,19 @@ install(
 # cmake config files
 set(CMOCKA_LIBRARY_NAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-configure_file(${PROJECT_NAME}-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake @ONLY)
-configure_file(${PROJECT_NAME}-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake @ONLY)
+set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR} CACHE INTERNAL "")
+set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR} CACHE INTERNAL "")
+configure_package_config_file(${PROJECT_NAME}-config.cmake.in
+                              ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+                              PATH_VARS
+                                  INCLUDE_INSTALL_DIR LIB_INSTALL_DIR
+                              INSTALL_DESTINATION
+                                  ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+
+write_basic_package_version_file(${PROJECT_NAME}-config-version.cmake
+                                 COMPATIBILITY
+                                     AnyNewerVersion)
+
 install(
     FILES
         ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
