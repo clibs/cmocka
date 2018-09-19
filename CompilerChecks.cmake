@@ -101,11 +101,5 @@ if (MSVC)
     add_c_compiler_flag("/D _CRT_SECURE_NO_WARNINGS=1" SUPPORTED_COMPILER_FLAGS)
 endif()
 
-# This removes this annoying warning
-# "warning: 'BN_CTX_free' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]"
-if (OSX)
-    add_c_compiler_flag("-Wno-deprecated-declarations" SUPPORTED_COMPILER_FLAGS)
-endif()
-
 set(DEFAULT_C_COMPILE_FLAGS ${SUPPORTED_COMPILER_FLAGS} CACHE INTERNAL "Default C Compiler Flags" FORCE)
 set(DEFAULT_LINK_FLAGS ${SUPPORTED_LINKER_FLAGS} CACHE INTERNAL "Default C Linker Flags" FORCE)
