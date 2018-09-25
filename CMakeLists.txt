@@ -15,7 +15,7 @@ include(DefineCMakeDefaults)
 include(DefineCompilerFlags)
 include(DefinePlatformDefaults)
 
-project(cmocka VERSION 1.1.2 LANGUAGES C)
+project(cmocka VERSION 1.1.3 LANGUAGES C)
 
 # global needed variables
 set(APPLICATION_NAME ${PROJECT_NAME})
@@ -27,7 +27,7 @@ set(APPLICATION_NAME ${PROJECT_NAME})
 #     Increment AGE. Set REVISION to 0
 #   If the source code was changed, but there were no interface changes:
 #     Increment REVISION.
-set(LIBRARY_VERSION "0.5.0")
+set(LIBRARY_VERSION "0.5.1")
 set(LIBRARY_SOVERSION "0")
 
 # include cmake files
