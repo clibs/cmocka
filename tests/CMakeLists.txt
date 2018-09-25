@@ -1,5 +1,14 @@
 project(tests C)
 
+set(TEST_EXCEPTION_HANDLER TRUE)
+if (CMAKE_BUILD_TYPE)
+    message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+    string(TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_LOWER)
+    if (CMAKE_BUILD_TYPE_LOWER STREQUAL "undefinedsanitizer")
+        set(TEST_EXCEPTION_HANDLER FALSE)
+    endif()
+endif()
+
 set(CMOCKA_TESTS
     test_alloc
     test_group_setup_assert
@@ -9,7 +18,6 @@ set(CMOCKA_TESTS
     test_groups
     test_assert_macros
     test_assert_macros_fail
-    test_exception_handler
     test_basics
     test_skip
     test_strmatch
@@ -19,6 +27,10 @@ set(CMOCKA_TESTS
     test_returns
     test_returns_fail
     test_wildcard)
+
+if (TEST_EXCEPTION_HANDLER)
+    list(APPEND CMOCKA_TESTS test_exception_handler)
+endif()
 
 foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
     add_cmocka_test(${_CMOCKA_TEST} ${_CMOCKA_TEST}.c ${CMOCKA_STATIC_LIBRARY})
@@ -73,20 +85,19 @@ set_tests_properties(
 )
 
 # test_exception_handler
-if (WIN32)
-    set_tests_properties(
-        test_exception_handler
-            PROPERTIES
-            PASS_REGULAR_EXPRESSION
-            "EXCEPTION_ACCESS_VIOLATION occurred at")
-else()
-    set_tests_properties(
-        test_exception_handler
-            PROPERTIES
-            PASS_REGULAR_EXPRESSION
-            "Test failed with exception: (Segmentation fault|Segmentation Fault|11|Illegal instruction)"
-    )
-endif (WIN32)
+if (TEST_EXCEPTION_HANDLER)
+    if (WIN32)
+        set_tests_properties(test_exception_handler
+                                 PROPERTIES
+                                     PASS_REGULAR_EXPRESSION
+                                         "EXCEPTION_ACCESS_VIOLATION occurred at")
+    else()
+        set_tests_properties(test_exception_handler
+                             PROPERTIES
+                                 PASS_REGULAR_EXPRESSION
+                                     "Test failed with exception: (Segmentation fault|Segmentation Fault|11|Illegal instruction)")
+    endif (WIN32)
+endif (TEST_EXCEPTION_HANDLER)
 
 set_tests_properties(
     test_setup_fail

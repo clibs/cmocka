@@ -22,4 +22,16 @@ if (UNIX AND NOT WIN32)
         CACHE STRING "Flags used by the linker during the creation of shared libraries during ADDRESSSANITIZER builds.")
     set(CMAKE_EXEC_LINKER_FLAGS_ADDRESSSANITIZER "-fsanitize=address"
         CACHE STRING "Flags used by the linker during ADDRESSSANITIZER builds.")
+
+    # Activate with: -DCMAKE_BUILD_TYPE=UndefinedSanitizer
+    set(CMAKE_C_FLAGS_UNDEFINEDSANITIZER "-g -O1 -fsanitize=undefined -fsanitize=null -fsanitize=alignment -fno-sanitize-recover"
+        CACHE STRING "Flags used by the C compiler during UNDEFINEDSANITIZER builds.")
+    set(CMAKE_CXX_FLAGS_UNDEFINEDSANITIZER "-g -O1 -fsanitize=undefined -fsanitize=null -fsanitize=alignment -fno-sanitize-recover"
+        CACHE STRING "Flags used by the CXX compiler during UNDEFINEDSANITIZER builds.")
+    set(CMAKE_SHARED_LINKER_FLAGS_UNDEFINEDSANITIZER "-fsanitize=undefined"
+        CACHE STRING "Flags used by the linker during the creation of shared libraries during UNDEFINEDSANITIZER builds.")
+    set(CMAKE_MODULE_LINKER_FLAGS_UNDEFINEDSANITIZER "-fsanitize=undefined"
+        CACHE STRING "Flags used by the linker during the creation of shared libraries during UNDEFINEDSANITIZER builds.")
+    set(CMAKE_EXEC_LINKER_FLAGS_UNDEFINEDSANITIZER "-fsanitize=undefined"
+        CACHE STRING "Flags used by the linker during UNDEFINEDSANITIZER builds.")
 endif()
