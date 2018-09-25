@@ -44,7 +44,7 @@ int __wrap_uptime(const char *uptime_path,
     double idle;
 
     /* Verify the passed value of the argument is correct */
-    check_expected(uptime_path);
+    check_expected_ptr(uptime_path);
 
     /* Assign the return values */
     up = mock_type(double);
