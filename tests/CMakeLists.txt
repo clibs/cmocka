@@ -32,22 +32,23 @@ if (TEST_EXCEPTION_HANDLER)
 endif()
 
 foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
-    add_cmocka_test(${_CMOCKA_TEST} ${_CMOCKA_TEST}.c ${CMOCKA_STATIC_LIBRARY})
+    add_cmocka_test(${_CMOCKA_TEST}
+                    SOURCES ${_CMOCKA_TEST}.c
+                    COMPILE_OPTIONS ${DEFAULT_C_COMPILE_FLAGS}
+                    LINK_LIBRARIES ${CMOCKA_STATIC_LIBRARY}
+                    LINK_OPTIONS ${DEFAULT_LINK_FLAGS})
     target_include_directories(${_CMOCKA_TEST} PRIVATE ${cmocka_BINARY_DIR})
-    target_compile_options(${_CMOCKA_TEST} PRIVATE ${DEFAULT_C_COMPILE_FLAGS})
-    set_property(TARGET
-                     ${_CMOCKA_TEST}
-                 PROPERTY
-                     LINK_FLAGS
-                         "${DEFAULT_LINK_FLAGS}")
 endforeach()
 
 ### Special Cases
 if (${CMAKE_C_COMPILER_ID} MATCHES "(GNU|Clang)")
     set_source_files_properties(test_cmockery.c PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
 endif()
-add_cmocka_test(test_cmockery test_cmockery.c ${CMOCKA_STATIC_LIBRARY})
-target_compile_options(test_cmockery PRIVATE ${DEFAULT_C_COMPILE_FLAGS})
+add_cmocka_test(test_cmockery
+                SOURCES test_cmockery.c
+                COMPILE_OPTIONS ${DEFAULT_C_COMPILE_FLAGS}
+                LINK_LIBRARIES ${CMOCKA_STATIC_LIBRARY}
+                LINK_OPTIONS ${DEFAULT_LINK_FLAGS})
 
 ### Exceptions
 
@@ -119,7 +120,7 @@ set_tests_properties(
         1
 )
 
-add_test (test_setup_fail_1_failed test_setup_fail)
+add_test(test_setup_fail_1_failed ${TARGET_SYSTEM_EMULATOR} test_setup_fail)
 set_tests_properties(
     test_setup_fail_1_failed
         PROPERTIES
@@ -127,7 +128,7 @@ set_tests_properties(
         "\\[  ERROR   \\] int_test_ignored"
 )
 
-add_test (test_setup_fail_1_passed test_setup_fail)
+add_test (test_setup_fail_1_passed ${TARGET_SYSTEM_EMULATOR} test_setup_fail)
 set_tests_properties(
     test_setup_fail_1_passed
         PROPERTIES
@@ -135,7 +136,7 @@ set_tests_properties(
         "\\[  PASSED  \\] 1 test\\(s\\)."
 )
 
-add_test (test_setup_fail_match_failed test_setup_fail)
+add_test (test_setup_fail_match_failed ${TARGET_SYSTEM_EMULATOR} test_setup_fail)
 set_tests_properties(
     test_setup_fail_match_failed
         PROPERTIES
@@ -143,7 +144,7 @@ set_tests_properties(
         "\\[  ERROR   \\] int_test_ignored"
 )
 
-add_test (test_setup_fail_match_passed test_setup_fail)
+add_test (test_setup_fail_match_passed ${TARGET_SYSTEM_EMULATOR} test_setup_fail)
 set_tests_properties(
     test_setup_fail_match_passed
         PROPERTIES
@@ -229,7 +230,7 @@ set(test_setup_fail_xml_out
 foreach(_TEST_OUTPUT_FMT ${TEST_OUTPUT_FMTS})
     foreach(_OUTPUT_TEST ${OUTPUT_TESTS})
         set(TEST_NAME ${_OUTPUT_TEST}_${_TEST_OUTPUT_FMT})
-        add_test(${TEST_NAME} ${_OUTPUT_TEST})
+        add_test(${TEST_NAME} ${TARGET_SYSTEM_EMULATOR} ${_OUTPUT_TEST})
 
         set_property(
             TEST

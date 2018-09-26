@@ -24,4 +24,4 @@ set_property(TARGET
                  LINK_FLAGS
                     "${DEFAULT_LINK_FLAGS} -Wl,--wrap=uptime")
 
-add_test(test_uptime ${CMAKE_CURRENT_BINARY_DIR}/test_uptime)
+add_test(test_uptime ${TARGET_SYSTEM_EMULATOR} ${CMAKE_CURRENT_BINARY_DIR}/test_uptime)
