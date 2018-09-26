@@ -3290,7 +3290,9 @@ int _run_group_tests(const UnitTest * const tests, const size_t number_of_tests)
     const ListNode * const check_point = check_point_allocated_blocks();
     const char **failed_names = NULL;
     void **current_state = NULL;
-    TestState group_state;
+    TestState group_state = {
+        .check_point = NULL,
+    };
 
     if (number_of_tests == 0) {
         return -1;
