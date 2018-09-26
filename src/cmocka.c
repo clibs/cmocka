@@ -802,6 +802,10 @@ static int get_symbol_value(
             ListNode *value_node = NULL;
             return_value = list_first(child_list, &value_node);
             assert_true(return_value);
+            /* Add a check to silence clang analyzer */
+            if (return_value == 0) {
+                goto out;
+            }
             *output = (void*) value_node->value;
             return_value = value_node->refcount;
             if (value_node->refcount - 1 == 0) {
@@ -818,9 +822,9 @@ static int get_symbol_value(
             list_remove_free(target_node, free_symbol_map_value, (void*)0);
         }
         return return_value;
-    } else {
-        cm_print_error("No entries for symbol %s.\n", symbol_name);
     }
+out:
+    cm_print_error("No entries for symbol %s.\n", symbol_name);
     return 0;
 }
 
