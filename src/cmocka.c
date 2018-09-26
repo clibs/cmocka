@@ -692,7 +692,7 @@ static int list_find(ListNode * const head, const void *value,
 
 /* Returns the first node of a list */
 static int list_first(ListNode * const head, ListNode **output) {
-    ListNode *target_node;
+    ListNode *target_node = NULL;
     assert_non_null(head);
     if (list_empty(head)) {
         return 0;
@@ -780,8 +780,8 @@ static void add_symbol_value(ListNode * const symbol_map_head,
 static int get_symbol_value(
         ListNode * const head, const char * const symbol_names[],
         const size_t number_of_symbol_names, void **output) {
-    const char* symbol_name;
-    ListNode *target_node;
+    const char* symbol_name = NULL;
+    ListNode *target_node = NULL;
     assert_non_null(head);
     assert_non_null(symbol_names);
     assert_true(number_of_symbol_names);
@@ -789,8 +789,8 @@ static int get_symbol_value(
     symbol_name = symbol_names[0];
 
     if (list_find(head, symbol_name, symbol_names_match, &target_node)) {
-        SymbolMapValue *map_value;
-        ListNode *child_list;
+        SymbolMapValue *map_value = NULL;
+        ListNode *child_list = NULL;
         int return_value = 0;
         assert_non_null(target_node);
         assert_non_null(target_node->value);
@@ -1603,7 +1603,7 @@ void _expect_any(
 void _check_expected(
         const char * const function_name, const char * const parameter_name,
         const char* file, const int line, const LargestIntegralType value) {
-    void *result;
+    void *result = NULL;
     const char* symbols[] = {function_name, parameter_name};
     const int rc = get_symbol_value(&global_function_parameter_map_head,
                                     symbols, 2, &result);
