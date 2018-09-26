@@ -9,8 +9,7 @@ set_source_files_properties(
 
 
 if (WIN32 OR CYGWIN OR MINGW)
-    set(CMOCKA_DLL_LIB ${CMAKE_BINARY_DIR}/src)
-    file(TO_NATIVE_PATH "${CMOCKA_DLL_PATH}" CMOCKA_DLL_PATH)
+    file(TO_NATIVE_PATH "${cmocka-library_BINARY_DIR}" CMOCKA_DLL_PATH)
     set(DLL_PATH_ENV "${CMOCKA_DLL_PATH};$ENV{PATH}")
 
     #

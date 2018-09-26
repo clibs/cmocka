@@ -119,20 +119,3 @@ if (BUILD_STATIC_LIB)
                     ${PROJECT_NAME})
     endif()
 endif (BUILD_STATIC_LIB)
-
-if (WIN32)
-    if (POLICY CMP0026)
-        cmake_policy(SET CMP0026 OLD)
-    endif()
-
-#
-# In order to run tests we will need to set the approriate environment
-# variable so that the test program can locate its dependent DLL's. First
-# we want to know what directory our dependent DLL was installed into:
-#
-    get_target_property(_cmocka_dir cmocka_shared LOCATION_${CMOCKA_BUILD_TYPE})
-    get_filename_component(_cmocka_path "${_cmocka_dir}" PATH)
-    file(TO_NATIVE_PATH "${_cmocka_path}" _cmocka_path_native)
-
-    set(CMOCKA_DLL_PATH "${_cmocka_path_native}" PARENT_SCOPE)
-endif()
