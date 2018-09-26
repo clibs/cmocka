@@ -74,6 +74,8 @@ endif (NOT WIN32)
 
 install(TARGETS
             ${CMOCKA_SHARED_LIBRARY}
+        ARCHIVE DESTINATION
+            ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION
             ${CMAKE_INSTALL_LIBDIR}
         COMPONENT
