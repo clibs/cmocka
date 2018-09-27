@@ -55,8 +55,8 @@ add_subdirectory(doc)
 add_subdirectory(include)
 add_subdirectory(src)
 
+include(AddCMockaTest)
 if (UNIT_TESTING)
-    include(AddCMockaTest)
     add_subdirectory(tests)
 endif (UNIT_TESTING)
 
