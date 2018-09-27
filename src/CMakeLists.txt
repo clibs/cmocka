@@ -8,12 +8,12 @@ set(CMOCKA_SHARED_LIBRARY
     CACHE INTERNAL "cmocka shared library"
 )
 
-if (WITH_STATIC_LIB)
+if (BUILD_STATIC_LIB)
     set(CMOCKA_STATIC_LIBRARY
         cmocka_static
         CACHE INTERNAL "cmocka static library"
     )
-endif (WITH_STATIC_LIB)
+endif()
 
 set(CMOCKA_LINK_LIBRARIES
     ${CMOCKA_REQUIRED_LIBRARIES}
@@ -79,7 +79,7 @@ install(TARGETS
         COMPONENT
             ${PROJECT_NAME})
 
-if (WITH_STATIC_LIB)
+if (BUILD_STATIC_LIB)
     add_library(${CMOCKA_STATIC_LIBRARY} STATIC ${cmocka_SRCS})
 
     target_include_directories(${CMOCKA_STATIC_LIBRARY}
@@ -108,13 +108,15 @@ if (WITH_STATIC_LIB)
                      LINK_FLAGS
                         "${DEFAULT_LINK_FLAGS}")
 
-    install(TARGETS
-                ${CMOCKA_STATIC_LIBRARY}
-            ARCHIVE DESTINATION
-                ${CMAKE_INSTALL_LIBDIR}
-            COMPONENT
-                ${PROJECT_NAME})
-endif (WITH_STATIC_LIB)
+    if (WITH_STATIC_LIB)
+        install(TARGETS
+                    ${CMOCKA_STATIC_LIBRARY}
+                ARCHIVE DESTINATION
+                    ${CMAKE_INSTALL_LIBDIR}
+                COMPONENT
+                    ${PROJECT_NAME})
+    endif()
+endif (BUILD_STATIC_LIB)
 
 if (WIN32)
     if (POLICY CMP0026)
