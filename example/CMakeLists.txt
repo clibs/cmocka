@@ -1,11 +1,11 @@
 project(cmocka-examples C)
 
-set_source_files_properties(
-    calculator.c
-    allocate_module.c
-    assert_module.c
-    PROPERTIES
-        COMPILE_DEFINITIONS UNIT_TESTING=1)
+set_source_files_properties(calculator.c
+                            allocate_module.c
+                            assert_module.c
+                            PROPERTIES
+                                COMPILE_DEFINITIONS
+                                    UNIT_TESTING=1)
 
 
 if (WIN32 OR CYGWIN OR MINGW)
@@ -94,41 +94,10 @@ if (WIN32 OR CYGWIN OR MINGW)
     set_tests_properties(assert_module_test PROPERTIES ENVIRONMENT "PATH=${DLL_PATH_ENV}")
 endif (WIN32 OR CYGWIN OR MINGW)
 
-### Customer database test
-add_executable(customer_database_test customer_database.c customer_database_test.c)
-target_link_libraries(customer_database_test ${CMOCKA_SHARED_LIBRARY})
-
-add_test(customer_database_test ${TARGET_SYSTEM_EMULATOR} ${CMAKE_CURRENT_BINARY_DIR}/customer_database_test)
-if (WIN32 OR CYGWIN OR MINGW)
-    set_tests_properties(customer_database_test PROPERTIES ENVIRONMENT "PATH=${DLL_PATH_ENV}")
-endif (WIN32 OR CYGWIN OR MINGW)
-
-### Key Value Test
-add_executable(key_value_test key_value.c key_value_test.c)
-target_link_libraries(key_value_test ${CMOCKA_SHARED_LIBRARY})
-
-add_test(key_value_test ${TARGET_SYSTEM_EMULATOR} ${CMAKE_CURRENT_BINARY_DIR}/key_value_test)
-if (WIN32 OR CYGWIN OR MINGW)
-    set_tests_properties(key_value_test PROPERTIES ENVIRONMENT "PATH=${DLL_PATH_ENV}")
-endif (WIN32 OR CYGWIN OR MINGW)
-
-### Product database test
-add_executable(product_database_test product_database.c product_database_test.c)
-target_link_libraries(product_database_test ${CMOCKA_SHARED_LIBRARY})
-
-add_test(product_database_test ${TARGET_SYSTEM_EMULATOR} ${CMAKE_CURRENT_BINARY_DIR}/product_database_test)
-set_tests_properties(
-    product_database_test
-        PROPERTIES
-        PASS_REGULAR_EXPRESSION
-        "\\[  FAILED  \\] 2 test"
-)
-if (WIN32 OR CYGWIN OR MINGW)
-    set_tests_properties(product_database_test PROPERTIES ENVIRONMENT "PATH=${DLL_PATH_ENV}")
-endif (WIN32 OR CYGWIN OR MINGW)
-
-# TODO Execute "$CMAKE_LINKER --help" and check for --wrap
-if (${CMAKE_C_COMPILER_ID} MATCHES "(GNU|Clang)" AND NOT APPLE)
-    add_subdirectory(chef_wrap)
-    add_subdirectory(uptime)
+if (NOT WIN32)
+    # TODO Execute "$CMAKE_LINKER --help" and check for --wrap
+    if (${CMAKE_C_COMPILER_ID} MATCHES "(GNU|Clang)" AND NOT APPLE)
+        add_subdirectory(chef_wrap)
+        add_subdirectory(uptime)
+    endif()
 endif()
