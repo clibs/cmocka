@@ -148,8 +148,7 @@ fedora/mingw32:
   - build=$(dpkg-architecture -qDEB_HOST_GNU_TYPE)
   - host="${CI_JOB_NAME#*.cross.}"
   - mkdir -p obj && cd obj && cmake
-    -DCMAKE_C_COMPILER="$(which $host-gcc)"
-    -DCMAKE_CXX_COMPILER="$(which $host-g++)"
+    -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-Debian-mips.cmake
     -DCMAKE_BUILD_TYPE=RelWithDebInfo
     -DUNIT_TESTING=ON .. &&
     make -j$(nproc) &&
