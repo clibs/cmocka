@@ -151,8 +151,9 @@ fedora/mingw32:
     -DCMAKE_C_COMPILER="$(which $host-gcc)"
     -DCMAKE_CXX_COMPILER="$(which $host-g++)"
     -DCMAKE_BUILD_TYPE=RelWithDebInfo
-    -DUNIT_TESTING=ON .. && make -j$(nproc)
-  - ctest --output-on-failure -j$(nproc)
+    -DUNIT_TESTING=ON .. &&
+    make -j$(nproc) &&
+    ctest --output-on-failure -j$(nproc)
   tags:
   - shared
   except:
