@@ -4,7 +4,7 @@ set(CMOCKA_PLATFORM_INCLUDE CACHE PATH "Path to include directory for cmocka_pla
 mark_as_advanced(CMOCKA_PLATFORM_INCLUDE)
 
 set(CMOCKA_SHARED_LIBRARY
-    cmocka_shared
+    cmocka
     CACHE INTERNAL "cmocka shared library"
 )
 
@@ -55,9 +55,6 @@ target_link_libraries(${CMOCKA_SHARED_LIBRARY} ${CMOCKA_LINK_LIBRARIES})
 set_property(TARGET
                  ${CMOCKA_SHARED_LIBRARY}
              PROPERTY
-                 OUTPUT_NAME
-                    cmocka
-             PROPERTY
                  DEFINE_SYMBOL
                      CMOCKA_EXPORTS
              PROPERTY
@@ -105,23 +102,11 @@ if (WITH_STATIC_LIB)
     set_property(TARGET
                      ${CMOCKA_STATIC_LIBRARY}
                  PROPERTY
-                     OUTPUT_NAME
-                        cmocka
-                 PROPERTY
                      DEFINE_SYMBOL
                          CMOCKA_EXPORTS
                  PROPERTY
                      LINK_FLAGS
                         "${DEFAULT_LINK_FLAGS}")
-
-    if (NOT WIN32)
-        set_target_properties(
-            ${CMOCKA_STATIC_LIBRARY}
-                PROPERTIES
-                    OUTPUT_NAME
-                        cmocka
-        )
-    endif()
 
     install(TARGETS
                 ${CMOCKA_STATIC_LIBRARY}
