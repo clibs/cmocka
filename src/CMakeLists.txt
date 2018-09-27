@@ -10,7 +10,7 @@ set(CMOCKA_SHARED_LIBRARY
 
 if (BUILD_STATIC_LIB)
     set(CMOCKA_STATIC_LIBRARY
-        cmocka_static
+        cmocka-static
         CACHE INTERNAL "cmocka static library"
     )
 endif()
