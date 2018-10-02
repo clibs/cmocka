@@ -16,3 +16,6 @@ set(CMAKE_COLOR_MAKEFILE ON)
 
 # Create the compile command database for clang by default
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Always build with -fPIC
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
