@@ -51,9 +51,9 @@ if (MINGW)
 endif (MINGW)
 
 # check subdirectories
-add_subdirectory(doc)
 add_subdirectory(include)
 add_subdirectory(src)
+add_subdirectory(doc)
 
 include(AddCMockaTest)
 if (UNIT_TESTING)
