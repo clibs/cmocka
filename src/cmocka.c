@@ -567,7 +567,7 @@ static void fail_if_leftover_values(const char *test_name) {
 
     remove_always_return_values_from_list(&global_call_ordering_head);
     if (check_for_leftover_values_list(&global_call_ordering_head,
-        "%s function was expected to be called but was not not.\n")) {
+        "%s function was expected to be called but was not.\n")) {
         error_occurred = 1;
     }
     if (error_occurred) {
