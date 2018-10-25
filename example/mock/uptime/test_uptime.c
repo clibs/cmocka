@@ -167,6 +167,8 @@ static void test_calc_uptime_null(void **state)
 
     uptime_str = calc_uptime();
     assert_null(uptime_str);
+
+    free(uptime_str);
 }
 
 int main(void)
