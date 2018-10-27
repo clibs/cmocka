@@ -966,6 +966,24 @@ void expect_any(#function, #parameter);
 
 #ifdef DOXYGEN
 /**
+ * @brief Add an event to always check if a parameter (of any value) has been passed.
+ *
+ * The event is triggered by calling check_expected() in the mocked function.
+ *
+ * @param[in]  #function  The function to add the check for.
+ *
+ * @param[in]  #parameter The name of the parameter passed to the function.
+ *
+ * @see check_expected().
+ */
+void expect_any_always(#function, #parameter);
+#else
+#define expect_any_always(function, parameter) \
+        expect_any_count(function, parameter, WILL_RETURN_ALWAYS)
+#endif
+
+#ifdef DOXYGEN
+/**
  * @brief Add an event to repeatedly check if a parameter (of any value) has
  *        been passed.
  *
