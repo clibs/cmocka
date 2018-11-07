@@ -77,6 +77,37 @@ fedora/undefined-sanitizer:
     paths:
       - obj/
 
+fedora/csbuild:
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
+  script:
+  - |
+    if [[ -z "$CI_COMMIT_BEFORE_SHA" ]]; then
+        export CI_COMMIT_BEFORE_SHA=$(git rev-parse HEAD^)
+    fi
+
+    # Check if the commit exists in this branch
+    # This is not the case for a force push
+    git branch --contains $CI_COMMIT_BEFORE_SHA 2>/dev/null || export CI_COMMIT_BEFORE_SHA=$(git rev-parse HEAD^)
+
+    export CI_COMMIT_RANGE="$CI_COMMIT_BEFORE_SHA..$CI_COMMIT_SHA"
+
+  - csbuild
+    --build-dir=obj-csbuild
+    --prep-cmd="cmake -DCMAKE_BUILD_TYPE=Debug -DPICKY_DEVELOPER=ON -DUNIT_TESTING=ON @SRCDIR@"
+    --build-cmd "make clean && make -j$(nproc)"
+    --git-commit-range $CI_COMMIT_RANGE
+    --color
+    --print-current --print-fixed
+  tags:
+  - shared
+  except:
+  - tags
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - obj-csbuild/
+
 freebsd/x86_64:
   image:
   script:
