@@ -78,6 +78,8 @@ install(TARGETS
             ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION
             ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION
+            ${CMAKE_INSTALL_BINDIR}
         COMPONENT
             ${PROJECT_NAME})
 
