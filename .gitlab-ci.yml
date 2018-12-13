@@ -326,3 +326,57 @@ tumbleweed/static-analysis:
     when: on_failure
     paths:
       - obj/scan
+
+visualstudio/x86_64:
+  script:
+  - $env:VCPKG_DEFAULT_TRIPLET="x64-windows"
+  - mkdir obj
+  - cd obj
+  - cmake
+    -A x64
+    -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_TOOLCHAIN_FILE"
+    -DPICKY_DEVELOPER=ON
+    -DUNIT_TESTING=ON ..
+  - cmake --build .
+  - ctest --output-on-failure
+  tags:
+  - vs2017
+  - windows
+  except:
+  - tags
+  only:
+  - branches@cmocka/cmocka
+  - branches@ansasaki/cmocka
+  - branches@cryptomilk/cmocka
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - obj/
+
+visualstudio/x86:
+  script:
+  - $env:VCPKG_DEFAULT_TRIPLET="x86-windows"
+  - mkdir obj
+  - cd obj
+  - cmake
+      -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_TOOLCHAIN_FILE"
+      -DPICKY_DEVELOPER=ON
+      -DWITH_SFTP=ON -DWITH_SERVER=ON -DWITH_ZLIB=ON -DWITH_PCAP=ON
+      -DUNIT_TESTING=ON ..
+  - cmake --build .
+  - ctest --output-on-failure
+  tags:
+  - vs2017
+  - windows
+  except:
+  - tags
+  only:
+  - branches@cmocka/cmocka
+  - branches@ansasaki/cmocka
+  - branches@cryptomilk/cmocka
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - obj/
