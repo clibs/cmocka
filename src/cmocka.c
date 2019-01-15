@@ -43,6 +43,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <float.h>
 
 /*
  * This allows to add a platform specific header file. Some embedded platforms
@@ -1122,6 +1123,62 @@ void _expect_function_call(
     list_add_value(&global_call_ordering_head, ordering, count);
 }
 
+/* Returns 1 if the specified float values are equal, else returns 0. */
+static int float_compare(const float left,
+                         const float right,
+                         const float epsilon) {
+    float absLeft;
+    float absRight;
+    float largest;
+    float relDiff;
+
+    float diff = left - right;
+    diff = (diff >= 0.f) ? diff : -diff;
+
+    // Check if the numbers are really close -- needed
+        // when comparing numbers near zero.
+        if (diff <= epsilon) {
+            return 1;
+    }
+
+    absLeft = (left >= 0.f) ? left : -left;
+    absRight = (right >= 0.f) ? right : -right;
+
+        largest = (absRight > absLeft) ? absRight : absLeft;
+    relDiff = largest * FLT_EPSILON;
+
+        if (diff > relDiff) {
+        return 0;
+    }
+    return 1;
+}
+
+/* Returns 1 if the specified float values are equal. If the values are not equal
+ * an error is displayed and 0 is returned. */
+static int float_values_equal_display_error(const float left,
+                                            const float right,
+                                            const float epsilon) {
+    const int equal = float_compare(left, right, epsilon);
+    if (!equal) {
+        cm_print_error(FloatPrintfFormat " != "
+                   FloatPrintfFormat "\n", left, right);
+    }
+    return equal;
+}
+
+/* Returns 1 if the specified float values are different. If the values are equal
+ * an error is displayed and 0 is returned. */
+static int float_values_not_equal_display_error(const float left,
+                                                const float right,
+                                                const float epsilon) {
+    const int not_equal = (float_compare(left, right, epsilon) == 0);
+    if (!not_equal) {
+        cm_print_error(FloatPrintfFormat " == "
+                   FloatPrintfFormat "\n", left, right);
+    }
+    return not_equal;
+}
+
 /* Returns 1 if the specified values are equal.  If the values are not equal
  * an error is displayed and 0 is returned. */
 static int values_equal_display_error(const LargestIntegralType left,
@@ -1710,6 +1767,26 @@ void _assert_return_code(const LargestIntegralType result,
         } else {
             cm_print_error("%s < 0\n", expression);
         }
+        _fail(file, line);
+    }
+}
+
+void _assert_float_equal(const float a,
+                         const float b,
+                         const float epsilon,
+                         const char * const file,
+                         const int line) {
+    if (!float_values_equal_display_error(a, b, epsilon)) {
+        _fail(file, line);
+    }
+}
+
+void _assert_float_not_equal(const float a,
+                             const float b,
+                             const float epsilon,
+                             const char * const file,
+                             const int line) {
+    if (!float_values_not_equal_display_error(a, b, epsilon)) {
         _fail(file, line);
     }
 }

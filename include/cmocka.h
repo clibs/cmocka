@@ -106,6 +106,10 @@ typedef uintmax_t LargestIntegralType;
 # endif /* _WIN32 */
 #endif /* LargestIntegralTypePrintfFormat */
 
+#ifndef FloatPrintfFormat
+# define FloatPrintfFormat "%f"
+#endif /* FloatPrintfFormat */
+
 /* Perform an unsigned cast to LargestIntegralType. */
 #define cast_to_largest_integral_type(value) \
     ((LargestIntegralType)(value))
@@ -1235,6 +1239,51 @@ void assert_int_not_equal(int a, int b);
 
 #ifdef DOXYGEN
 /**
+ * @brief Assert that the two given float are equal given an epsilon.
+ *
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if the float are not equal (given an epsilon).
+ *
+ * @param[in]  a        The first float to compare.
+ *
+ * @param[in]  b        The float to compare against the first one.
+ *
+ * @param[in]  epsilon  The epsilon used as margin for float comparison.
+ */
+void assert_float_equal(float a, float b, float epsilon);
+#else
+#define assert_float_equal(a, b, epsilon) \
+	_assert_float_equal((float)a, \
+			(float)b, \
+			(float)epsilon, \
+			__FILE__, __LINE__)
+#endif
+
+#ifdef DOXYGEN
+/**
+ * @brief Assert that the two given float are not equal given an epsilon.
+ *
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if the float are not equal (given an epsilon).
+ *
+ * @param[in]  a        The first float to compare.
+ *
+ * @param[in]  b        The float to compare against the first one.
+ *
+ * @param[in]  epsilon  The epsilon used as margin for float comparison.
+ */
+void assert_float_not_equal(float a, float b, float epsilon);
+#else
+#define assert_float_not_equal(a, b, epsilon) \
+	_assert_float_not_equal((float)a, \
+			(float)b, \
+			(float)epsilon, \
+			__FILE__, __LINE__)
+#endif
+
+
+#ifdef DOXYGEN
+/**
  * @brief Assert that the two given strings are equal.
  *
  * The function prints an error message to standard error and terminates the
@@ -2217,6 +2266,12 @@ void _assert_return_code(const LargestIntegralType result,
                          const char * const expression,
                          const char * const file,
                          const int line);
+void _assert_float_equal(const float a, const float n,
+		const float epsilon, const char* const file,
+		const int line);
+void _assert_float_not_equal(const float a, const float n,
+		const float epsilon, const char* const file,
+		const int line);
 void _assert_int_equal(
     const LargestIntegralType a, const LargestIntegralType b,
     const char * const file, const int line);

@@ -15,6 +15,7 @@ set(CMOCKA_TESTS
     test_fixtures
     test_group_fixtures
     test_groups
+    test_float_macros
     test_assert_macros
     test_assert_macros_fail
     test_basics
