@@ -41,6 +41,7 @@ if (UNIX)
     add_c_compiler_flag("-Werror=strict-overflow" SUPPORTED_COMPILER_FLAGS)
     add_c_compiler_flag("-Wstrict-overflow=2" SUPPORTED_COMPILER_FLAGS)
     add_c_compiler_flag("-Wno-format-zero-length" SUPPORTED_COMPILER_FLAGS)
+    add_c_compiler_flag("-Wmissing-field-initializers" SUPPORTED_COMPILER_FLAGS)
 
     check_c_compiler_flag("-Wformat" REQUIRED_FLAGS_WFORMAT)
     if (REQUIRED_FLAGS_WFORMAT)
