@@ -41,12 +41,13 @@ int __stdcall IsDebuggerPresent();
 /**
  * @defgroup cmocka The CMocka API
  *
- * These headers or their equivalents should be included prior to including
+ * These headers or their equivalents MUST be included prior to including
  * this header file.
  * @code
  * #include <stdarg.h>
  * #include <stddef.h>
  * #include <setjmp.h>
+ * #include <stdint.h>
  * @endcode
  *
  * This allows test applications to use custom definitions of C standard
