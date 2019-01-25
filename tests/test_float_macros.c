@@ -23,7 +23,10 @@
 #include <cmocka.h>
 
 /* A test case that does check if float is equal. */
-static void float_test_success(void **state) {
+static void float_test_success(void **state)
+{
+    (void)state; /* unused */
+
     assert_float_equal(0.5f, 1.f / 2.f, 0.000001f);
     assert_float_not_equal(0.5, 0.499f, 0.000001f);
 }
