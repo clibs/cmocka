@@ -1897,11 +1897,11 @@ static ListNode* get_allocated_blocks_list(void) {
     return &global_allocated_blocks;
 }
 
-static void *libc_malloc(size_t size)
+static void *libc_calloc(size_t nmemb, size_t size)
 {
-#undef malloc
-    return malloc(size);
-#define malloc test_malloc
+#undef calloc
+    return calloc(nmemb, size);
+#define calloc test_calloc
 }
 
 static void libc_free(void *ptr)
@@ -1941,7 +1941,7 @@ static void vcm_print_error(const char* const format, va_list args)
     if (cm_error_message == NULL) {
         /* CREATE MESSAGE */
 
-        cm_error_message = libc_malloc(len + 1);
+        cm_error_message = libc_calloc(1, len + 1);
         if (cm_error_message == NULL) {
             /* TODO */
             goto end;
@@ -2021,6 +2021,7 @@ void* _test_calloc(const size_t number_of_elements, const size_t size,
     }
     return ptr;
 }
+#define calloc test_calloc
 
 
 /* Use the real free in this function. */
@@ -2966,7 +2967,7 @@ int _cmocka_run_group_tests(const char *group_name,
     /* Make sure LargestIntegralType is at least the size of a pointer. */
     assert_true(sizeof(LargestIntegralType) >= sizeof(void*));
 
-    cm_tests = (struct CMUnitTestState *)libc_malloc(sizeof(struct CMUnitTestState) * num_tests);
+    cm_tests = libc_calloc(1, sizeof(struct CMUnitTestState) * num_tests);
     if (cm_tests == NULL) {
         return -1;
     }
