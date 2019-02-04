@@ -1183,6 +1183,73 @@ static int float_values_not_equal_display_error(const float left,
     return not_equal;
 }
 
+/* Returns 1 if the specified double values are equal, else returns 0. */
+static int double_compare(const double left,
+                          const double right,
+                          const double epsilon) {
+    double absLeft;
+    double absRight;
+    double largest;
+    double relDiff;
+
+    double diff = left - right;
+    diff = (diff >= 0.f) ? diff : -diff;
+
+    /*
+     * Check if the numbers are really close -- needed
+     * when comparing numbers near zero.
+     */
+    if (diff <= epsilon) {
+        return 1;
+    }
+
+    absLeft = (left >= 0.f) ? left : -left;
+    absRight = (right >= 0.f) ? right : -right;
+
+    largest = (absRight > absLeft) ? absRight : absLeft;
+    relDiff = largest * FLT_EPSILON;
+
+    if (diff > relDiff) {
+        return 0;
+    }
+
+    return 1;
+}
+
+/*
+ * Returns 1 if the specified double values are equal. If the values are not
+ * equal an error is displayed and 0 is returned.
+ */
+static int double_values_equal_display_error(const double left,
+                                             const double right,
+                                             const double epsilon) {
+    const int equal = double_compare(left, right, epsilon);
+
+    if (!equal) {
+        cm_print_error(DoublePrintfFormat " != "
+                   DoublePrintfFormat "\n", left, right);
+    }
+
+    return equal;
+}
+
+/*
+ * Returns 1 if the specified double values are different. If the values are
+ * equal an error is displayed and 0 is returned.
+ */
+static int double_values_not_equal_display_error(const double left,
+                                                 const double right,
+                                                 const double epsilon) {
+    const int not_equal = (double_compare(left, right, epsilon) == 0);
+
+    if (!not_equal) {
+        cm_print_error(DoublePrintfFormat " == "
+                   DoublePrintfFormat "\n", left, right);
+    }
+
+    return not_equal;
+}
+
 /* Returns 1 if the specified values are equal.  If the values are not equal
  * an error is displayed and 0 is returned. */
 static int values_equal_display_error(const LargestIntegralType left,
@@ -1791,6 +1858,26 @@ void _assert_float_not_equal(const float a,
                              const char * const file,
                              const int line) {
     if (!float_values_not_equal_display_error(a, b, epsilon)) {
+        _fail(file, line);
+    }
+}
+
+void _assert_double_equal(const double a,
+                          const double b,
+                          const double epsilon,
+                          const char * const file,
+                          const int line) {
+    if (!double_values_equal_display_error(a, b, epsilon)) {
+        _fail(file, line);
+    }
+}
+
+void _assert_double_not_equal(const double a,
+                              const double b,
+                              const double epsilon,
+                              const char * const file,
+                              const int line) {
+    if (!double_values_not_equal_display_error(a, b, epsilon)) {
         _fail(file, line);
     }
 }
