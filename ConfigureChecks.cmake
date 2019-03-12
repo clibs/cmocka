@@ -100,7 +100,7 @@ else (WIN32)
 endif (WIN32)
 
 find_library(RT_LIBRARY rt)
-if (RT_LIBRARY AND NOT LINUX)
+if (RT_LIBRARY AND NOT LINUX AND NOT ANDROID)
     set(CMOCKA_REQUIRED_LIBRARIES ${RT_LIBRARY} CACHE INTERNAL "cmocka required system libraries")
 endif ()
 
