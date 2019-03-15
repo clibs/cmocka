@@ -26,7 +26,9 @@ set(CMOCKA_TESTS
     test_ordering_fail
     test_returns
     test_returns_fail
-    test_wildcard)
+    test_wildcard
+    test_skip_filter
+    )
 
 if (TEST_EXCEPTION_HANDLER)
     list(APPEND CMOCKA_TESTS test_exception_handler)
