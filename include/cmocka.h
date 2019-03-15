@@ -2358,7 +2358,7 @@ void cmocka_set_message_output(enum cm_message_output output);
 /**
  * @brief Set a pattern to only run the test matching the pattern.
  *
- * This allows to filter tests and only run the ones matching the pattern. Thep
+ * This allows to filter tests and only run the ones matching the pattern. The
  * pattern can include two wildards. The first is '*', a wildcard that matches
  * zero or more characters, or ‘?’, a wildcard that matches exactly one
  * character.
