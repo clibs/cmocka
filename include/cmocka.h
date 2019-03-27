@@ -121,7 +121,7 @@ typedef uintmax_t LargestIntegralType;
     /* WIN32 is an ILP32 platform */
     typedef unsigned int uintptr_t;
 # elif defined(_WIN64)
-    typedef unsigned long int uintptr_t
+    typedef unsigned long int uintptr_t;
 # else /* _WIN32 */
 
 /* ILP32 and LP64 platforms */
