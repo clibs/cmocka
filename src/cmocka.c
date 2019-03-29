@@ -70,7 +70,9 @@
 #define MALLOC_ALLOC_PATTERN 0xBA
 #define MALLOC_FREE_PATTERN 0xCD
 /* Alignment of allocated blocks.  NOTE: This must be base2. */
+#ifndef MALLOC_ALIGNMENT
 #define MALLOC_ALIGNMENT sizeof(size_t)
+#endif
 
 /* Printf formatting for source code locations. */
 #define SOURCE_LOCATION_FORMAT "%s:%u"
