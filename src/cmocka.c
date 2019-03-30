@@ -3373,7 +3373,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
 int _run_group_tests(const UnitTest * const tests, const size_t number_of_tests)
 {
     UnitTestFunction setup = NULL;
-    const char *setup_name;
+    const char *setup_name = NULL;
     size_t num_setups = 0;
     UnitTestFunction teardown = NULL;
     const char *teardown_name = NULL;
