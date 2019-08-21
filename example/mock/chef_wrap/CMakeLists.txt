@@ -7,7 +7,7 @@ include_directories(
 )
 
 add_executable(waiter_test_wrap waiter_test_wrap.c chef.c)
-target_link_libraries(waiter_test_wrap ${CMOCKA_SHARED_LIBRARY})
+target_link_libraries(waiter_test_wrap cmocka::cmocka)
 
 add_test(waiter_test_wrap ${CMAKE_CURRENT_BINARY_DIR}/waiter_test_wrap)
 

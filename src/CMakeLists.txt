@@ -3,17 +3,20 @@ project(cmocka-library C)
 set(CMOCKA_PLATFORM_INCLUDE CACHE PATH "Path to include directory for cmocka_platform.h")
 mark_as_advanced(CMOCKA_PLATFORM_INCLUDE)
 
-set(CMOCKA_SHARED_LIBRARY
-    cmocka
-    CACHE INTERNAL "cmocka shared library"
-)
-
-if (BUILD_STATIC_LIB)
+set(cmocka_library_name)
+if (BUILD_SHARED_LIBS)
+    set(CMOCKA_SHARED_LIBRARY
+        cmocka
+        CACHE INTERNAL "cmocka shared library"
+    )
+    set(cmocka_library_name ${CMOCKA_SHARED_LIBRARY})
+else (BUILD_SHARED_LIBS)
     set(CMOCKA_STATIC_LIBRARY
         cmocka-static
         CACHE INTERNAL "cmocka static library"
     )
-endif()
+    set(cmocka_library_name ${CMOCKA_STATIC_LIBRARY})
+endif (BUILD_SHARED_LIBS)
 
 set(CMOCKA_LINK_LIBRARIES
     ${CMOCKA_REQUIRED_LIBRARIES}
@@ -31,9 +34,9 @@ if (WIN32)
     )
 endif (WIN32)
 
-add_library(${CMOCKA_SHARED_LIBRARY} SHARED ${cmocka_SRCS})
+add_library(${cmocka_library_name} ${cmocka_SRCS})
 
-target_include_directories(${CMOCKA_SHARED_LIBRARY}
+target_include_directories(${cmocka_library_name}
                            PRIVATE
                                ${CMOCKA_PLATFORM_INCLUDE}
                                ${cmocka_BINARY_DIR}
@@ -41,39 +44,46 @@ target_include_directories(${CMOCKA_SHARED_LIBRARY}
                                ${cmocka-header_SOURCE_DIR})
 
 
-target_compile_options(${CMOCKA_SHARED_LIBRARY}
+target_compile_options(${cmocka_library_name}
                        PRIVATE
                            ${DEFAULT_C_COMPILE_FLAGS}
                            -DHAVE_CONFIG_H)
 if (CMOCKA_PLATFORM_INCLUDE)
-    target_compile_options(${CMOCKA_SHARED_LIBRARY}
+    target_compile_options(${cmocka_library_name}
                            PRIVATE
                                -DCMOCKA_PLATFORM_INCLUDE)
 endif()
 
-target_link_libraries(${CMOCKA_SHARED_LIBRARY} ${CMOCKA_LINK_LIBRARIES})
+target_link_libraries(${cmocka_library_name} ${CMOCKA_LINK_LIBRARIES})
 set_property(TARGET
-                 ${CMOCKA_SHARED_LIBRARY}
+                 ${cmocka_library_name}
              PROPERTY
                  DEFINE_SYMBOL
                      CMOCKA_EXPORTS
-             PROPERTY
-                 LINKER_FLAGS
-                     "${DEFAULT_LINK_FLAGS}")
+)
 
-if (NOT WIN32)
-    set_target_properties(
-        ${CMOCKA_SHARED_LIBRARY}
-            PROPERTIES
+set_property(TARGET
+                 ${cmocka_library_name}
+             PROPERTY
                 VERSION
                     ${LIBRARY_VERSION}
+)
+set_property(TARGET
+                 ${cmocka_library_name}
+             PROPERTY
                 SOVERSION
-                    ${LIBRARY_SOVERSION}
-    )
-endif (NOT WIN32)
+                    ${LIBRARY_SOVERSION})
+
+set_property(TARGET
+                ${cmocka_library_name}
+             PROPERTY
+                LINK_FLAGS
+                "${DEFAULT_LINK_FLAGS}")
+
+add_library(cmocka::cmocka ALIAS ${cmocka_library_name})
 
 install(TARGETS
-            ${CMOCKA_SHARED_LIBRARY}
+            ${cmocka_library_name}
         ARCHIVE DESTINATION
             ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION
@@ -83,41 +93,3 @@ install(TARGETS
         COMPONENT
             ${PROJECT_NAME})
 
-if (BUILD_STATIC_LIB)
-    add_library(${CMOCKA_STATIC_LIBRARY} STATIC ${cmocka_SRCS})
-
-    target_include_directories(${CMOCKA_STATIC_LIBRARY}
-                               PRIVATE
-                                   ${CMOCKA_PLATFORM_INCLUDE}
-                                   ${cmocka_BINARY_DIR}
-                               PUBLIC
-                                   ${cmocka-header_SOURCE_DIR})
-
-    target_compile_options(${CMOCKA_STATIC_LIBRARY}
-                           PRIVATE
-                               ${DEFAULT_C_COMPILE_FLAGS}
-                               -DHAVE_CONFIG_H)
-    if (CMOCKA_PLATFORM_INCLUDE)
-        target_compile_options(${CMOCKA_STATIC_LIBRARY}
-                               PRIVATE
-                                   -DCMOCKA_PLATFORM_INCLUDE)
-    endif()
-
-    set_property(TARGET
-                     ${CMOCKA_STATIC_LIBRARY}
-                 PROPERTY
-                     DEFINE_SYMBOL
-                         CMOCKA_EXPORTS
-                 PROPERTY
-                     LINK_FLAGS
-                        "${DEFAULT_LINK_FLAGS}")
-
-    if (WITH_STATIC_LIB)
-        install(TARGETS
-                    ${CMOCKA_STATIC_LIBRARY}
-                ARCHIVE DESTINATION
-                    ${CMAKE_INSTALL_LIBDIR}
-                COMPONENT
-                    ${PROJECT_NAME})
-    endif()
-endif (BUILD_STATIC_LIB)

@@ -12,7 +12,7 @@ set_property(TARGET
 add_cmocka_test(test_uptime
                 SOURCES test_uptime.c
                 COMPILE_OPTIONS ${DEFAULT_C_COMPILE_FLAGS}
-                LINK_LIBRARIES ${CMOCKA_SHARED_LIBRARY})
+                LINK_LIBRARIES cmocka::cmocka)
 set_property(TARGET
                  test_uptime
              PROPERTY

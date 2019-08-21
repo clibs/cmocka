@@ -5,9 +5,7 @@ option(UNIT_TESTING "Build with unit testing" OFF)
 option(PICKY_DEVELOPER "Build with picky developer flags" OFF)
 
 if (WITH_STATIC_LIB)
-    set(BUILD_STATIC_LIB ON)
+    set(BUILD_SHARED_LIBS OFF)
+else (WITH_STATIC_LIB)
+    set(BUILD_SHARED_LIBS ON)
 endif (WITH_STATIC_LIB)
-
-if (UNIT_TESTING)
-  set(BUILD_STATIC_LIB ON)
-endif (UNIT_TESTING)

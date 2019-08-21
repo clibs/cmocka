@@ -28,6 +28,7 @@ set(CMOCKA_TESTS
     test_returns_fail
     test_wildcard
     test_skip_filter
+    test_cmockery
     )
 
 if (TEST_EXCEPTION_HANDLER)
@@ -38,20 +39,17 @@ foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
     add_cmocka_test(${_CMOCKA_TEST}
                     SOURCES ${_CMOCKA_TEST}.c
                     COMPILE_OPTIONS ${DEFAULT_C_COMPILE_FLAGS}
-                    LINK_LIBRARIES ${CMOCKA_STATIC_LIBRARY}
+                    LINK_LIBRARIES cmocka::cmocka
                     LINK_OPTIONS ${DEFAULT_LINK_FLAGS})
     target_include_directories(${_CMOCKA_TEST} PRIVATE ${cmocka_BINARY_DIR})
+
+    add_cmocka_test_environment(${_CMOCKA_TEST})
 endforeach()
 
 ### Special Cases
 if (${CMAKE_C_COMPILER_ID} MATCHES "(GNU|Clang)")
     set_source_files_properties(test_cmockery.c PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
 endif()
-add_cmocka_test(test_cmockery
-                SOURCES test_cmockery.c
-                COMPILE_OPTIONS ${DEFAULT_C_COMPILE_FLAGS}
-                LINK_LIBRARIES ${CMOCKA_STATIC_LIBRARY}
-                LINK_OPTIONS ${DEFAULT_LINK_FLAGS})
 
 ### Exceptions
 
@@ -124,6 +122,7 @@ set_tests_properties(
 )
 
 add_test(test_setup_fail_1_failed ${TARGET_SYSTEM_EMULATOR} test_setup_fail)
+add_cmocka_test_environment(test_setup_fail_1_failed)
 set_tests_properties(
     test_setup_fail_1_failed
         PROPERTIES
@@ -132,6 +131,7 @@ set_tests_properties(
 )
 
 add_test (test_setup_fail_1_passed ${TARGET_SYSTEM_EMULATOR} test_setup_fail)
+add_cmocka_test_environment(test_setup_fail_1_passed)
 set_tests_properties(
     test_setup_fail_1_passed
         PROPERTIES
@@ -140,6 +140,7 @@ set_tests_properties(
 )
 
 add_test (test_setup_fail_match_failed ${TARGET_SYSTEM_EMULATOR} test_setup_fail)
+add_cmocka_test_environment(test_setup_fail_match_failed)
 set_tests_properties(
     test_setup_fail_match_failed
         PROPERTIES
@@ -148,6 +149,7 @@ set_tests_properties(
 )
 
 add_test (test_setup_fail_match_passed ${TARGET_SYSTEM_EMULATOR} test_setup_fail)
+add_cmocka_test_environment(test_setup_fail_match_passed)
 set_tests_properties(
     test_setup_fail_match_passed
         PROPERTIES
@@ -234,10 +236,12 @@ foreach(_TEST_OUTPUT_FMT ${TEST_OUTPUT_FMTS})
     foreach(_OUTPUT_TEST ${OUTPUT_TESTS})
         set(TEST_NAME ${_OUTPUT_TEST}_${_TEST_OUTPUT_FMT})
         add_test(${TEST_NAME} ${TARGET_SYSTEM_EMULATOR} ${_OUTPUT_TEST})
+        add_cmocka_test_environment(${TEST_NAME})
 
         set_property(
             TEST
             ${TEST_NAME}
+            APPEND
             PROPERTY
                 ENVIRONMENT CMOCKA_MESSAGE_OUTPUT=${_TEST_OUTPUT_FMT}
             )

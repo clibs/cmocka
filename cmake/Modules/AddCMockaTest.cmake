@@ -118,3 +118,26 @@ function(ADD_CMOCKA_TEST _TARGET_NAME)
     )
 
 endfunction (ADD_CMOCKA_TEST)
+
+function(ADD_CMOCKA_TEST_ENVIRONMENT _TARGET_NAME)
+    if (WIN32 OR CYGWIN OR MINGW)
+        file(TO_NATIVE_PATH "${cmocka-library_BINARY_DIR}" CMOCKA_DLL_PATH)
+
+        if (TARGET_SYSTEM_EMULATOR)
+            set(DLL_PATH_ENV "WINEPATH=${CMOCKA_DLL_PATH};$ENV{WINEPATH}")
+        else()
+            set(DLL_PATH_ENV "PATH=${CMOCKA_DLL_PATH};$ENV{PATH}")
+        endif()
+        #
+        # IMPORTANT NOTE: The set_tests_properties(), below, internally
+        # stores its name/value pairs with a semicolon delimiter.
+        # because of this we must protect the semicolons in the path
+        #
+        string(REPLACE ";" "\\;" DLL_PATH_ENV "${DLL_PATH_ENV}")
+
+        set_tests_properties(${_TARGET_NAME}
+                             PROPERTIES
+                                ENVIRONMENT
+                                    "${DLL_PATH_ENV}")
+    endif()
+endfunction()
