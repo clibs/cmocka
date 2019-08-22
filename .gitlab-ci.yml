@@ -42,6 +42,21 @@ fedora/x86_64:
     paths:
       - obj/
 
+fedora/meson:
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
+  script:
+  - meson build -Dunit_testing=true &&
+    meson test -C build --print-errorlogs
+  tags:
+  - shared
+  except:
+  - tags
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - build/
+
 fedora/address-sanitizer:
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
   script:
