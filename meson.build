@@ -41,3 +41,7 @@ pkgconfig.generate(libraries : [libcmocka],
                    name : 'cmocka',
                    filebase : 'cmocka',
                    description : 'The cmocka unit testing library')
+
+if get_option('unit_testing')
+	subdir('tests')
+endif
