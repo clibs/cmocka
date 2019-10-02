@@ -174,16 +174,19 @@ set(TEST_OUTPUT_FMTS
     xml)
 
 set(test_basics_tap_out
-    "^1\\.\\.2"
+    "^TAP version 13"
+    "1\\.\\.2"
     "ok 1 - null_test_success"
     "ok 2 - int_test_success"
     "# ok - tests")
 set(test_assert_macros_fail_tap_out
-    "^1\\.\\.1"
+    "^TAP version 13"
+    "1\\.\\.1"
     "not ok 1 - test_assert_return_code_fail"
     "#[^\n\r]+[\n\r]#[^\n\r]+[\n\r]# not ok - tests")
 set(test_groups_tap_out
-    "^1\\.\\.1"
+    "^TAP version 13"
+    "1\\.\\.1"
     "ok 1 - null_test_success"
     "# ok - test_group1"
     "1\\.\\.1"

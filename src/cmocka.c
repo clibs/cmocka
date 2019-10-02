@@ -42,6 +42,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <time.h>
 #include <float.h>
 
@@ -2604,6 +2605,12 @@ static void cmprintf_standard(enum cm_printf_type type,
 
 static void cmprintf_group_start_tap(const size_t num_tests)
 {
+    static bool version_printed = false;
+    if (!version_printed) {
+        print_message("TAP version 13\n");
+        version_printed = true;
+    }
+
     print_message("1..%u\n", (unsigned)num_tests);
 }
 
