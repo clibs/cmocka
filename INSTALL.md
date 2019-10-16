@@ -7,7 +7,7 @@
 In order to build cmocka, you need to install several components:
 
 - A C compiler
-- [CMake](http://www.cmake.org) >= 2.8.0.
+- [CMake](http://www.cmake.org) >= 3.5.0.
 
 Note that these version numbers are version we know works correctly. If you
 build and run cmocka successfully with an older version, please let us know.
