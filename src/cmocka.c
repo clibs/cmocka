@@ -2528,7 +2528,7 @@ static void cmprintf_group_finish_tap(const char *group_name,
 }
 
 static void cmprintf_tap(enum cm_printf_type type,
-                         uint32_t test_number,
+                         size_t test_number,
                          const char *test_name,
                          const char *error_message)
 {
