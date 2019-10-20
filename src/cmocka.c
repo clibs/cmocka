@@ -2745,7 +2745,7 @@ static double cm_secdiff(struct timespec clock1, struct timespec clock0)
 
     diff = cm_tspecdiff(clock1, clock0);
 
-    ret = diff.tv_sec;
+    ret = (double) diff.tv_sec;
     ret += (double) diff.tv_nsec / (double) 1E9;
 
     return ret;
