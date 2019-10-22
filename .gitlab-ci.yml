@@ -368,6 +368,7 @@ visualstudio/x86_64:
   - cmake
     -A x64
     -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_TOOLCHAIN_FILE"
+    -DCMAKE_BUILD_TYPE=Debug
     -DPICKY_DEVELOPER=ON
     -DUNIT_TESTING=ON ..
   - cmake --build .
@@ -394,8 +395,8 @@ visualstudio/x86:
   - cd obj
   - cmake
       -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_TOOLCHAIN_FILE"
+      -DCMAKE_BUILD_TYPE=Debug
       -DPICKY_DEVELOPER=ON
-      -DWITH_SFTP=ON -DWITH_SERVER=ON -DWITH_ZLIB=ON -DWITH_PCAP=ON
       -DUNIT_TESTING=ON ..
   - cmake --build .
   - ctest --output-on-failure
