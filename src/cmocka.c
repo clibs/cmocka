@@ -3131,7 +3131,7 @@ int _cmocka_run_group_tests(const char *group_name,
     libc_free(cm_tests);
     fail_if_blocks_allocated(group_check_point, "cmocka_group_tests");
 
-    return total_failed + total_errors;
+    return (int)(total_failed + total_errors);
 }
 
 /****************************************************************************
