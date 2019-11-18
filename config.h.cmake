@@ -75,6 +75,10 @@
 
 #cmakedefine HAVE_STRUCT_TIMESPEC 1
 
+/***************************** TYPES *****************************/
+
+#cmakedefine HAVE_UINTPTR_T 1
+
 /*************************** FUNCTIONS ***************************/
 
 /* Define to 1 if you have the `calloc' function. */

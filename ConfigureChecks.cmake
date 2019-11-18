@@ -70,6 +70,9 @@ if (HAVE_TIME_H)
     check_struct_has_member("struct timespec" tv_sec "time.h" HAVE_STRUCT_TIMESPEC)
 endif (HAVE_TIME_H)
 
+# TYPES
+check_type_size(uintptr_t UINTPTR_T)
+
 # FUNCTIONS
 check_function_exists(calloc HAVE_CALLOC)
 check_function_exists(exit HAVE_EXIT)
