@@ -1835,7 +1835,7 @@ static inline void _unit_test_dummy(void **state) {
  * @code
  * static int setup(void **state) {
  *      int *answer = malloc(sizeof(int));
- *      if (*answer == NULL) {
+ *      if (answer == NULL) {
  *          return -1;
  *      }
  *      *answer = 42;
@@ -1903,7 +1903,7 @@ int cmocka_run_group_tests(const struct CMUnitTest group_tests[],
  * @code
  * static int setup(void **state) {
  *      int *answer = malloc(sizeof(int));
- *      if (*answer == NULL) {
+ *      if (answer == NULL) {
  *          return -1;
  *      }
  *      *answer = 42;
