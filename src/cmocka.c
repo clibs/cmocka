@@ -1148,10 +1148,10 @@ static int float_compare(const float left,
     absLeft = (left >= 0.f) ? left : -left;
     absRight = (right >= 0.f) ? right : -right;
 
-        largest = (absRight > absLeft) ? absRight : absLeft;
+    largest = (absRight > absLeft) ? absRight : absLeft;
     relDiff = largest * FLT_EPSILON;
 
-        if (diff > relDiff) {
+    if (diff > relDiff) {
         return 0;
     }
     return 1;
