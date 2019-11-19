@@ -26,8 +26,8 @@ target_include_directories(cmocka
                                ${CMOCKA_PLATFORM_INCLUDE}
                                ${cmocka_BINARY_DIR}
                            PUBLIC
-                               ${cmocka-header_SOURCE_DIR})
-
+                               $<BUILD_INTERFACE:${cmocka-header_SOURCE_DIR}>
+                               $<INSTALL_INTERFACE:include>)
 
 target_compile_options(cmocka
                        PRIVATE
@@ -67,16 +67,15 @@ set_property(TARGET
 
 add_library(cmocka::cmocka ALIAS cmocka)
 
-install(TARGETS
-            cmocka
-        ARCHIVE DESTINATION
-            ${CMAKE_INSTALL_LIBDIR}
-        LIBRARY DESTINATION
-            ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION
-            ${CMAKE_INSTALL_BINDIR}
-        COMPONENT
-            ${PROJECT_NAME})
+install(TARGETS cmocka
+        EXPORT cmocka-config
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        COMPONENT ${PROJECT_NAME})
+
+install(EXPORT cmocka-config
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cmocka)
 
 if (UNIT_TESTING)
     # Internal library

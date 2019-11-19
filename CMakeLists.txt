@@ -75,40 +75,13 @@ install(
     pkgconfig
 )
 
-# cmake config files
-if (WIN32)
-    set(CMOCKA_LIBRARY_NAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_IMPORT_LIBRARY_SUFFIX})
-else()
-    set(CMOCKA_LIBRARY_NAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-endif()
-
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmocka-build-tree-settings.cmake.in
-          ${CMAKE_CURRENT_BINARY_DIR}/cmocka-build-tree-settings.cmake
-          @ONLY
-)
-
-set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR} CACHE INTERNAL "")
-set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR} CACHE INTERNAL "")
-configure_package_config_file(${PROJECT_NAME}-config.cmake.in
-                              ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
-                              PATH_VARS
-                                  INCLUDE_INSTALL_DIR LIB_INSTALL_DIR
-                              INSTALL_DESTINATION
-                                  ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/${PROJECT_NAME})
-
 write_basic_package_version_file(${PROJECT_NAME}-config-version.cmake
                                  COMPATIBILITY
                                      AnyNewerVersion)
 
-install(
-    FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-    DESTINATION
-        ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-    COMPONENT
-        devel
-)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+        COMPONENT devel)
 
 # Add 'make dist' target which makes sure to invoke cmake before
 add_custom_target(dist
