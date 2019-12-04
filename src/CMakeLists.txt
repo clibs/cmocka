@@ -75,6 +75,7 @@ install(TARGETS cmocka
         COMPONENT ${PROJECT_NAME})
 
 install(EXPORT cmocka-config
+        NAMESPACE cmocka::
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/cmocka)
 
 if (UNIT_TESTING)
