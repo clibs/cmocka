@@ -2529,7 +2529,8 @@ static void cmprintf_group_start_standard(const size_t num_tests)
                   (unsigned)num_tests);
 }
 
-static void cmprintf_group_finish_standard(size_t total_executed,
+static void cmprintf_group_finish_standard(const char *group_name,
+                                           size_t total_executed,
                                            size_t total_passed,
                                            size_t total_failed,
                                            size_t total_errors,
@@ -2538,12 +2539,16 @@ static void cmprintf_group_finish_standard(size_t total_executed,
 {
     size_t i;
 
-    print_message("[==========] %u test(s) run.\n", (unsigned)total_executed);
+    print_message("[==========] %s: %zu test(s) run.\n",
+                  group_name,
+                  total_executed);
     print_error("[  PASSED  ] %u test(s).\n",
                 (unsigned)(total_passed));
 
     if (total_skipped) {
-        print_error("[  SKIPPED ] %"PRIdS " test(s), listed below:\n", total_skipped);
+        print_error("[  SKIPPED ] %s: %zu test(s), listed below:\n",
+                    group_name,
+                    total_skipped);
         for (i = 0; i < total_executed; i++) {
             struct CMUnitTestState *cmtest = &cm_tests[i];
 
@@ -2551,11 +2556,13 @@ static void cmprintf_group_finish_standard(size_t total_executed,
                 print_error("[  SKIPPED ] %s\n", cmtest->test->name);
             }
         }
-        print_error("\n %u SKIPPED TEST(S)\n", (unsigned)(total_skipped));
+        print_error("\n %zu SKIPPED TEST(S)\n", total_skipped);
     }
 
     if (total_failed) {
-        print_error("[  FAILED  ] %"PRIdS " test(s), listed below:\n", total_failed);
+        print_error("[  FAILED  ] %s: %zu test(s), listed below:\n",
+                    group_name,
+                    total_failed);
         for (i = 0; i < total_executed; i++) {
             struct CMUnitTestState *cmtest = &cm_tests[i];
 
@@ -2563,8 +2570,8 @@ static void cmprintf_group_finish_standard(size_t total_executed,
                 print_error("[  FAILED  ] %s\n", cmtest->test->name);
             }
         }
-        print_error("\n %u FAILED TEST(S)\n",
-                    (unsigned)(total_failed + total_errors));
+        print_error("\n %zu FAILED TEST(S)\n",
+                    (total_failed + total_errors));
     }
 }
 
@@ -2726,17 +2733,21 @@ static void cmprintf_group_finish(const char *group_name,
 
     switch (output) {
     case CM_OUTPUT_STDOUT:
-        cmprintf_group_finish_standard(total_executed,
-                                    total_passed,
-                                    total_failed,
-                                    total_errors,
-                                    total_skipped,
-                                    cm_tests);
+        cmprintf_group_finish_standard(group_name,
+                                       total_executed,
+                                       total_passed,
+                                       total_failed,
+                                       total_errors,
+                                       total_skipped,
+                                       cm_tests);
         break;
     case CM_OUTPUT_SUBUNIT:
         break;
     case CM_OUTPUT_TAP:
-        cmprintf_group_finish_tap(group_name, total_executed, total_passed, total_skipped);
+        cmprintf_group_finish_tap(group_name,
+                                  total_executed,
+                                  total_passed,
+                                  total_skipped);
         break;
     case CM_OUTPUT_XML:
         cmprintf_group_finish_xml(group_name,

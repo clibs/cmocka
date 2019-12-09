@@ -67,7 +67,7 @@ set_tests_properties(
     test_assert_macros_fail
         PROPERTIES
         PASS_REGULAR_EXPRESSION
-        "\\[  FAILED  \\] 1 test"
+        "\\[  FAILED  \\] tests: 1 test"
 )
 
 # test_ordering ensure proper failures
@@ -75,7 +75,7 @@ set_tests_properties(
     test_ordering_fail
         PROPERTIES
         PASS_REGULAR_EXPRESSION
-        "\\[  FAILED  \\] 7 test"
+        "\\[  FAILED  \\] tests: 7 test"
 )
 
 # test_returns_fail ensure proper failures
@@ -83,7 +83,7 @@ set_tests_properties(
     test_returns_fail
         PROPERTIES
         PASS_REGULAR_EXPRESSION
-        "\\[  FAILED  \\] 3 test"
+        "\\[  FAILED  \\] alloc_tests: 3 test"
 )
 
 # test_exception_handler
