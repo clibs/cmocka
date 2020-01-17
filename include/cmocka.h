@@ -95,6 +95,9 @@ int __stdcall IsDebuggerPresent();
 #define WILL_RETURN_ALWAYS -1
 #define WILL_RETURN_ONCE -2
 
+#define EXPECT_ALWAYS -1
+#define EXPECT_MAYBE -2
+
 /**
  * @defgroup cmocka_mock Mock Objects
  * @ingroup cmocka
@@ -388,6 +391,44 @@ void expect_check(#function, #parameter, #check_function, const void *check_data
 #define expect_check(function, parameter, check_function, check_data) \
     _expect_check(#function, #parameter, __FILE__, __LINE__, check_function, \
                   cast_to_uintmax_type(check_data), NULL, 1)
+#endif
+
+/*
+ * Add a custom parameter checking function.  If the event parameter is NULL
+ * the event structure is allocated internally by this function.  If event
+ * parameter is provided it must be allocated on the heap and doesn't need to
+ * be deallocated by the caller.
+ */
+#ifdef DOXYGEN
+/**
+ * @brief Add a custom parameter checking function.
+ *
+ * If the event parameter is NULL the event structure is allocated internally
+ * by this function. If the parameter is provided it must be allocated on the
+ * heap and doesn't need to be deallocated by the caller.
+ *
+ * @param[in]  #function  The function to add a custom parameter checking
+ *                        function for.
+ *
+ * @param[in]  #parameter The parameters passed to the function.
+ *
+ * @param[in]  #check_function  The check function to call.
+ *
+ * @param[in]  check_data       The data to pass to the check function.
+ *
+ * @param[in]  count  The count parameter gives the number of times the value
+ *                    should be validated by check_expected(). If count is set
+ *                    to @ref EXPECT_ALWAYS the value will always be returned,
+ *                    and cmocka expects check_expected() to be issued at least
+ *                    once. If count is set to @ref EXPECT_MAYBE, any number of
+ *                    calls to check_expected() is accepted, including zero.
+ *
+ */
+void expect_check_count(#function, #parameter, #check_function, const void *check_data, size_t count);
+#else
+#define expect_check_count(function, parameter, check_function, check_data, count) \
+    _expect_check(#function, #parameter, __FILE__, __LINE__, check_function, \
+                  cast_to_uintmax_type(check_data), NULL, count)
 #endif
 
 #ifdef DOXYGEN

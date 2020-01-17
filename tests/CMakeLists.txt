@@ -10,6 +10,8 @@ endif()
 
 set(CMOCKA_TESTS
     test_alloc
+    test_expect_check
+    test_expect_check_fail
     test_group_setup_assert
     test_group_setup_fail
     test_fixtures
@@ -63,6 +65,14 @@ set_tests_properties(
         PROPERTIES
         PASS_REGULAR_EXPRESSION
         "\\[  FAILED  \\] tests: 1 test"
+)
+
+# test_expect_check_fail
+set_tests_properties(
+    test_expect_check_fail
+        PROPERTIES
+        PASS_REGULAR_EXPRESSION
+        "\\[  FAILED  \\] tests: 3 test"
 )
 
 # test_ordering ensure proper failures
