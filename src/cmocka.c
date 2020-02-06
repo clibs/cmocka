@@ -2523,10 +2523,12 @@ static void cmprintf_group_finish_xml(const char *group_name,
     }
 }
 
-static void cmprintf_group_start_standard(const size_t num_tests)
+static void cmprintf_group_start_standard(const char *group_name,
+                                          const size_t num_tests)
 {
-    print_message("[==========] Running %u test(s).\n",
-                  (unsigned)num_tests);
+    print_message("[==========] %s: Running %zu test(s).\n",
+                  group_name,
+                  num_tests);
 }
 
 static void cmprintf_group_finish_standard(const char *group_name,
@@ -2698,7 +2700,8 @@ static void cmprintf_subunit(enum cm_printf_type type,
     }
 }
 
-static void cmprintf_group_start(const size_t num_tests)
+static void cmprintf_group_start(const char *group_name,
+                                 const size_t num_tests)
 {
     enum cm_message_output output;
 
@@ -2706,7 +2709,7 @@ static void cmprintf_group_start(const size_t num_tests)
 
     switch (output) {
     case CM_OUTPUT_STDOUT:
-        cmprintf_group_start_standard(num_tests);
+        cmprintf_group_start_standard(group_name, num_tests);
         break;
     case CM_OUTPUT_SUBUNIT:
         break;
@@ -3110,7 +3113,7 @@ int _cmocka_run_group_tests(const char *group_name,
         }
     }
 
-    cmprintf_group_start(total_tests);
+    cmprintf_group_start(group_name, total_tests);
 
     rc = 0;
 
