@@ -722,9 +722,16 @@ static void free_symbol_map_value(const void *value,
     SymbolMapValue * const map_value = (SymbolMapValue*)value;
     const LargestIntegralType children = cast_ptr_to_largest_integral_type(cleanup_value_data);
     assert_non_null(value);
-    list_free(&map_value->symbol_values_list_head,
-              children ? free_symbol_map_value : free_value,
-              (void *) ((uintptr_t)children - 1));
+    if (children == 0) {
+        list_free(&map_value->symbol_values_list_head,
+                  free_value,
+                  NULL);
+    } else {
+        list_free(&map_value->symbol_values_list_head,
+                  free_symbol_map_value,
+                  (void *)((uintptr_t)children - 1));
+    }
+
     free(map_value);
 }
 
