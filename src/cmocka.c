@@ -110,37 +110,17 @@
 
 
 /*
- * Declare and initialize the pointer member of ValuePointer variable name
- * with ptr.
+ * Declare and initialize a LargestIntegralType variable name
+ * with value the conversion of ptr.
  */
 #define declare_initialize_value_pointer_pointer(name, ptr) \
-    ValuePointer name ; \
-    name.value = 0; \
-    name.x.pointer = (void*)(ptr)
+    LargestIntegralType name ; \
+    name = (LargestIntegralType) (uintptr_t) ptr
 
-/*
- * Declare and initialize the value member of ValuePointer variable name
- * with val.
- */
-#define declare_initialize_value_pointer_value(name, val) \
-    ValuePointer name ; \
-    name.value = val
-
-/* Cast a LargestIntegralType to pointer_type via a ValuePointer. */
+/* Cast a LargestIntegralType to pointer_type. */
 #define cast_largest_integral_type_to_pointer( \
     pointer_type, largest_integral_type) \
-    ((pointer_type)((ValuePointer*)&(largest_integral_type))->x.pointer)
-
-/* Used to cast LargetIntegralType to void* and vice versa. */
-typedef union ValuePointer {
-    LargestIntegralType value;
-    struct {
-#if defined(WORDS_BIGENDIAN) && (WORDS_SIZEOF_VOID_P == 4)
-        unsigned int padding;
-#endif
-        void *pointer;
-    } x;
-} ValuePointer;
+    ((pointer_type)(uintptr_t)(largest_integral_type))
 
 /* Doubly linked list node. */
 typedef struct ListNode {
@@ -1489,7 +1469,7 @@ static void expect_set(
     check_integer_set->size_of_set = number_of_values;
     _expect_check(
         function, parameter, file, line, check_function,
-        check_data.value, &check_integer_set->event, count);
+        check_data, &check_integer_set->event, count);
 }
 
 
@@ -1552,7 +1532,7 @@ static void expect_range(
     check_integer_range->minimum = minimum;
     check_integer_range->maximum = maximum;
     _expect_check(function, parameter, file, line, check_function,
-                  check_data.value, &check_integer_range->event, count);
+                  check_data, &check_integer_range->event, count);
 }
 
 
@@ -1631,7 +1611,7 @@ void _expect_string(
     declare_initialize_value_pointer_pointer(string_pointer,
                                              discard_const(string));
     _expect_check(function, parameter, file, line, check_string,
-                  string_pointer.value, NULL, count);
+                  string_pointer, NULL, count);
 }
 
 
@@ -1653,7 +1633,7 @@ void _expect_not_string(
     declare_initialize_value_pointer_pointer(string_pointer,
                                              discard_const(string));
     _expect_check(function, parameter, file, line, check_not_string,
-                  string_pointer.value, NULL, count);
+                  string_pointer, NULL, count);
 }
 
 /* CheckParameterValue callback to check whether a parameter equals an area of
@@ -1686,7 +1666,7 @@ static void expect_memory_setup(
     check_data->memory = mem;
     check_data->size = size;
     _expect_check(function, parameter, file, line, check_function,
-                  check_data_pointer.value, &check_data->event, count);
+                  check_data_pointer, &check_data->event, count);
 }
 
 
