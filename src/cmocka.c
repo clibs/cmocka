@@ -416,6 +416,9 @@ void _skip(const char * const file, const int line)
     cm_print_error(SOURCE_LOCATION_FORMAT ": Skipped!\n", file, line);
     global_skip_test = 1;
     exit_test(1);
+
+    /* Unreachable */
+    exit(-1);
 }
 
 /* Initialize a SourceLocation structure. */
@@ -2290,11 +2293,14 @@ void _fail(const char * const file, const int line) {
             break;
     }
     exit_test(1);
+
+    /* Unreachable */
+    exit(-1);
 }
 
 
 #ifndef _WIN32
-static void exception_handler(int sig) {
+CMOCKA_NORETURN static void exception_handler(int sig) {
     const char *sig_strerror = "";
 
 #ifdef HAVE_STRSIGNAL
@@ -2304,6 +2310,9 @@ static void exception_handler(int sig) {
     cm_print_error("Test failed with exception: %s(%d)",
                    sig_strerror, sig);
     exit_test(1);
+
+    /* Unreachable */
+    exit(-1);
 }
 
 #else /* _WIN32 */

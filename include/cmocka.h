@@ -172,6 +172,14 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
 #define CMOCKA_DEPRECATED
 #endif
 
+#if defined(__GNUC__)
+#define CMOCKA_NORETURN __attribute__ ((noreturn))
+#elif defined(_MSC_VER)
+#define CMOCKA_NORETURN __declspec(noreturn)
+#else
+#define CMOCKA_NORETURN
+#endif
+
 #define WILL_RETURN_ALWAYS -1
 #define WILL_RETURN_ONCE -2
 
@@ -2362,9 +2370,9 @@ void* _test_calloc(const size_t number_of_elements, const size_t size,
                    const char* file, const int line);
 void _test_free(void* const ptr, const char* file, const int line);
 
-void _fail(const char * const file, const int line);
+CMOCKA_NORETURN void _fail(const char * const file, const int line);
 
-void _skip(const char * const file, const int line);
+CMOCKA_NORETURN void _skip(const char * const file, const int line);
 
 int _run_test(
     const char * const function_name, const UnitTestFunction Function,
