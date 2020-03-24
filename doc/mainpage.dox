@@ -79,7 +79,7 @@ differences are between them.
 Mock objects include some logic and the test driver is able to modify the
 behaviour and state. The object can call some functions or act on different
 input (abort a test if it is wrong). The test driver injects what it expects
-the mock object to return. CMocka provides and API to easily mock code.
+the mock object to return. CMocka provides an API to easily mock code.
 
 <a href="https://lwn.net/Articles/558106/">Learn more ...</a>
 
