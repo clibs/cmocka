@@ -2672,7 +2672,7 @@ static void cmprintf_tap(enum cm_printf_type type,
         }
         break;
     case PRINTF_TEST_SKIPPED:
-        print_message("not ok %u # SKIP %s\n", (unsigned)test_number, test_name);
+        print_message("ok %u # SKIP %s\n", (unsigned)test_number, test_name);
         break;
     case PRINTF_TEST_ERROR:
         print_message("not ok %u - %s %s\n",

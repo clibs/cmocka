@@ -190,7 +190,7 @@ set(test_groups_tap_out
     "ok 1 - int_test_success"
     "# ok - test_group2")
 set(test_skip_tap_out
-    "not ok 1 # SKIP")
+    "ok 1 # SKIP")
 set(test_setup_fail_tap_out
     "not ok 1 - int_test_ignored Could not run test: Test setup failed")
 
