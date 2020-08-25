@@ -4,6 +4,7 @@ variables:
   CENTOS7_BUILD: buildenv-centos7
   TUMBLEWEED_BUILD: buildenv-tumbleweed
   MINGW_BUILD: buildenv-mingw
+  UBUNTU_BUILD: buildenv-ubuntu
 
 centos7/x86_64:
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$CENTOS7_BUILD
@@ -333,6 +334,24 @@ tumbleweed/static-analysis:
     when: on_failure
     paths:
       - obj/scan
+
+ubuntu/x86_64:
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$UBUNTU_BUILD
+  script:
+  - mkdir -p obj && cd obj && cmake
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo
+    -DPICKY_DEVELOPER=ON
+    -DUNIT_TESTING=ON .. &&
+    make -j$(nproc) && ctest --output-on-failure
+  tags:
+  - shared
+  except:
+  - tags
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - obj/
 
 visualstudio/x86_64:
   script:
