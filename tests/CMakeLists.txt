@@ -27,6 +27,7 @@ set(CMOCKA_TESTS
     test_ordering_fail
     test_returns
     test_returns_fail
+    test_string
     test_wildcard
     test_skip_filter
     test_cmockery

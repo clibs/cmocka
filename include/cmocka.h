@@ -1353,8 +1353,7 @@ void assert_double_not_equal(double a, double b, double epsilon);
 void assert_string_equal(const char *a, const char *b);
 #else
 #define assert_string_equal(a, b) \
-    _assert_string_equal((const char*)(a), (const char*)(b), __FILE__, \
-                         __LINE__)
+    _assert_string_equal((a), (b), __FILE__, __LINE__)
 #endif
 
 #ifdef DOXYGEN
@@ -1371,8 +1370,7 @@ void assert_string_equal(const char *a, const char *b);
 void assert_string_not_equal(const char *a, const char *b);
 #else
 #define assert_string_not_equal(a, b) \
-    _assert_string_not_equal((const char*)(a), (const char*)(b), __FILE__, \
-                             __LINE__)
+    _assert_string_not_equal((a), (b), __FILE__, __LINE__)
 #endif
 
 #ifdef DOXYGEN
