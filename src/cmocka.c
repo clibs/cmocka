@@ -737,7 +737,7 @@ static void free_value(const void *value, void *cleanup_value_data) {
 static void free_symbol_map_value(const void *value,
                                   void *cleanup_value_data) {
     SymbolMapValue * const map_value = (SymbolMapValue*)value;
-    const uintmax_t children = cast_ptr_to_largest_integral_type(cleanup_value_data);
+    const uintmax_t children = cast_ptr_to_uintmax_type(cleanup_value_data);
     assert_non_null(value);
     if (children == 0) {
         list_free(&map_value->symbol_values_list_head,
@@ -2150,7 +2150,7 @@ void _test_free(void* const ptr, const char* file, const int line) {
         return;
     }
 
-    _assert_true(cast_ptr_to_largest_integral_type(ptr), "ptr", file, line);
+    _assert_true(cast_ptr_to_uintmax_type(ptr), "ptr", file, line);
     block_info.ptr = block - (MALLOC_GUARD_SIZE +
                               sizeof(struct MallocBlockInfoData));
     /* Check the guard blocks. */

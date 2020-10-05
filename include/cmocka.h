@@ -66,7 +66,7 @@ int __stdcall IsDebuggerPresent();
     ((uintptr_t)(value))
 
 /* Perform a cast of a pointer to uintmax_t */
-#define cast_ptr_to_largest_integral_type(value) \
+#define cast_ptr_to_uintmax_type(value) \
     cast_to_uintmax_type(cast_to_uintptr_type(value))
 
 /* GCC have printf type attribute check.  */
@@ -974,7 +974,7 @@ void check_expected_ptr(#parameter);
 #else
 #define check_expected_ptr(parameter) \
     _check_expected(__func__, #parameter, __FILE__, __LINE__, \
-                    cast_ptr_to_largest_integral_type(parameter))
+                    cast_ptr_to_uintmax_type(parameter))
 #endif
 
 /** @} */
@@ -1070,7 +1070,7 @@ void assert_return_code(int rc, int error);
  */
 void assert_non_null(void *pointer);
 #else
-#define assert_non_null(c) _assert_true(cast_ptr_to_largest_integral_type(c), #c, \
+#define assert_non_null(c) _assert_true(cast_ptr_to_uintmax_type(c), #c, \
                                         __FILE__, __LINE__)
 #endif
 
@@ -1087,7 +1087,7 @@ void assert_non_null(void *pointer);
  */
 void assert_null(void *pointer);
 #else
-#define assert_null(c) _assert_true(!(cast_ptr_to_largest_integral_type(c)), #c, \
+#define assert_null(c) _assert_true(!(cast_ptr_to_uintmax_type(c)), #c, \
 __FILE__, __LINE__)
 #endif
 
@@ -1105,8 +1105,8 @@ __FILE__, __LINE__)
 void assert_ptr_equal(void *a, void *b);
 #else
 #define assert_ptr_equal(a, b) \
-    _assert_int_equal(cast_ptr_to_largest_integral_type(a), \
-                      cast_ptr_to_largest_integral_type(b), \
+    _assert_int_equal(cast_ptr_to_uintmax_type(a), \
+                      cast_ptr_to_uintmax_type(b), \
                       __FILE__, __LINE__)
 #endif
 
@@ -1124,8 +1124,8 @@ void assert_ptr_equal(void *a, void *b);
 void assert_ptr_not_equal(void *a, void *b);
 #else
 #define assert_ptr_not_equal(a, b) \
-    _assert_int_not_equal(cast_ptr_to_largest_integral_type(a), \
-                          cast_ptr_to_largest_integral_type(b), \
+    _assert_int_not_equal(cast_ptr_to_uintmax_type(a), \
+                          cast_ptr_to_uintmax_type(b), \
                           __FILE__, __LINE__)
 #endif
 
