@@ -58,7 +58,7 @@ int __stdcall IsDebuggerPresent();
  */
 
 /* Perform an unsigned cast to uintmax_t. */
-#define cast_to_largest_integral_type(value) \
+#define cast_to_uintmax_type(value) \
     ((uintmax_t)(value))
 
 /* Perform an unsigned cast to uintptr_t. */
@@ -67,7 +67,7 @@ int __stdcall IsDebuggerPresent();
 
 /* Perform a cast of a pointer to uintmax_t */
 #define cast_ptr_to_largest_integral_type(value) \
-cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
+cast_to_uintmax_type(cast_to_pointer_integral_type(value))
 
 /* GCC have printf type attribute check.  */
 #ifdef __GNUC__
@@ -240,7 +240,7 @@ void will_return(#function, uintmax_t value);
 #else
 #define will_return(function, value) \
     _will_return(#function, __FILE__, __LINE__, \
-                 cast_to_largest_integral_type(value), 1)
+                 cast_to_uintmax_type(value), 1)
 #endif
 
 #ifdef DOXYGEN
@@ -263,7 +263,7 @@ void will_return_count(#function, uintmax_t value, int count);
 #else
 #define will_return_count(function, value, count) \
     _will_return(#function, __FILE__, __LINE__, \
-                 cast_to_largest_integral_type(value), count)
+                 cast_to_uintmax_type(value), count)
 #endif
 
 #ifdef DOXYGEN
@@ -388,7 +388,7 @@ void expect_check(#function, #parameter, #check_function, const void *check_data
 #else
 #define expect_check(function, parameter, check_function, check_data) \
     _expect_check(#function, #parameter, __FILE__, __LINE__, check_function, \
-                  cast_to_largest_integral_type(check_data), NULL, 1)
+                  cast_to_uintmax_type(check_data), NULL, 1)
 #endif
 
 #ifdef DOXYGEN
@@ -638,7 +638,7 @@ void expect_value_count(#function, #parameter, uintmax_t value, size_t count);
 #else
 #define expect_value_count(function, parameter, value, count) \
     _expect_value(#function, #parameter, __FILE__, __LINE__, \
-                  cast_to_largest_integral_type(value), count)
+                  cast_to_uintmax_type(value), count)
 #endif
 
 #ifdef DOXYGEN
@@ -683,7 +683,7 @@ void expect_not_value_count(#function, #parameter, uintmax_t value, size_t count
 #else
 #define expect_not_value_count(function, parameter, value, count) \
     _expect_not_value(#function, #parameter, __FILE__, __LINE__, \
-                      cast_to_largest_integral_type(value), count)
+                      cast_to_uintmax_type(value), count)
 #endif
 
 #ifdef DOXYGEN
@@ -956,7 +956,7 @@ void check_expected(#parameter);
 #else
 #define check_expected(parameter) \
     _check_expected(__func__, #parameter, __FILE__, __LINE__, \
-                    cast_to_largest_integral_type(parameter))
+                    cast_to_uintmax_type(parameter))
 #endif
 
 #ifdef DOXYGEN
@@ -1013,7 +1013,7 @@ void check_expected_ptr(#parameter);
  */
 void assert_true(scalar expression);
 #else
-#define assert_true(c) _assert_true(cast_to_largest_integral_type(c), #c, \
+#define assert_true(c) _assert_true(cast_to_uintmax_type(c), #c, \
                                     __FILE__, __LINE__)
 #endif
 
@@ -1031,7 +1031,7 @@ void assert_true(scalar expression);
  */
 void assert_false(scalar expression);
 #else
-#define assert_false(c) _assert_true(!(cast_to_largest_integral_type(c)), #c, \
+#define assert_false(c) _assert_true(!(cast_to_uintmax_type(c)), #c, \
                                      __FILE__, __LINE__)
 #endif
 
@@ -1051,9 +1051,9 @@ void assert_false(scalar expression);
 void assert_return_code(int rc, int error);
 #else
 #define assert_return_code(rc, error) \
-    _assert_return_code(cast_to_largest_integral_type(rc), \
+    _assert_return_code(cast_to_uintmax_type(rc), \
                         sizeof(rc), \
-                        cast_to_largest_integral_type(error), \
+                        cast_to_uintmax_type(error), \
                         #rc, __FILE__, __LINE__)
 #endif
 
@@ -1143,8 +1143,8 @@ void assert_ptr_not_equal(void *a, void *b);
 void assert_int_equal(int a, int b);
 #else
 #define assert_int_equal(a, b) \
-    _assert_int_equal(cast_to_largest_integral_type(a), \
-                      cast_to_largest_integral_type(b), \
+    _assert_int_equal(cast_to_uintmax_type(a), \
+                      cast_to_uintmax_type(b), \
                       __FILE__, __LINE__)
 #endif
 
@@ -1164,8 +1164,8 @@ void assert_int_equal(int a, int b);
 void assert_int_not_equal(int a, int b);
 #else
 #define assert_int_not_equal(a, b) \
-    _assert_int_not_equal(cast_to_largest_integral_type(a), \
-                          cast_to_largest_integral_type(b), \
+    _assert_int_not_equal(cast_to_uintmax_type(a), \
+                          cast_to_uintmax_type(b), \
                           __FILE__, __LINE__)
 #endif
 
@@ -1354,9 +1354,9 @@ void assert_in_range(uintmax_t value, uintmax_t minimum, uintmax_t maximum);
 #else
 #define assert_in_range(value, minimum, maximum) \
     _assert_in_range( \
-        cast_to_largest_integral_type(value), \
-        cast_to_largest_integral_type(minimum), \
-        cast_to_largest_integral_type(maximum), __FILE__, __LINE__)
+        cast_to_uintmax_type(value), \
+        cast_to_uintmax_type(minimum), \
+        cast_to_uintmax_type(maximum), __FILE__, __LINE__)
 #endif
 
 #ifdef DOXYGEN
@@ -1377,9 +1377,9 @@ void assert_not_in_range(uintmax_t value, uintmax_t minimum, uintmax_t maximum);
 #else
 #define assert_not_in_range(value, minimum, maximum) \
     _assert_not_in_range( \
-        cast_to_largest_integral_type(value), \
-        cast_to_largest_integral_type(minimum), \
-        cast_to_largest_integral_type(maximum), __FILE__, __LINE__)
+        cast_to_uintmax_type(value), \
+        cast_to_uintmax_type(minimum), \
+        cast_to_uintmax_type(maximum), __FILE__, __LINE__)
 #endif
 
 #ifdef DOXYGEN
