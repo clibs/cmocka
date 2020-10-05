@@ -62,12 +62,12 @@ int __stdcall IsDebuggerPresent();
     ((uintmax_t)(value))
 
 /* Perform an unsigned cast to uintptr_t. */
-#define cast_to_pointer_integral_type(value) \
+#define cast_to_uintptr_type(value) \
     ((uintptr_t)(value))
 
 /* Perform a cast of a pointer to uintmax_t */
 #define cast_ptr_to_largest_integral_type(value) \
-cast_to_uintmax_type(cast_to_pointer_integral_type(value))
+    cast_to_uintmax_type(cast_to_uintptr_type(value))
 
 /* GCC have printf type attribute check.  */
 #ifdef __GNUC__
