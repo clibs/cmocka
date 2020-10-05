@@ -58,30 +58,30 @@ int __stdcall IsDebuggerPresent();
  */
 
 /* Printf format used to display uintmax_t as a hexidecimal. */
-#ifndef LargestIntegralTypePrintfFormat
+#ifndef UintMaxTypePrintfFormat
 # ifdef _WIN32
-#  define LargestIntegralTypePrintfFormat "0x%I64x"
+#  define UintMaxTypePrintfFormat "0x%I64x"
 # else
 #  if __WORDSIZE == 64
-#   define LargestIntegralTypePrintfFormat "%#lx"
+#   define UintMaxTypePrintfFormat "%#lx"
 #  else
-#   define LargestIntegralTypePrintfFormat "%#llx"
+#   define UintMaxTypePrintfFormat "%#llx"
 #  endif
 # endif /* _WIN32 */
-#endif /* LargestIntegralTypePrintfFormat */
+#endif /* UintMaxTypePrintfFormat */
 
 /* Printf format used to display uintmax_t as a decimal. */
-#ifndef LargestIntegralTypePrintfFormatDecimal
+#ifndef UintMaxTypePrintfFormatDecimal
 # ifdef _WIN32
-#  define LargestIntegralTypePrintfFormatDecimal "%I64u"
+#  define UintMaxTypePrintfFormatDecimal "%I64u"
 # else
 #  if __WORDSIZE == 64
-#   define LargestIntegralTypePrintfFormatDecimal "%lu"
+#   define UintMaxTypePrintfFormatDecimal "%lu"
 #  else
-#   define LargestIntegralTypePrintfFormatDecimal "%llu"
+#   define UintMaxTypePrintfFormatDecimal "%llu"
 #  endif
 # endif /* _WIN32 */
-#endif /* LargestIntegralTypePrintfFormat */
+#endif /* UintMaxTypePrintfFormat */
 
 #ifndef FloatPrintfFormat
 # define FloatPrintfFormat "%f"

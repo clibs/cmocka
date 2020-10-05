@@ -1247,8 +1247,8 @@ static int values_equal_display_error(const uintmax_t left,
                                       const uintmax_t right) {
     const int equal = left == right;
     if (!equal) {
-        cm_print_error(LargestIntegralTypePrintfFormat " != "
-                       LargestIntegralTypePrintfFormat "\n", left, right);
+        cm_print_error(UintMaxTypePrintfFormat " != "
+                       UintMaxTypePrintfFormat "\n", left, right);
     }
     return equal;
 }
@@ -1260,8 +1260,8 @@ static int values_not_equal_display_error(const uintmax_t left,
                                           const uintmax_t right) {
     const int not_equal = left != right;
     if (!not_equal) {
-        cm_print_error(LargestIntegralTypePrintfFormat " == "
-                       LargestIntegralTypePrintfFormat "\n", left, right);
+        cm_print_error(UintMaxTypePrintfFormat " == "
+                       UintMaxTypePrintfFormat "\n", left, right);
     }
     return not_equal;
 }
@@ -1294,11 +1294,11 @@ static int value_in_set_display_error(
         if (succeeded) {
             return 1;
         }
-        cm_print_error(LargestIntegralTypePrintfFormatDecimal
+        cm_print_error(UintMaxTypePrintfFormatDecimal
                        " is %sin the set (",
                        value, invert ? "" : "not ");
         for (i = 0; i < size_of_set; i++) {
-            cm_print_error(LargestIntegralTypePrintfFormat ", ", set[i]);
+            cm_print_error(UintMaxTypePrintfFormat ", ", set[i]);
         }
         cm_print_error(")\n");
     }
@@ -1317,10 +1317,10 @@ static int integer_in_range_display_error(
     if (value >= range_min && value <= range_max) {
         return 1;
     }
-    cm_print_error(LargestIntegralTypePrintfFormatDecimal
+    cm_print_error(UintMaxTypePrintfFormatDecimal
                    " is not within the range "
-                   LargestIntegralTypePrintfFormatDecimal "-"
-                   LargestIntegralTypePrintfFormatDecimal "\n",
+                   UintMaxTypePrintfFormatDecimal "-"
+                   UintMaxTypePrintfFormatDecimal "\n",
                    value, range_min, range_max);
     return 0;
 }
@@ -1337,10 +1337,10 @@ static int integer_not_in_range_display_error(
     if (value < range_min || value > range_max) {
         return 1;
     }
-    cm_print_error(LargestIntegralTypePrintfFormatDecimal
+    cm_print_error(UintMaxTypePrintfFormatDecimal
                    " is within the range "
-                   LargestIntegralTypePrintfFormatDecimal "-"
-                   LargestIntegralTypePrintfFormatDecimal "\n",
+                   UintMaxTypePrintfFormatDecimal "-"
+                   UintMaxTypePrintfFormatDecimal "\n",
                    value, range_min, range_max);
     return 0;
 }
@@ -1824,7 +1824,7 @@ void _assert_return_code(const uintmax_t result,
     if (result > valmax - 1) {
         if (error > 0) {
             cm_print_error("%s < 0, errno("
-                           LargestIntegralTypePrintfFormatDecimal "): %s\n",
+                           UintMaxTypePrintfFormatDecimal "): %s\n",
                            expression, error, strerror((int)error));
         } else {
             cm_print_error("%s < 0\n", expression);
