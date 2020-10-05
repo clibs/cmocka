@@ -17,6 +17,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <setjmp.h>
+#include <stdint.h>
 #include <cmocka.h>
 
 static void test_ok1(void **state)

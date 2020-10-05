@@ -1,6 +1,6 @@
 /*
  * Copyright 2008 Google Inc.
- * Copyright 2014-2018 Andreas Schneider <asn@cryptomilk.org>
+ * Copyright 2014-2020 Andreas Schneider <asn@cryptomilk.org>
  * Copyright 2015      Jakub Hrozek <jakub.hrozek@posteo.se>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -111,14 +111,14 @@
 
 
 /*
- * Declare and initialize a LargestIntegralType variable name
+ * Declare and initialize a uintmax_t variable name
  * with value the conversion of ptr.
  */
 #define declare_initialize_value_pointer_pointer(name, ptr) \
-    LargestIntegralType name ; \
-    name = (LargestIntegralType) (uintptr_t) ptr
+    uintmax_t name ; \
+    name = (uintmax_t)((uintptr_t)(ptr))
 
-/* Cast a LargestIntegralType to pointer_type. */
+/* Cast a uintmax_t to pointer_type. */
 #define cast_largest_integral_type_to_pointer( \
     pointer_type, largest_integral_type) \
     ((pointer_type)(uintptr_t)(largest_integral_type))
@@ -158,7 +158,7 @@ typedef int (*EqualityFunction)(const void *left, const void *right);
 /* Value of a symbol and the place it was declared. */
 typedef struct SymbolValue {
     SourceLocation location;
-    LargestIntegralType value;
+    uintmax_t value;
 } SymbolValue;
 
 /*
@@ -183,14 +183,14 @@ typedef void (*CleanupListValue)(const void *value, void *cleanup_value_data);
 /* Structure used to check the range of integer types.a */
 typedef struct CheckIntegerRange {
     CheckParameterEvent event;
-    LargestIntegralType minimum;
-    LargestIntegralType maximum;
+    uintmax_t minimum;
+    uintmax_t maximum;
 } CheckIntegerRange;
 
 /* Structure used to check whether an integer value is in a set. */
 typedef struct CheckIntegerSet {
     CheckParameterEvent event;
-    const LargestIntegralType *set;
+    const uintmax_t *set;
     size_t size_of_set;
 } CheckIntegerSet;
 
@@ -704,7 +704,7 @@ static void free_value(const void *value, void *cleanup_value_data) {
 static void free_symbol_map_value(const void *value,
                                   void *cleanup_value_data) {
     SymbolMapValue * const map_value = (SymbolMapValue*)value;
-    const LargestIntegralType children = cast_ptr_to_largest_integral_type(cleanup_value_data);
+    const uintmax_t children = cast_ptr_to_largest_integral_type(cleanup_value_data);
     assert_non_null(value);
     if (children == 0) {
         list_free(&map_value->symbol_values_list_head,
@@ -949,14 +949,14 @@ static size_t check_for_leftover_values(
 
 
 /* Get the next return value for the specified mock function. */
-LargestIntegralType _mock(const char * const function, const char* const file,
+uintmax_t _mock(const char * const function, const char* const file,
                           const int line) {
     void *result;
     const int rc = get_symbol_value(&global_function_result_map_head,
                                     &function, 1, &result);
     if (rc) {
         SymbolValue * const symbol = (SymbolValue*)result;
-        const LargestIntegralType value = symbol->value;
+        const uintmax_t value = symbol->value;
         global_last_mock_value_location = symbol->location;
         if (rc == 1) {
             free(symbol);
@@ -1057,7 +1057,7 @@ void _function_called(const char *const function,
 
 /* Add a return value for the specified mock function name. */
 void _will_return(const char * const function_name, const char * const file,
-                  const int line, const LargestIntegralType value,
+                  const int line, const uintmax_t value,
                   const int count) {
     SymbolValue * const return_value =
         (SymbolValue*)malloc(sizeof(*return_value));
@@ -1079,7 +1079,7 @@ void _expect_check(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
         const CheckParameterValue check_function,
-        const LargestIntegralType check_data,
+        const uintmax_t check_data,
         CheckParameterEvent * const event, const int count) {
     CheckParameterEvent * const check =
         event ? event : (CheckParameterEvent*)malloc(sizeof(*check));
@@ -1243,8 +1243,8 @@ static int double_values_not_equal_display_error(const double left,
 
 /* Returns 1 if the specified values are equal.  If the values are not equal
  * an error is displayed and 0 is returned. */
-static int values_equal_display_error(const LargestIntegralType left,
-                                      const LargestIntegralType right) {
+static int values_equal_display_error(const uintmax_t left,
+                                      const uintmax_t right) {
     const int equal = left == right;
     if (!equal) {
         cm_print_error(LargestIntegralTypePrintfFormat " != "
@@ -1256,8 +1256,8 @@ static int values_equal_display_error(const LargestIntegralType left,
 /*
  * Returns 1 if the specified values are not equal.  If the values are equal
  * an error is displayed and 0 is returned. */
-static int values_not_equal_display_error(const LargestIntegralType left,
-                                          const LargestIntegralType right) {
+static int values_not_equal_display_error(const uintmax_t left,
+                                          const uintmax_t right) {
     const int not_equal = left != right;
     if (!not_equal) {
         cm_print_error(LargestIntegralTypePrintfFormat " == "
@@ -1275,12 +1275,12 @@ static int values_not_equal_display_error(const LargestIntegralType left,
  * displayed.
  */
 static int value_in_set_display_error(
-        const LargestIntegralType value,
+        const uintmax_t value,
         const CheckIntegerSet * const check_integer_set, const int invert) {
     int succeeded = invert;
     assert_non_null(check_integer_set);
     {
-        const LargestIntegralType * const set = check_integer_set->set;
+        const uintmax_t * const set = check_integer_set->set;
         const size_t size_of_set = check_integer_set->size_of_set;
         size_t i;
         for (i = 0; i < size_of_set; i++) {
@@ -1312,8 +1312,8 @@ static int value_in_set_display_error(
  * specified range an error is displayed and 0 is returned.
  */
 static int integer_in_range_display_error(
-        const LargestIntegralType value, const LargestIntegralType range_min,
-        const LargestIntegralType range_max) {
+        const uintmax_t value, const uintmax_t range_min,
+        const uintmax_t range_max) {
     if (value >= range_min && value <= range_max) {
         return 1;
     }
@@ -1332,8 +1332,8 @@ static int integer_in_range_display_error(
  * specified range an error is displayed and zero is returned.
  */
 static int integer_not_in_range_display_error(
-        const LargestIntegralType value, const LargestIntegralType range_min,
-        const LargestIntegralType range_max) {
+        const uintmax_t value, const uintmax_t range_min,
+        const uintmax_t range_max) {
     if (value < range_min || value > range_max) {
         return 1;
     }
@@ -1433,8 +1433,8 @@ static int memory_not_equal_display_error(
 
 
 /* CheckParameterValue callback to check whether a value is within a set. */
-static int check_in_set(const LargestIntegralType value,
-                        const LargestIntegralType check_value_data) {
+static int check_in_set(const uintmax_t value,
+                        const uintmax_t check_value_data) {
     return value_in_set_display_error(value,
         cast_largest_integral_type_to_pointer(CheckIntegerSet*,
                                               check_value_data), 0);
@@ -1442,8 +1442,8 @@ static int check_in_set(const LargestIntegralType value,
 
 
 /* CheckParameterValue callback to check whether a value isn't within a set. */
-static int check_not_in_set(const LargestIntegralType value,
-                            const LargestIntegralType check_value_data) {
+static int check_not_in_set(const uintmax_t value,
+                            const uintmax_t check_value_data) {
     return value_in_set_display_error(value,
         cast_largest_integral_type_to_pointer(CheckIntegerSet*,
                                               check_value_data), 1);
@@ -1455,12 +1455,12 @@ static int check_not_in_set(const LargestIntegralType value,
 static void expect_set(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
-        const LargestIntegralType values[], const size_t number_of_values,
+        const uintmax_t values[], const size_t number_of_values,
         const CheckParameterValue check_function, const int count) {
     CheckIntegerSet * const check_integer_set =
         (CheckIntegerSet*)malloc(sizeof(*check_integer_set) +
                (sizeof(values[0]) * number_of_values));
-    LargestIntegralType * const set = (LargestIntegralType*)(
+    uintmax_t * const set = (uintmax_t*)(
         check_integer_set + 1);
     declare_initialize_value_pointer_pointer(check_data, check_integer_set);
     assert_non_null(values);
@@ -1478,7 +1478,7 @@ static void expect_set(
 void _expect_in_set(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
-        const LargestIntegralType values[], const size_t number_of_values,
+        const uintmax_t values[], const size_t number_of_values,
         const int count) {
     expect_set(function, parameter, file, line, values, number_of_values,
                check_in_set, count);
@@ -1489,7 +1489,7 @@ void _expect_in_set(
 void _expect_not_in_set(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
-        const LargestIntegralType values[], const size_t number_of_values,
+        const uintmax_t values[], const size_t number_of_values,
         const int count) {
     expect_set(function, parameter, file, line, values, number_of_values,
                check_not_in_set, count);
@@ -1497,8 +1497,8 @@ void _expect_not_in_set(
 
 
 /* CheckParameterValue callback to check whether a value is within a range. */
-static int check_in_range(const LargestIntegralType value,
-                          const LargestIntegralType check_value_data) {
+static int check_in_range(const uintmax_t value,
+                          const uintmax_t check_value_data) {
     CheckIntegerRange * const check_integer_range =
         cast_largest_integral_type_to_pointer(CheckIntegerRange*,
                                               check_value_data);
@@ -1509,8 +1509,8 @@ static int check_in_range(const LargestIntegralType value,
 
 
 /* CheckParameterValue callback to check whether a value is not within a range. */
-static int check_not_in_range(const LargestIntegralType value,
-                              const LargestIntegralType check_value_data) {
+static int check_not_in_range(const uintmax_t value,
+                              const uintmax_t check_value_data) {
     CheckIntegerRange * const check_integer_range =
         cast_largest_integral_type_to_pointer(CheckIntegerRange*,
                                               check_value_data);
@@ -1525,7 +1525,7 @@ static int check_not_in_range(const LargestIntegralType value,
 static void expect_range(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
-        const LargestIntegralType minimum, const LargestIntegralType maximum,
+        const uintmax_t minimum, const uintmax_t maximum,
         const CheckParameterValue check_function, const int count) {
     CheckIntegerRange * const check_integer_range =
         (CheckIntegerRange*)malloc(sizeof(*check_integer_range));
@@ -1541,7 +1541,7 @@ static void expect_range(
 void _expect_in_range(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
-        const LargestIntegralType minimum, const LargestIntegralType maximum,
+        const uintmax_t minimum, const uintmax_t maximum,
         const int count) {
     expect_range(function, parameter, file, line, minimum, maximum,
                  check_in_range, count);
@@ -1552,7 +1552,7 @@ void _expect_in_range(
 void _expect_not_in_range(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
-        const LargestIntegralType minimum, const LargestIntegralType maximum,
+        const uintmax_t minimum, const uintmax_t maximum,
         const int count) {
     expect_range(function, parameter, file, line, minimum, maximum,
                  check_not_in_range, count);
@@ -1561,8 +1561,8 @@ void _expect_not_in_range(
 
 /* CheckParameterValue callback to check whether a value is equal to an
  * expected value. */
-static int check_value(const LargestIntegralType value,
-                       const LargestIntegralType check_value_data) {
+static int check_value(const uintmax_t value,
+                       const uintmax_t check_value_data) {
     return values_equal_display_error(value, check_value_data);
 }
 
@@ -1571,7 +1571,7 @@ static int check_value(const LargestIntegralType value,
 void _expect_value(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
-        const LargestIntegralType value, const int count) {
+        const uintmax_t value, const int count) {
     _expect_check(function, parameter, file, line, check_value, value, NULL,
                   count);
 }
@@ -1579,8 +1579,8 @@ void _expect_value(
 
 /* CheckParameterValue callback to check whether a value is not equal to an
  * expected value. */
-static int check_not_value(const LargestIntegralType value,
-                           const LargestIntegralType check_value_data) {
+static int check_not_value(const uintmax_t value,
+                           const uintmax_t check_value_data) {
     return values_not_equal_display_error(value, check_value_data);
 }
 
@@ -1589,15 +1589,15 @@ static int check_not_value(const LargestIntegralType value,
 void _expect_not_value(
         const char* const function, const char* const parameter,
         const char* const file, const int line,
-        const LargestIntegralType value, const int count) {
+        const uintmax_t value, const int count) {
     _expect_check(function, parameter, file, line, check_not_value, value,
                   NULL, count);
 }
 
 
 /* CheckParameterValue callback to check whether a parameter equals a string. */
-static int check_string(const LargestIntegralType value,
-                        const LargestIntegralType check_value_data) {
+static int check_string(const uintmax_t value,
+                        const uintmax_t check_value_data) {
     return string_equal_display_error(
         cast_largest_integral_type_to_pointer(char*, value),
         cast_largest_integral_type_to_pointer(char*, check_value_data));
@@ -1618,8 +1618,8 @@ void _expect_string(
 
 /* CheckParameterValue callback to check whether a parameter is not equals to
  * a string. */
-static int check_not_string(const LargestIntegralType value,
-                            const LargestIntegralType check_value_data) {
+static int check_not_string(const uintmax_t value,
+                            const uintmax_t check_value_data) {
     return string_not_equal_display_error(
         cast_largest_integral_type_to_pointer(char*, value),
         cast_largest_integral_type_to_pointer(char*, check_value_data));
@@ -1639,8 +1639,8 @@ void _expect_not_string(
 
 /* CheckParameterValue callback to check whether a parameter equals an area of
  * memory. */
-static int check_memory(const LargestIntegralType value,
-                        const LargestIntegralType check_value_data) {
+static int check_memory(const uintmax_t value,
+                        const uintmax_t check_value_data) {
     CheckMemoryData * const check = cast_largest_integral_type_to_pointer(
         CheckMemoryData*, check_value_data);
     assert_non_null(check);
@@ -1683,8 +1683,8 @@ void _expect_memory(
 
 /* CheckParameterValue callback to check whether a parameter is not equal to
  * an area of memory. */
-static int check_not_memory(const LargestIntegralType value,
-                            const LargestIntegralType check_value_data) {
+static int check_not_memory(const uintmax_t value,
+                            const uintmax_t check_value_data) {
     CheckMemoryData * const check = cast_largest_integral_type_to_pointer(
         CheckMemoryData*, check_value_data);
     assert_non_null(check);
@@ -1706,8 +1706,8 @@ void _expect_not_memory(
 
 
 /* CheckParameterValue callback that always returns 1. */
-static int check_any(const LargestIntegralType value,
-                     const LargestIntegralType check_value_data) {
+static int check_any(const uintmax_t value,
+                     const uintmax_t check_value_data) {
     (void)value;
     (void)check_value_data;
     return 1;
@@ -1725,7 +1725,7 @@ void _expect_any(
 
 void _check_expected(
         const char * const function_name, const char * const parameter_name,
-        const char* file, const int line, const LargestIntegralType value) {
+        const char* file, const int line, const uintmax_t value) {
     void *result = NULL;
     const char* symbols[] = {function_name, parameter_name};
     const int rc = get_symbol_value(&global_function_parameter_map_head,
@@ -1782,7 +1782,7 @@ void mock_assert(const int result, const char* const expression,
 }
 
 
-void _assert_true(const LargestIntegralType result,
+void _assert_true(const uintmax_t result,
                   const char * const expression,
                   const char * const file, const int line) {
     if (!result) {
@@ -1791,14 +1791,14 @@ void _assert_true(const LargestIntegralType result,
     }
 }
 
-void _assert_return_code(const LargestIntegralType result,
+void _assert_return_code(const uintmax_t result,
                          size_t rlen,
-                         const LargestIntegralType error,
+                         const uintmax_t error,
                          const char * const expression,
                          const char * const file,
                          const int line)
 {
-    LargestIntegralType valmax;
+    uintmax_t valmax;
 
 
     switch (rlen) {
@@ -1874,7 +1874,7 @@ void _assert_double_not_equal(const double a,
 }
 
 void _assert_int_equal(
-        const LargestIntegralType a, const LargestIntegralType b,
+        const uintmax_t a, const uintmax_t b,
         const char * const file, const int line) {
     if (!values_equal_display_error(a, b)) {
         _fail(file, line);
@@ -1883,7 +1883,7 @@ void _assert_int_equal(
 
 
 void _assert_int_not_equal(
-        const LargestIntegralType a, const LargestIntegralType b,
+        const uintmax_t a, const uintmax_t b,
         const char * const file, const int line) {
     if (!values_not_equal_display_error(a, b)) {
         _fail(file, line);
@@ -1927,8 +1927,8 @@ void _assert_memory_not_equal(const void * const a, const void * const b,
 
 
 void _assert_in_range(
-        const LargestIntegralType value, const LargestIntegralType minimum,
-        const LargestIntegralType maximum, const char* const file,
+        const uintmax_t value, const uintmax_t minimum,
+        const uintmax_t maximum, const char* const file,
         const int line) {
     if (!integer_in_range_display_error(value, minimum, maximum)) {
         _fail(file, line);
@@ -1936,16 +1936,16 @@ void _assert_in_range(
 }
 
 void _assert_not_in_range(
-        const LargestIntegralType value, const LargestIntegralType minimum,
-        const LargestIntegralType maximum, const char* const file,
+        const uintmax_t value, const uintmax_t minimum,
+        const uintmax_t maximum, const char* const file,
         const int line) {
     if (!integer_not_in_range_display_error(value, minimum, maximum)) {
         _fail(file, line);
     }
 }
 
-void _assert_in_set(const LargestIntegralType value,
-                    const LargestIntegralType values[],
+void _assert_in_set(const uintmax_t value,
+                    const uintmax_t values[],
                     const size_t number_of_values, const char* const file,
                     const int line) {
     CheckIntegerSet check_integer_set;
@@ -1956,8 +1956,8 @@ void _assert_in_set(const LargestIntegralType value,
     }
 }
 
-void _assert_not_in_set(const LargestIntegralType value,
-                        const LargestIntegralType values[],
+void _assert_not_in_set(const uintmax_t value,
+                        const uintmax_t values[],
                         const size_t number_of_values, const char* const file,
                         const int line) {
     CheckIntegerSet check_integer_set;
@@ -3081,8 +3081,8 @@ int _cmocka_run_group_tests(const char *group_name,
     size_t i;
     int rc;
 
-    /* Make sure LargestIntegralType is at least the size of a pointer. */
-    assert_true(sizeof(LargestIntegralType) >= sizeof(void*));
+    /* Make sure uintmax_t is at least the size of a pointer. */
+    assert_true(sizeof(uintmax_t) >= sizeof(void*));
 
     cm_tests = libc_calloc(1, sizeof(struct CMUnitTestState) * num_tests);
     if (cm_tests == NULL) {
@@ -3372,8 +3372,8 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
     print_message("[==========] Running %"PRIdS " test(s).\n",
                   number_of_tests - setups - teardowns);
 
-    /* Make sure LargestIntegralType is at least the size of a pointer. */
-    assert_true(sizeof(LargestIntegralType) >= sizeof(void*));
+    /* Make sure uintmax_t is at least the size of a pointer. */
+    assert_true(sizeof(uintmax_t) >= sizeof(void*));
 
     while (current_test < number_of_tests) {
         const ListNode *test_check_point = NULL;

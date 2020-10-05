@@ -19,6 +19,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <setjmp.h>
+#include <stdint.h>
 #include <cmocka.h>
 
 static void test_skip1(void **state)

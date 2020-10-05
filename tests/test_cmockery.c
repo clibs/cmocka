@@ -17,6 +17,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <setjmp.h>
+#include <stdint.h>
 #include <cmockery/cmockery.h>
 
 /* A test case that does nothing and succeeds. */
