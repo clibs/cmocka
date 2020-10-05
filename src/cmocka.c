@@ -2346,8 +2346,10 @@ void cm_print_error(const char * const format, ...)
 }
 
 /* Standard output and error print methods. */
-void vprint_message(const char* const format, va_list args) {
-    char buffer[1024];
+void vprint_message(const char* const format, va_list args)
+{
+    char buffer[4096];
+
     vsnprintf(buffer, sizeof(buffer), format, args);
     printf("%s", buffer);
     fflush(stdout);
@@ -2357,8 +2359,10 @@ void vprint_message(const char* const format, va_list args) {
 }
 
 
-void vprint_error(const char* const format, va_list args) {
-    char buffer[1024];
+void vprint_error(const char* const format, va_list args)
+{
+    char buffer[4096];
+
     vsnprintf(buffer, sizeof(buffer), format, args);
     fprintf(stderr, "%s", buffer);
     fflush(stderr);
