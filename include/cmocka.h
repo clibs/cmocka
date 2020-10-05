@@ -680,7 +680,7 @@ void expect_not_in_range_count(#function, #parameter, LargestIntegralType minimu
 
 #ifdef DOXYGEN
 /**
- * @brief Add an event to check if a parameter is the given value.
+ * @brief Add an event to check if a parameter is the given integer based value.
  *
  * The event is triggered by calling check_expected() in the mocked function.
  *
@@ -690,7 +690,10 @@ void expect_not_in_range_count(#function, #parameter, LargestIntegralType minimu
  *
  * @param[in]  value  The value to check.
  *
- * @see check_expected().
+ * @see check_expected()
+ * @see expect_string()
+ * @see expect_memory()
+ * @see expect_any()
  */
 void expect_value(#function, #parameter, LargestIntegralType value);
 #else
@@ -700,7 +703,8 @@ void expect_value(#function, #parameter, LargestIntegralType value);
 
 #ifdef DOXYGEN
 /**
- * @brief Add an event to repeatedly check if a parameter is the given value.
+ * @brief Add an event to repeatedly check if a parameter is the given integer
+ * based value.
  *
  * The event is triggered by calling check_expected() in the mocked function.
  *
@@ -715,6 +719,8 @@ void expect_value(#function, #parameter, LargestIntegralType value);
  *                    to -1 the value will always be returned.
  *
  * @see check_expected().
+ * @see expect_not_string()
+ * @see expect_not_memory()
  */
 void expect_value_count(#function, #parameter, LargestIntegralType value, size_t count);
 #else
