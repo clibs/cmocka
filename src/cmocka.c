@@ -119,7 +119,7 @@
     name = (uintmax_t)((uintptr_t)(ptr))
 
 /* Cast a uintmax_t to pointer_type. */
-#define cast_largest_integral_type_to_pointer( \
+#define cast_uintmax_type_to_pointer( \
     pointer_type, largest_integral_type) \
     ((pointer_type)(uintptr_t)(largest_integral_type))
 
@@ -1436,7 +1436,7 @@ static int memory_not_equal_display_error(
 static int check_in_set(const uintmax_t value,
                         const uintmax_t check_value_data) {
     return value_in_set_display_error(value,
-        cast_largest_integral_type_to_pointer(CheckIntegerSet*,
+        cast_uintmax_type_to_pointer(CheckIntegerSet*,
                                               check_value_data), 0);
 }
 
@@ -1445,7 +1445,7 @@ static int check_in_set(const uintmax_t value,
 static int check_not_in_set(const uintmax_t value,
                             const uintmax_t check_value_data) {
     return value_in_set_display_error(value,
-        cast_largest_integral_type_to_pointer(CheckIntegerSet*,
+        cast_uintmax_type_to_pointer(CheckIntegerSet*,
                                               check_value_data), 1);
 }
 
@@ -1500,7 +1500,7 @@ void _expect_not_in_set(
 static int check_in_range(const uintmax_t value,
                           const uintmax_t check_value_data) {
     CheckIntegerRange * const check_integer_range =
-        cast_largest_integral_type_to_pointer(CheckIntegerRange*,
+        cast_uintmax_type_to_pointer(CheckIntegerRange*,
                                               check_value_data);
     assert_non_null(check_integer_range);
     return integer_in_range_display_error(value, check_integer_range->minimum,
@@ -1512,7 +1512,7 @@ static int check_in_range(const uintmax_t value,
 static int check_not_in_range(const uintmax_t value,
                               const uintmax_t check_value_data) {
     CheckIntegerRange * const check_integer_range =
-        cast_largest_integral_type_to_pointer(CheckIntegerRange*,
+        cast_uintmax_type_to_pointer(CheckIntegerRange*,
                                               check_value_data);
     assert_non_null(check_integer_range);
     return integer_not_in_range_display_error(
@@ -1599,8 +1599,8 @@ void _expect_not_value(
 static int check_string(const uintmax_t value,
                         const uintmax_t check_value_data) {
     return string_equal_display_error(
-        cast_largest_integral_type_to_pointer(char*, value),
-        cast_largest_integral_type_to_pointer(char*, check_value_data));
+        cast_uintmax_type_to_pointer(char*, value),
+        cast_uintmax_type_to_pointer(char*, check_value_data));
 }
 
 
@@ -1621,8 +1621,8 @@ void _expect_string(
 static int check_not_string(const uintmax_t value,
                             const uintmax_t check_value_data) {
     return string_not_equal_display_error(
-        cast_largest_integral_type_to_pointer(char*, value),
-        cast_largest_integral_type_to_pointer(char*, check_value_data));
+        cast_uintmax_type_to_pointer(char*, value),
+        cast_uintmax_type_to_pointer(char*, check_value_data));
 }
 
 
@@ -1641,11 +1641,11 @@ void _expect_not_string(
  * memory. */
 static int check_memory(const uintmax_t value,
                         const uintmax_t check_value_data) {
-    CheckMemoryData * const check = cast_largest_integral_type_to_pointer(
+    CheckMemoryData * const check = cast_uintmax_type_to_pointer(
         CheckMemoryData*, check_value_data);
     assert_non_null(check);
     return memory_equal_display_error(
-        cast_largest_integral_type_to_pointer(const char*, value),
+        cast_uintmax_type_to_pointer(const char*, value),
         (const char*)check->memory, check->size);
 }
 
@@ -1685,11 +1685,11 @@ void _expect_memory(
  * an area of memory. */
 static int check_not_memory(const uintmax_t value,
                             const uintmax_t check_value_data) {
-    CheckMemoryData * const check = cast_largest_integral_type_to_pointer(
+    CheckMemoryData * const check = cast_uintmax_type_to_pointer(
         CheckMemoryData*, check_value_data);
     assert_non_null(check);
     return memory_not_equal_display_error(
-        cast_largest_integral_type_to_pointer(const char*, value),
+        cast_uintmax_type_to_pointer(const char*, value),
         (const char*)check->memory,
         check->size);
 }
