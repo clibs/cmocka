@@ -34,8 +34,6 @@ EXPORTS
     _fail
     _function_called
     _mock
-    _run_test
-    _run_tests
     _skip
     _test_calloc
     _test_free

@@ -1621,31 +1621,6 @@ void fail_msg(const char *msg, ...);
 } while (0)
 #endif
 
-#ifdef DOXYGEN
-/**
- * @brief Generic method to run a single test.
- *
- * @deprecated This function was deprecated in favor of cmocka_run_group_tests
- *
- * @param[in]  #function The function to test.
- *
- * @return 0 on success, 1 if an error occured.
- *
- * @code
- * // A test case that does nothing and succeeds.
- * void null_test_success(void **state) {
- * }
- *
- * int main(void) {
- *      return run_test(null_test_success);
- * }
- * @endcode
- */
-int run_test(#function);
-#else
-#define run_test(f) _run_test(#f, f, NULL, UNIT_TEST_FUNCTION_TYPE_TEST, NULL)
-#endif
-
 static inline void _unit_test_dummy(void **state) {
     (void)state;
 }
@@ -1739,9 +1714,6 @@ static inline void _unit_test_dummy(void **state) {
  * overridden by the initial state defined here.
  */
 #define cmocka_unit_test_prestate_setup_teardown(f, setup, teardown, state) { #f, f, setup, teardown, state }
-
-#define run_tests(tests) _run_tests(tests, sizeof(tests) / sizeof((tests)[0]))
-#define run_group_tests(tests) _run_group_tests(tests, sizeof(tests) / sizeof((tests)[0]))
 
 #ifdef DOXYGEN
 /**
@@ -2290,15 +2262,6 @@ void _test_free(void* const ptr, const char* file, const int line);
 CMOCKA_NORETURN void _fail(const char * const file, const int line);
 
 CMOCKA_NORETURN void _skip(const char * const file, const int line);
-
-int _run_test(
-    const char * const function_name, const UnitTestFunction Function,
-    void ** const volatile state, const UnitTestFunctionType function_type,
-    const void* const heap_check_point);
-CMOCKA_DEPRECATED int _run_tests(const UnitTest * const tests,
-                                 const size_t number_of_tests);
-CMOCKA_DEPRECATED int _run_group_tests(const UnitTest * const tests,
-                                       const size_t number_of_tests);
 
 /* Test runner */
 int _cmocka_run_group_tests(const char *group_name,

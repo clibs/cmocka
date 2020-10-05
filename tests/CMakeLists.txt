@@ -30,7 +30,6 @@ set(CMOCKA_TESTS
     test_string
     test_wildcard
     test_skip_filter
-    test_cmockery
     )
 
 if (TEST_EXCEPTION_HANDLER)
@@ -47,11 +46,6 @@ foreach(_CMOCKA_TEST ${CMOCKA_TESTS})
 
     add_cmocka_test_environment(${_CMOCKA_TEST})
 endforeach()
-
-### Special Cases
-if (${CMAKE_C_COMPILER_ID} MATCHES "(GNU|Clang)")
-    set_source_files_properties(test_cmockery.c PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
-endif()
 
 ### Exceptions
 

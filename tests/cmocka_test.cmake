@@ -155,7 +155,6 @@ endif()
 ### Add project default build options here !!!
 
 add_cmake_cache_entry(UNIT_TESTING ON)
-add_cmake_cache_entry(WITH_CMOCKERY_SUPPORT ON)
 
 ### Add project default build options here ^^^
 
