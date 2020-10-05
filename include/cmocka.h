@@ -57,40 +57,6 @@ int __stdcall IsDebuggerPresent();
  * @{
  */
 
-/* Printf format used to display uintmax_t as a hexidecimal. */
-#ifndef UintMaxTypePrintfFormat
-# ifdef _WIN32
-#  define UintMaxTypePrintfFormat "0x%I64x"
-# else
-#  if __WORDSIZE == 64
-#   define UintMaxTypePrintfFormat "%#lx"
-#  else
-#   define UintMaxTypePrintfFormat "%#llx"
-#  endif
-# endif /* _WIN32 */
-#endif /* UintMaxTypePrintfFormat */
-
-/* Printf format used to display uintmax_t as a decimal. */
-#ifndef UintMaxTypePrintfFormatDecimal
-# ifdef _WIN32
-#  define UintMaxTypePrintfFormatDecimal "%I64u"
-# else
-#  if __WORDSIZE == 64
-#   define UintMaxTypePrintfFormatDecimal "%lu"
-#  else
-#   define UintMaxTypePrintfFormatDecimal "%llu"
-#  endif
-# endif /* _WIN32 */
-#endif /* UintMaxTypePrintfFormat */
-
-#ifndef FloatPrintfFormat
-# define FloatPrintfFormat "%f"
-#endif /* FloatPrintfFormat */
-
-#ifndef DoublePrintfFormat
-# define DoublePrintfFormat "%f"
-#endif /* DoublePrintfFormat */
-
 /* Perform an unsigned cast to uintmax_t. */
 #define cast_to_largest_integral_type(value) \
     ((uintmax_t)(value))
