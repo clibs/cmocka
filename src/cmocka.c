@@ -1824,41 +1824,18 @@ void _assert_true(const uintmax_t result,
     }
 }
 
-void _assert_return_code(const uintmax_t result,
-                         size_t rlen,
-                         const uintmax_t error,
+void _assert_return_code(const intmax_t result,
+                         const int32_t error,
                          const char * const expression,
                          const char * const file,
                          const int line)
 {
-    uintmax_t valmax;
-
-
-    switch (rlen) {
-    case 1:
-        valmax = 255;
-        break;
-    case 2:
-        valmax = 32767;
-        break;
-    case 4:
-        valmax = 2147483647;
-        break;
-    case 8:
-    default:
-        if (rlen > sizeof(valmax)) {
-            valmax = 2147483647;
-        } else {
-            valmax = 9223372036854775807L;
-        }
-        break;
-    }
-
-    if (result > valmax - 1) {
+    if (result < 0) {
         if (error > 0) {
-            cm_print_error("%s < 0, errno("
-                           UintMaxTypePrintfFormatDecimal "): %s\n",
-                           expression, error, strerror((int)error));
+            cm_print_error("%s < 0, errno(%d): %s\n",
+                           expression,
+                           error,
+                           strerror(error));
         } else {
             cm_print_error("%s < 0\n", expression);
         }
