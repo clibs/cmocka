@@ -267,10 +267,10 @@ static void remove_always_return_values(ListNode * const map_head,
                                         const size_t number_of_symbol_names);
 
 static size_t check_for_leftover_values_list(const ListNode * head,
-                                             const char * const error_message);
+                                             const char * const error_message_fmt);
 
 static size_t check_for_leftover_values(
-    const ListNode * const map_head, const char * const error_message,
+    const ListNode * const map_head, const char * const error_message_fmt,
     const size_t number_of_symbol_names);
 
 static void remove_always_return_values_from_list(ListNode * const map_head);
@@ -917,7 +917,7 @@ static void remove_always_return_values(ListNode * const map_head,
 }
 
 static size_t check_for_leftover_values_list(const ListNode * head,
-                                             const char * const error_message)
+                                             const char * const error_message_fmt)
 {
     ListNode *child_node;
     size_t leftover_count = 0;
@@ -927,7 +927,7 @@ static size_t check_for_leftover_values_list(const ListNode * head,
                  child_node = child_node->next, ++leftover_count) {
             const FuncOrderingValue *const o =
                     (const FuncOrderingValue*) child_node->value;
-            cm_print_error("%s: %s", error_message, o->function);
+            cm_print_error(error_message_fmt, o->function);
             cm_print_error(SOURCE_LOCATION_FORMAT
                     ": note: remaining item was declared here\n",
                     o->location.file, o->location.line);
@@ -941,7 +941,7 @@ static size_t check_for_leftover_values_list(const ListNode * head,
  * retrieved through execution, and fail the test if that is the case.
  */
 static size_t check_for_leftover_values(
-        const ListNode * const map_head, const char * const error_message,
+        const ListNode * const map_head, const char * const error_message_fmt,
         const size_t number_of_symbol_names) {
     const ListNode *current;
     size_t symbols_with_leftover_values = 0;
@@ -959,7 +959,7 @@ static size_t check_for_leftover_values(
         if (!list_empty(child_list)) {
             if (number_of_symbol_names == 1) {
                 const ListNode *child_node;
-                cm_print_error("%s: %s", error_message, value->symbol_name);
+                cm_print_error(error_message_fmt, value->symbol_name);
 
                 for (child_node = child_list->next; child_node != child_list;
                      child_node = child_node->next) {
@@ -971,7 +971,7 @@ static size_t check_for_leftover_values(
                 }
             } else {
                 cm_print_error("%s: ", value->symbol_name);
-                check_for_leftover_values(child_list, error_message,
+                check_for_leftover_values(child_list, error_message_fmt,
                                           number_of_symbol_names - 1);
             }
             symbols_with_leftover_values ++;
