@@ -267,10 +267,10 @@ static void remove_always_return_values(ListNode * const map_head,
                                         const size_t number_of_symbol_names);
 
 static size_t check_for_leftover_values_list(const ListNode * head,
-                                             const char * const error_message_fmt);
+                                             const char * const error_message);
 
 static size_t check_for_leftover_values(
-    const ListNode * const map_head, const char * const error_message_fmt,
+    const ListNode * const map_head, const char * const error_message,
     const size_t number_of_symbol_names);
 
 static void remove_always_return_values_from_list(ListNode * const map_head);
@@ -575,21 +575,21 @@ static void fail_if_leftover_values(const char *test_name) {
     remove_always_return_values(&global_function_result_map_head, 1);
     if (check_for_leftover_values(
             &global_function_result_map_head,
-            "%s() has remaining non-returned values.\n", 1)) {
+            "Has remaining non-returned values", 1)) {
         error_occurred = 1;
     }
 
     remove_always_return_values(&global_function_parameter_map_head, 2);
     if (check_for_leftover_values(
             &global_function_parameter_map_head,
-            "'%s' parameter still has values that haven't been checked.\n",
+            "Parameter still has values that haven't been checked",
             2)) {
         error_occurred = 1;
     }
 
     remove_always_return_values_from_list(&global_call_ordering_head);
     if (check_for_leftover_values_list(&global_call_ordering_head,
-        "%s function was expected to be called but was not.\n")) {
+        "Function was expected to be called but was not")) {
         error_occurred = 1;
     }
     if (error_occurred) {
@@ -917,7 +917,7 @@ static void remove_always_return_values(ListNode * const map_head,
 }
 
 static size_t check_for_leftover_values_list(const ListNode * head,
-                                             const char * const error_message_fmt)
+                                             const char * const error_message)
 {
     ListNode *child_node;
     size_t leftover_count = 0;
@@ -927,7 +927,7 @@ static size_t check_for_leftover_values_list(const ListNode * head,
                  child_node = child_node->next, ++leftover_count) {
             const FuncOrderingValue *const o =
                     (const FuncOrderingValue*) child_node->value;
-            cm_print_error(error_message_fmt, o->function);
+            cm_print_error("%s: %s\n", error_message, o->function);
             cm_print_error(SOURCE_LOCATION_FORMAT
                     ": note: remaining item was declared here\n",
                     o->location.file, o->location.line);
@@ -941,7 +941,7 @@ static size_t check_for_leftover_values_list(const ListNode * head,
  * retrieved through execution, and fail the test if that is the case.
  */
 static size_t check_for_leftover_values(
-        const ListNode * const map_head, const char * const error_message_fmt,
+        const ListNode * const map_head, const char * const error_message,
         const size_t number_of_symbol_names) {
     const ListNode *current;
     size_t symbols_with_leftover_values = 0;
@@ -959,7 +959,7 @@ static size_t check_for_leftover_values(
         if (!list_empty(child_list)) {
             if (number_of_symbol_names == 1) {
                 const ListNode *child_node;
-                cm_print_error(error_message_fmt, value->symbol_name);
+                cm_print_error("%s: %s\n", error_message, value->symbol_name);
 
                 for (child_node = child_list->next; child_node != child_list;
                      child_node = child_node->next) {
@@ -971,7 +971,7 @@ static size_t check_for_leftover_values(
                 }
             } else {
                 cm_print_error("%s: ", value->symbol_name);
-                check_for_leftover_values(child_list, error_message_fmt,
+                check_for_leftover_values(child_list, error_message,
                                           number_of_symbol_names - 1);
             }
             symbols_with_leftover_values ++;
