@@ -48,7 +48,6 @@ int __stdcall IsDebuggerPresent();
  * #include <stddef.h>
  * #include <stdint.h>
  * #include <setjmp.h>
- * #include <stdint.h>
  * @endcode
  *
  * This allows test applications to use custom definitions of C standard
