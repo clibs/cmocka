@@ -1672,7 +1672,7 @@ void stop(void);
 void fail_msg(const char *msg, ...);
 #else
 #define fail_msg(msg, ...) do { \
-    print_error("ERROR: " msg "\n", ##__VA_ARGS__); \
+    cm_print_error("ERROR: " msg "\n", ##__VA_ARGS__); \
     fail(); \
 } while (0)
 #endif
@@ -2332,6 +2332,7 @@ void print_message(const char* const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
 void print_error(const char* const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
 void vprint_message(const char* const format, va_list args) CMOCKA_PRINTF_ATTRIBUTE(1, 0);
 void vprint_error(const char* const format, va_list args) CMOCKA_PRINTF_ATTRIBUTE(1, 0);
+void cm_print_error(const char* const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
 
 enum cm_message_output {
     CM_OUTPUT_STANDARD = 1,

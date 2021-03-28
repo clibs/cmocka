@@ -289,8 +289,6 @@ static uint32_t cm_get_output(void);
 static int cm_error_message_enabled = 1;
 static CMOCKA_THREAD char *cm_error_message;
 
-void cm_print_error(const char * const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
-
 /*
  * Keeps track of the calling context returned by setenv() so that the fail()
  * method can jump out of a test.
