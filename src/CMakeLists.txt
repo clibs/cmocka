@@ -45,6 +45,8 @@ set_target_properties(cmocka PROPERTIES
                       VERSION               ${LIBRARY_VERSION}
                       SOVERSION             ${LIBRARY_SOVERSION}
                       LINK_FLAGS            "${DEFAULT_LINK_FLAGS}"
+                      C_STANDARD            99
+                      C_STANDARD_REQUIRED   ON
 )
 
 add_library(cmocka::cmocka ALIAS cmocka)
