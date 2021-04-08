@@ -40,30 +40,12 @@ if (CMOCKA_PLATFORM_INCLUDE)
 endif()
 
 target_link_libraries(cmocka PRIVATE ${CMOCKA_LINK_LIBRARIES})
-set_property(TARGET
-                 cmocka
-             PROPERTY
-                 DEFINE_SYMBOL
-                     CMOCKA_EXPORTS
+set_target_properties(cmocka PROPERTIES
+                      DEFINE_SYMBOL         CMOCKA_EXPORTS
+                      VERSION               ${LIBRARY_VERSION}
+                      SOVERSION             ${LIBRARY_SOVERSION}
+                      LINK_FLAGS            "${DEFAULT_LINK_FLAGS}"
 )
-
-set_property(TARGET
-                 cmocka
-             PROPERTY
-                VERSION
-                    ${LIBRARY_VERSION}
-)
-set_property(TARGET
-                 cmocka
-             PROPERTY
-                SOVERSION
-                    ${LIBRARY_SOVERSION})
-
-set_property(TARGET
-                cmocka
-             PROPERTY
-                LINK_FLAGS
-                "${DEFAULT_LINK_FLAGS}")
 
 add_library(cmocka::cmocka ALIAS cmocka)
 
