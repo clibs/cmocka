@@ -1444,7 +1444,10 @@ void assert_not_in_set(uintmax_t value, uintmax_t values[], size_t count);
  * created (e.g. expect_function_call()) than consumed with function_called().
  * There are provisions such as ignore_function_calls() which allow this
  * restriction to be circumvented in tests where mock calls for the code under
- * test are not the focus of the test.
+ * test are not the focus of the test. function_called() must be called from
+ * the same thread as expect_function_call(), and that thread must have been
+ * initialized for use by cmocka (see also the [Threading section of the main
+ * documentation page](index.html#main-threads)).
  *
  * The following example illustrates how a unit test instructs cmocka
  * to expect a function_called() from a particular mock,
