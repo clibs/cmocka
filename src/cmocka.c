@@ -1028,57 +1028,52 @@ void _function_called(const char *const function,
                       const char *const file,
                       const int line)
 {
-    ListNode *first_value_node = NULL;
-    ListNode *value_node = NULL;
-    int rc;
-
-    rc = list_first(&global_call_ordering_head, &value_node);
-    first_value_node = value_node;
-    if (rc) {
+    if (list_empty(&global_call_ordering_head)) {
+        cmocka_print_error(SOURCE_LOCATION_FORMAT
+                       ": error: No mock calls expected but called() was "
+                       "invoked in %s\n",
+                       file, line,
+                       function);
+        exit_test(1);
+    } else {
+        const ListNode * const head = &global_call_ordering_head;
+        ListNode *current = head->next;
         FuncOrderingValue *expected_call;
-        int cmp;
+        bool found = false;
 
-        expected_call = (FuncOrderingValue *)value_node->value;
-
-        cmp = strcmp(expected_call->function, function);
-        if (value_node->refcount < -1) {
-            /*
-             * Search through value nodes until either function is found or
-             * encounter a non-zero refcount greater than -2
-             */
-            if (cmp != 0) {
-                value_node = value_node->next;
-                expected_call = (FuncOrderingValue *)value_node->value;
-
-                cmp = strcmp(expected_call->function, function);
-                while (value_node->refcount < -1 &&
-                       cmp != 0 &&
-                       value_node != first_value_node->prev) {
-                    value_node = value_node->next;
-                    if (value_node == NULL) {
-                        break;
-                    }
-                    expected_call = (FuncOrderingValue *)value_node->value;
-                    if (expected_call == NULL) {
-                        continue;
-                    }
-                    cmp = strcmp(expected_call->function, function);
-                }
-
-                if (expected_call == NULL || value_node == first_value_node->prev) {
-                    cmocka_print_error(SOURCE_LOCATION_FORMAT
-                                   ": error: No expected mock calls matching "
-                                   "called() invocation in %s",
-                                   file, line,
-                                   function);
-                    exit_test(1);
-                }
+        /*
+         * Search through value nodes until either function is found or
+         * encounter a non-zero refcount greater than -2
+         */
+        do {
+            expected_call = (FuncOrderingValue *)current->value;
+            if (expected_call != NULL) {
+                found = strcmp(expected_call->function, function) == 0;
+            } else {
+                found = false;
             }
+            if (found || current->refcount > -2) {
+                break;
+            }
+
+            current = current->next;
+        } while (current != NULL && current != head);
+
+        if (expected_call == NULL || current == head) {
+            cmocka_print_error(SOURCE_LOCATION_FORMAT
+                           ": error: No expected mock calls matching "
+                           "called() invocation in %s\n",
+                           file, line,
+                           function);
+            exit_test(1);
         }
 
-        if (cmp == 0) {
-            if (value_node->refcount > -2 && --value_node->refcount == 0) {
-                list_remove_free(value_node, free_value, NULL);
+        if (found) {
+            if (current->refcount > -2) {
+                current->refcount--;
+                if (current->refcount == 0) {
+                    list_remove_free(current, free_value, NULL);
+                }
             }
         } else {
             cmocka_print_error(SOURCE_LOCATION_FORMAT
@@ -1089,13 +1084,6 @@ void _function_called(const char *const function,
                            function);
             exit_test(1);
         }
-    } else {
-        cmocka_print_error(SOURCE_LOCATION_FORMAT
-                       ": error: No mock calls expected but called() was "
-                       "invoked in %s\n",
-                       file, line,
-                       function);
-        exit_test(1);
     }
 }
 
