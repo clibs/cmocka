@@ -1633,11 +1633,25 @@ void fail(void);
 
 #ifdef DOXYGEN
 /**
- * @brief Forces the test to not be executed, but marked as skipped
+ * @brief Forces the test to not be executed, but marked as skipped.
  */
 void skip(void);
 #else
 #define skip() _skip(__FILE__, __LINE__)
+#endif
+
+#ifdef DOXYGEN
+/**
+ * @brief Forces the test to be stopped immediately.
+ *
+ * Call stop() to stop a running test.
+ * The test is considered passed if there are no leftover values, otherwise a test failure
+ * is signaled.
+ * Calling stop() is especially useful in mocked functions that do not return, e.g reset the CPU.
+ */
+void stop(void);
+#else
+#define stop() _stop()
 #endif
 
 #ifdef DOXYGEN
@@ -2303,6 +2317,8 @@ void _test_free(void* const ptr, const char* file, const int line);
 CMOCKA_NORETURN void _fail(const char * const file, const int line);
 
 CMOCKA_NORETURN void _skip(const char * const file, const int line);
+
+CMOCKA_NORETURN void _stop(void);
 
 /* Test runner */
 int _cmocka_run_group_tests(const char *group_name,

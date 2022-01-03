@@ -18,6 +18,8 @@ tests = {
     'returns_fail': true,
     'wildcard': false,
     'skip_filter': false,
+    'stop': false,
+    'stop_fail': true,
 }
 
 foreach name, should_fail: tests

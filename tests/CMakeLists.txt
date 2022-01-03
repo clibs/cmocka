@@ -27,6 +27,8 @@ set(CMOCKA_TESTS
     test_assert_macros_fail
     test_basics
     test_skip
+    test_stop
+    test_stop_fail
     test_strmatch
     test_setup_fail
     test_ordering
@@ -74,12 +76,20 @@ set_tests_properties(
 # test_expect_check_fail
 set_tests_properties(
     test_expect_check_fail
+    PROPERTIES
+    PASS_REGULAR_EXPRESSION
+    "\\[  FAILED  \\] tests: 3 test"
+)
+
+# stop_fail
+set_tests_properties(
+    test_stop_fail
         PROPERTIES
         PASS_REGULAR_EXPRESSION
         "\\[  FAILED  \\] tests: 3 test"
 )
 
-# test_ordering ensure proper failures
+# test_ordering_fail ensure proper failures
 set_tests_properties(
     test_ordering_fail
         PROPERTIES

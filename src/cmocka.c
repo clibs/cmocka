@@ -304,6 +304,7 @@ jmp_buf global_expect_assert_env;
 int global_expecting_assert = 0;
 const char *global_last_failed_assert = NULL;
 static int global_skip_test;
+static int global_stop_test;
 
 /* Keeps a map of the values that functions will have to return to provide */
 /* mocked interfaces. */
@@ -429,6 +430,15 @@ void _skip(const char * const file, const int line)
 {
     cm_print_error(SOURCE_LOCATION_FORMAT ": Skipped!\n", file, line);
     global_skip_test = 1;
+    exit_test(1);
+
+    /* Unreachable */
+    exit(-1);
+}
+
+void _stop(void)
+{
+    global_stop_test = 1;
     exit_test(1);
 
     /* Unreachable */
@@ -568,15 +578,14 @@ void initialize_testing(const char *test_name) {
     initialize_source_location(&global_last_parameter_location);
 }
 
-
-static void fail_if_leftover_values(const char *test_name) {
-    int error_occurred = 0;
+static int has_leftover_values(const char *test_name) {
+    int leftover_values = 0;
     (void)test_name;
     remove_always_return_values(&global_function_result_map_head, 1);
     if (check_for_leftover_values(
             &global_function_result_map_head,
             "Has remaining non-returned values", 1)) {
-        error_occurred = 1;
+        leftover_values = 1;
     }
 
     remove_always_return_values(&global_function_parameter_map_head, 2);
@@ -584,15 +593,19 @@ static void fail_if_leftover_values(const char *test_name) {
             &global_function_parameter_map_head,
             "Parameter still has values that haven't been checked",
             2)) {
-        error_occurred = 1;
+        leftover_values = 1;
     }
 
     remove_always_return_values_from_list(&global_call_ordering_head);
     if (check_for_leftover_values_list(&global_call_ordering_head,
         "Function was expected to be called but was not")) {
-        error_occurred = 1;
+        leftover_values = 1;
     }
-    if (error_occurred) {
+    return (leftover_values);
+}
+
+static void fail_if_leftover_values(const char *test_name) {
+    if (has_leftover_values(test_name) != 0) {
         exit_test(1);
     }
 }
@@ -2964,6 +2977,12 @@ static int cmocka_run_one_test_or_fixture(const char *function_name,
         /* TEST FAILED */
         global_running_test = 0;
         rc = -1;
+        if (global_stop_test) {
+            if (has_leftover_values(function_name) == 0) {
+                rc = 0;
+            }
+            global_stop_test = 0;
+        }
     }
     teardown_testing(function_name);
 

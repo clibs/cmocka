@@ -35,6 +35,7 @@ EXPORTS
     _function_called
     _mock
     _skip
+    _stop
     _test_calloc
     _test_free
     _test_malloc
