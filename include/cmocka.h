@@ -2318,24 +2318,27 @@ void vprint_message(const char* const format, va_list args) CMOCKA_PRINTF_ATTRIB
 void vprint_error(const char* const format, va_list args) CMOCKA_PRINTF_ATTRIBUTE(1, 0);
 
 enum cm_message_output {
-    CM_OUTPUT_STDOUT,
-    CM_OUTPUT_SUBUNIT,
-    CM_OUTPUT_TAP,
-    CM_OUTPUT_XML,
+    CM_OUTPUT_STANDARD = 1,
+    CM_OUTPUT_SUBUNIT = 2,
+    CM_OUTPUT_TAP = 4,
+    CM_OUTPUT_XML = 8,
 };
 
 /**
  * @brief Function to set the output format for a test.
  *
- * The ouput format for the test can either be set globally using this
- * function or overriden with environment variable CMOCKA_MESSAGE_OUTPUT.
+ * The output format(s) for the test can either be set globally using this
+ * function or overwritten with environment variable CMOCKA_MESSAGE_OUTPUT.
  *
- * The environment variable can be set to either STDOUT, SUBUNIT, TAP or XML.
+ * The environment variable can be set to STANDARD, SUBUNIT, TAP or XML.
+ * Multiple outputs separated with comma are permitted.
+ * (e.g. export CMOCKA_MESSAGE_OUTPUT=STANDARD,XML)
  *
- * @param[in] output    The output format to use for the test.
+ * @param[in] output    The output format from cm_message_output to use for the
+ *                      test. For multiple outputs OR options together.
  *
  */
-void cmocka_set_message_output(enum cm_message_output output);
+void cmocka_set_message_output(uint32_t output);
 
 
 /**
