@@ -20,7 +20,7 @@
  **************************************/
 static void test_assert_return_code(void **state)
 {
-    struct stat sb;
+    struct stat sb = {0};
     int rc;
 
     (void)state; /* unused */
