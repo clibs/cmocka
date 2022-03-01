@@ -193,7 +193,7 @@ fedora/mingw32:
     - mkdir -p obj && cd obj && mingw32-cmake
       -DCMAKE_BUILD_TYPE=RelWithDebInfo
       -DPICKY_DEVELOPER=ON
-      -DWITH_SFTP=ON -DWITH_SERVER=ON -DWITH_ZLIB=ON --DWITH_PCAP=ON
+      -DWITH_SFTP=ON -DWITH_SERVER=ON -DWITH_ZLIB=ON -DWITH_PCAP=ON
       -DUNIT_TESTING=ON .. &&
       make -j$(nproc) &&
       ctest --output-on-failure
