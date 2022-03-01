@@ -102,7 +102,7 @@ if (TEST_EXCEPTION_HANDLER)
         set_tests_properties(test_exception_handler
                              PROPERTIES
                                  PASS_REGULAR_EXPRESSION
-                                     "Test failed with exception: (Segmentation fault|Segmentation Fault|11|Illegal instruction)")
+                                 "Test failed with exception")
     endif (WIN32)
 endif (TEST_EXCEPTION_HANDLER)
 
