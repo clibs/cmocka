@@ -7,7 +7,13 @@ variables:
   MINGW_BUILD: buildenv-mingw
   UBUNTU_BUILD: buildenv-ubuntu
 
+stages:
+  - build
+  - test
+  - analysis
+
 centos7/x86_64:
+  stage: test
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$CENTOS7_BUILD
   script:
     - mkdir -p obj && cd obj && cmake3
@@ -26,6 +32,7 @@ centos7/x86_64:
       - obj/
 
 fedora/x86_64:
+  stage: test
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
   script:
     - mkdir -p obj && cd obj && cmake
@@ -44,6 +51,7 @@ fedora/x86_64:
       - obj/
 
 fedora/meson:
+  stage: build
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
   script:
     - meson build -Dunit_testing=true &&
@@ -59,6 +67,7 @@ fedora/meson:
       - build/
 
 fedora/address-sanitizer:
+  stage: build
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
   script:
     - mkdir -p obj && cd obj && cmake
@@ -77,6 +86,7 @@ fedora/address-sanitizer:
       - obj/
 
 fedora/memory-sanitizer:
+  stage: build
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
   script:
     - mkdir -p obj && cd obj && cmake
@@ -95,6 +105,7 @@ fedora/memory-sanitizer:
       - obj/
 
 fedora/undefined-sanitizer:
+  stage: build
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
   script:
     - mkdir -p obj && cd obj && cmake
@@ -112,6 +123,7 @@ fedora/undefined-sanitizer:
       - obj/
 
 fedora/csbuild:
+  stage: analysis
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
   script:
     - |
@@ -144,6 +156,7 @@ fedora/csbuild:
       - obj-csbuild/
 
 freebsd/x86_64:
+  stage: build
   image:
   script:
     - mkdir -p obj && cd obj && cmake
@@ -165,6 +178,7 @@ freebsd/x86_64:
       - obj/
 
 fedora/mingw64:
+  stage: test
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$MINGW_BUILD
   script:
     - export WINEPATH=/usr/x86_64-w64-mingw32/sys-root/mingw/bin
@@ -186,6 +200,7 @@ fedora/mingw64:
       - obj/
 
 fedora/mingw32:
+  stage: test
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$MINGW_BUILD
   script:
     - export WINEPATH=/usr/i686-w64-mingw32/sys-root/mingw/bin
@@ -208,6 +223,7 @@ fedora/mingw32:
       - obj/
 
 tumbleweed/x86_64/gcc:
+  stage: test
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$TUMBLEWEED_BUILD
   script:
     - mkdir -p obj && cd obj && cmake
@@ -226,6 +242,7 @@ tumbleweed/x86_64/gcc:
       - obj/
 
 tumbleweed/x86/gcc:
+  stage: test
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$TUMBLEWEED_BUILD
   script:
     - mkdir -p obj && cd obj && cmake
@@ -245,6 +262,7 @@ tumbleweed/x86/gcc:
       - obj/
 
 tumbleweed/x86_64/gcc7:
+  stage: test
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$TUMBLEWEED_BUILD
   script:
     - mkdir -p obj && cd obj && cmake
@@ -264,6 +282,7 @@ tumbleweed/x86_64/gcc7:
       - obj/
 
 tumbleweed/x86/gcc7:
+  stage: test
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$TUMBLEWEED_BUILD
   script:
     - mkdir -p obj && cd obj && cmake
@@ -284,6 +303,7 @@ tumbleweed/x86/gcc7:
       - obj/
 
 tumbleweed/x86_64/clang:
+  stage: test
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$TUMBLEWEED_BUILD
   script:
     - mkdir -p obj && cd obj && cmake
@@ -303,6 +323,7 @@ tumbleweed/x86_64/clang:
       - obj/
 
 tumbleweed/docs:
+  stage: build
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$TUMBLEWEED_BUILD
   script:
     - mkdir -p obj && cd obj && cmake .. && make docs
@@ -317,6 +338,7 @@ tumbleweed/docs:
       - obj/
 
 tumbleweed/static-analysis:
+  stage: analysis
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$TUMBLEWEED_BUILD
   script:
     - export CCC_CC=clang
@@ -338,6 +360,7 @@ tumbleweed/static-analysis:
       - obj/scan
 
 ubuntu/x86_64:
+  stage: test
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$UBUNTU_BUILD
   script:
     - mkdir -p obj && cd obj && cmake
