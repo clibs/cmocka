@@ -36,11 +36,11 @@ static void test_segfault_recovery3(void **state)
 }
 
 int main(void) {
-    const struct CMUnitTest tests[] = {
+    const struct CMUnitTest exception_tests[] = {
         cmocka_unit_test(test_segfault_recovery1),
         cmocka_unit_test(test_segfault_recovery2),
         cmocka_unit_test(test_segfault_recovery3),
     };
 
-    return cmocka_run_group_tests(tests, NULL, NULL);
+    return cmocka_run_group_tests(exception_tests, NULL, NULL);
 }
