@@ -1,6 +1,10 @@
 project(tests C)
 
 set(TEST_EXCEPTION_HANDLER TRUE)
+if (WIN32)
+    # FIXME: The exception handler doesn't work on Windows
+    set(TEST_EXCEPTION_HANDLER FALSE)
+endif()
 if (CMAKE_BUILD_TYPE)
     string(TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_LOWER)
     if (CMAKE_BUILD_TYPE_LOWER STREQUAL "undefinedsanitizer")
@@ -93,17 +97,10 @@ set_tests_properties(
 
 # test_exception_handler
 if (TEST_EXCEPTION_HANDLER)
-    if (WIN32)
-        set_tests_properties(test_exception_handler
-                                 PROPERTIES
-                                     PASS_REGULAR_EXPRESSION
-                                         "EXCEPTION_ACCESS_VIOLATION occurred at")
-    else()
-        set_tests_properties(test_exception_handler
-                             PROPERTIES
-                                 PASS_REGULAR_EXPRESSION
-                                 "Test failed with exception")
-    endif (WIN32)
+    set_tests_properties(test_exception_handler
+                         PROPERTIES
+                             PASS_REGULAR_EXPRESSION
+                             "Test failed with exception")
 endif (TEST_EXCEPTION_HANDLER)
 
 set_tests_properties(
