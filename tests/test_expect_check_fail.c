@@ -21,17 +21,20 @@ int custom_checker(uintmax_t param, uintmax_t check)
 
 static void test_no_expects_fail(void **state)
 {
+    (void)state; /* unused */
     mock_test_a(0);
 }
 
 static void test_expect_check_count_remaining_fail(void **state)
 {
+    (void)state; /* unused */
     expect_check_count(mock_test_a, value, custom_checker, 0, 2);
     mock_test_a(0);
 }
 
 static void test_expect_check_count_always_remaining_fail(void **state)
 {
+    (void)state; /* unused */
     expect_check_count(mock_test_a, value, custom_checker, 0, EXPECT_ALWAYS);
 }
 
