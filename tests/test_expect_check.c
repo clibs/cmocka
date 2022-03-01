@@ -21,12 +21,14 @@ int custom_checker(uintmax_t param, uintmax_t check)
 
 static void test_expect_check(void **state)
 {
+    (void)state; /* unused */
     expect_check(mock_test_a, value, custom_checker, 0);
     mock_test_a(0);
 }
 
 static void test_expect_check_count(void **state)
 {
+    (void)state; /* unused */
     expect_check_count(mock_test_a, value, custom_checker, 0, 2);
     mock_test_a(0);
     mock_test_a(0);
@@ -34,6 +36,7 @@ static void test_expect_check_count(void **state)
 
 static void test_expect_check_count_always(void **state)
 {
+    (void)state; /* unused */
     expect_check_count(mock_test_a, value, custom_checker, 0, EXPECT_ALWAYS);
     mock_test_a(0);
     mock_test_a(0);
@@ -43,6 +46,7 @@ static void test_expect_check_count_always(void **state)
 
 static void test_expect_check_count_maybe_1(void **state)
 {
+    (void)state; /* unused */
     expect_check_count(mock_test_a, value, custom_checker, 0, EXPECT_MAYBE);
     mock_test_a(0);
     mock_test_a(0);
@@ -52,6 +56,7 @@ static void test_expect_check_count_maybe_1(void **state)
 
 static void test_expect_check_count_maybe_2(void **state)
 {
+    (void)state; /* unused */
     expect_check_count(mock_test_a, value, custom_checker, 0, EXPECT_MAYBE);
 }
 
