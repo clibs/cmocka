@@ -126,7 +126,7 @@ function(ADD_CMOCKA_TEST_ENVIRONMENT _TARGET_NAME)
         if (TARGET_SYSTEM_EMULATOR)
             set(DLL_PATH_ENV "WINEPATH=${CMOCKA_DLL_PATH};$ENV{WINEPATH}")
         else()
-            set(DLL_PATH_ENV "PATH=${CMOCKA_DLL_PATH};$ENV{PATH}")
+            set(DLL_PATH_ENV "PATH=${CMOCKA_DLL_PATH}\\${CMAKE_BUILD_TYPE};$ENV{PATH}")
         endif()
         #
         # IMPORTANT NOTE: The set_tests_properties(), below, internally
