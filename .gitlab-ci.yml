@@ -156,7 +156,7 @@ fedora/csbuild:
       - obj-csbuild/
 
 freebsd/x86_64:
-  stage: build
+  stage: test
   image:
   script:
     - mkdir -p obj && cd obj && cmake
