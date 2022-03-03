@@ -86,7 +86,7 @@ fedora/address-sanitizer:
       - obj/
 
 fedora/memory-sanitizer:
-  stage: build
+  stage: analysis
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
   script:
     - mkdir -p obj && cd obj && cmake
@@ -105,7 +105,7 @@ fedora/memory-sanitizer:
       - obj/
 
 fedora/undefined-sanitizer:
-  stage: build
+  stage: analysis
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
   script:
     - mkdir -p obj && cd obj && cmake
