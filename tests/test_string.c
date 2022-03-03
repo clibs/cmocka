@@ -22,11 +22,13 @@
 
 static void torture_string_equal(void **state)
 {
+    (void)state; /* unused */
     assert_string_equal("wurst", "wurst");
 }
 
 static void torture_string_not_equal(void **state)
 {
+    (void)state; /* unused */
     assert_string_not_equal("wurst", "brot");
 }
 
