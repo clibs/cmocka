@@ -94,7 +94,9 @@ set_tests_properties(
     test_ordering_fail
         PROPERTIES
         PASS_REGULAR_EXPRESSION
-        "\\[  FAILED  \\] tests: 7 test"
+        "\\[  FAILED  \\] tests: 8 test"
+        FAIL_REGULAR_EXPRESSION
+        "Test failed with exception: (Segmentation fault|Segmentation Fault|11|Illegal instruction)"
 )
 
 # test_returns_fail ensure proper failures
