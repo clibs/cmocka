@@ -2332,7 +2332,6 @@ void print_message(const char* const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
 void print_error(const char* const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
 void vprint_message(const char* const format, va_list args) CMOCKA_PRINTF_ATTRIBUTE(1, 0);
 void vprint_error(const char* const format, va_list args) CMOCKA_PRINTF_ATTRIBUTE(1, 0);
-void cmocka_print_error(const char* const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
 
 enum cm_message_output {
     CM_OUTPUT_STANDARD = 1,
@@ -2340,6 +2339,18 @@ enum cm_message_output {
     CM_OUTPUT_TAP = 4,
     CM_OUTPUT_XML = 8,
 };
+
+/**
+ * @brief Print error message using the cmocka output format.
+ *
+ * This prints an error message using the message output defined by the
+ * environment variable CMOCKA_MESSAGE_OUTPUT or cmocka_set_message_output().
+ *
+ * @param format  The formant string fprintf(3) uses.
+
+ * @param ...     The parameters used to fill format.
+ */
+void cmocka_print_error(const char* const format, ...) CMOCKA_PRINTF_ATTRIBUTE(1, 2);
 
 /**
  * @brief Function to set the output format for a test.
