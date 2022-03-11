@@ -41,7 +41,7 @@ EXPORTS
     _test_malloc
     _test_realloc
     _will_return
-    cm_print_error
+    cmocka_print_error
     cmocka_set_message_output
     cmocka_set_test_filter
     cmocka_set_skip_filter

@@ -426,7 +426,7 @@ static void exit_test(const int quit_application)
 
 void _skip(const char * const file, const int line)
 {
-    cm_print_error(SOURCE_LOCATION_FORMAT ": Skipped!\n", file, line);
+    cmocka_print_error(SOURCE_LOCATION_FORMAT ": Skipped!\n", file, line);
     global_skip_test = 1;
     exit_test(1);
 
@@ -864,7 +864,7 @@ static int get_symbol_value(
         return return_value;
     }
 out:
-    cm_print_error("No entries for symbol %s.\n", symbol_name);
+    cmocka_print_error("No entries for symbol %s.\n", symbol_name);
     return 0;
 }
 
@@ -938,8 +938,8 @@ static size_t check_for_leftover_values_list(const ListNode * head,
                  child_node = child_node->next, ++leftover_count) {
             const FuncOrderingValue *const o =
                     (const FuncOrderingValue*) child_node->value;
-            cm_print_error("%s: %s\n", error_message, o->function);
-            cm_print_error(SOURCE_LOCATION_FORMAT
+            cmocka_print_error("%s: %s\n", error_message, o->function);
+            cmocka_print_error(SOURCE_LOCATION_FORMAT
                     ": note: remaining item was declared here\n",
                     o->location.file, o->location.line);
         }
@@ -970,18 +970,18 @@ static size_t check_for_leftover_values(
         if (!list_empty(child_list)) {
             if (number_of_symbol_names == 1) {
                 const ListNode *child_node;
-                cm_print_error("%s: %s\n", error_message, value->symbol_name);
+                cmocka_print_error("%s: %s\n", error_message, value->symbol_name);
 
                 for (child_node = child_list->next; child_node != child_list;
                      child_node = child_node->next) {
                     const SourceLocation * const location =
                         (const SourceLocation*)child_node->value;
-                    cm_print_error(SOURCE_LOCATION_FORMAT
+                    cmocka_print_error(SOURCE_LOCATION_FORMAT
                                    ": note: remaining item was declared here\n",
                                    location->file, location->line);
                 }
             } else {
-                cm_print_error("%s: ", value->symbol_name);
+                cmocka_print_error("%s: ", value->symbol_name);
                 check_for_leftover_values(child_list, error_message,
                                           number_of_symbol_names - 1);
             }
@@ -1007,15 +1007,15 @@ uintmax_t _mock(const char * const function, const char* const file,
         }
         return value;
     } else {
-        cm_print_error(SOURCE_LOCATION_FORMAT ": error: Could not get value "
+        cmocka_print_error(SOURCE_LOCATION_FORMAT ": error: Could not get value "
                        "to mock function %s\n", file, line, function);
         if (source_location_is_set(&global_last_mock_value_location)) {
-            cm_print_error(SOURCE_LOCATION_FORMAT
+            cmocka_print_error(SOURCE_LOCATION_FORMAT
                            ": note: Previously returned mock value was declared here\n",
                            global_last_mock_value_location.file,
                            global_last_mock_value_location.line);
         } else {
-            cm_print_error("There were no previously returned mock values for "
+            cmocka_print_error("There were no previously returned mock values for "
                            "this test.\n");
         }
         exit_test(1);
@@ -1066,7 +1066,7 @@ void _function_called(const char *const function,
                 }
 
                 if (expected_call == NULL || value_node == first_value_node->prev) {
-                    cm_print_error(SOURCE_LOCATION_FORMAT
+                    cmocka_print_error(SOURCE_LOCATION_FORMAT
                                    ": error: No expected mock calls matching "
                                    "called() invocation in %s",
                                    file, line,
@@ -1081,7 +1081,7 @@ void _function_called(const char *const function,
                 list_remove_free(value_node, free_value, NULL);
             }
         } else {
-            cm_print_error(SOURCE_LOCATION_FORMAT
+            cmocka_print_error(SOURCE_LOCATION_FORMAT
                            ": error: Expected call to %s but received called() "
                            "in %s\n",
                            file, line,
@@ -1090,7 +1090,7 @@ void _function_called(const char *const function,
             exit_test(1);
         }
     } else {
-        cm_print_error(SOURCE_LOCATION_FORMAT
+        cmocka_print_error(SOURCE_LOCATION_FORMAT
                        ": error: No mock calls expected but called() was "
                        "invoked in %s\n",
                        file, line,
@@ -1199,7 +1199,7 @@ static int float_values_equal_display_error(const float left,
                                             const float epsilon) {
     const int equal = float_compare(left, right, epsilon);
     if (!equal) {
-        cm_print_error(FloatPrintfFormat " != "
+        cmocka_print_error(FloatPrintfFormat " != "
                    FloatPrintfFormat "\n", left, right);
     }
     return equal;
@@ -1212,7 +1212,7 @@ static int float_values_not_equal_display_error(const float left,
                                                 const float epsilon) {
     const int not_equal = (float_compare(left, right, epsilon) == 0);
     if (!not_equal) {
-        cm_print_error(FloatPrintfFormat " == "
+        cmocka_print_error(FloatPrintfFormat " == "
                    FloatPrintfFormat "\n", left, right);
     }
     return not_equal;
@@ -1261,7 +1261,7 @@ static int double_values_equal_display_error(const double left,
     const int equal = double_compare(left, right, epsilon);
 
     if (!equal) {
-        cm_print_error(DoublePrintfFormat " != "
+        cmocka_print_error(DoublePrintfFormat " != "
                    DoublePrintfFormat "\n", left, right);
     }
 
@@ -1278,7 +1278,7 @@ static int double_values_not_equal_display_error(const double left,
     const int not_equal = (double_compare(left, right, epsilon) == 0);
 
     if (!not_equal) {
-        cm_print_error(DoublePrintfFormat " == "
+        cmocka_print_error(DoublePrintfFormat " == "
                    DoublePrintfFormat "\n", left, right);
     }
 
@@ -1291,7 +1291,7 @@ static int values_equal_display_error(const uintmax_t left,
                                       const uintmax_t right) {
     const int equal = left == right;
     if (!equal) {
-        cm_print_error(UintMaxTypePrintfFormat " != "
+        cmocka_print_error(UintMaxTypePrintfFormat " != "
                        UintMaxTypePrintfFormat "\n", left, right);
     }
     return equal;
@@ -1304,7 +1304,7 @@ static int values_not_equal_display_error(const uintmax_t left,
                                           const uintmax_t right) {
     const int not_equal = left != right;
     if (!not_equal) {
-        cm_print_error(UintMaxTypePrintfFormat " == "
+        cmocka_print_error(UintMaxTypePrintfFormat " == "
                        UintMaxTypePrintfFormat "\n", left, right);
     }
     return not_equal;
@@ -1338,13 +1338,13 @@ static int value_in_set_display_error(
         if (succeeded) {
             return 1;
         }
-        cm_print_error(UintMaxTypePrintfFormatDecimal
+        cmocka_print_error(UintMaxTypePrintfFormatDecimal
                        " is %sin the set (",
                        value, invert ? "" : "not ");
         for (i = 0; i < size_of_set; i++) {
-            cm_print_error(UintMaxTypePrintfFormat ", ", set[i]);
+            cmocka_print_error(UintMaxTypePrintfFormat ", ", set[i]);
         }
-        cm_print_error(")\n");
+        cmocka_print_error(")\n");
     }
     return 0;
 }
@@ -1361,7 +1361,7 @@ static int integer_in_range_display_error(
     if (value >= range_min && value <= range_max) {
         return 1;
     }
-    cm_print_error(UintMaxTypePrintfFormatDecimal
+    cmocka_print_error(UintMaxTypePrintfFormatDecimal
                    " is not within the range "
                    UintMaxTypePrintfFormatDecimal "-"
                    UintMaxTypePrintfFormatDecimal "\n",
@@ -1381,7 +1381,7 @@ static int integer_not_in_range_display_error(
     if (value < range_min || value > range_max) {
         return 1;
     }
-    cm_print_error(UintMaxTypePrintfFormatDecimal
+    cmocka_print_error(UintMaxTypePrintfFormatDecimal
                    " is within the range "
                    UintMaxTypePrintfFormatDecimal "-"
                    UintMaxTypePrintfFormatDecimal "\n",
@@ -1400,7 +1400,7 @@ static int string_equal_display_error(
     if (strcmp(left, right) == 0) {
         return 1;
     }
-    cm_print_error("\"%s\" != \"%s\"\n", left, right);
+    cmocka_print_error("\"%s\" != \"%s\"\n", left, right);
     return 0;
 }
 
@@ -1415,7 +1415,7 @@ static int string_not_equal_display_error(
     if (strcmp(left, right) != 0) {
         return 1;
     }
-    cm_print_error("\"%s\" == \"%s\"\n", left, right);
+    cmocka_print_error("\"%s\" == \"%s\"\n", left, right);
     return 0;
 }
 
@@ -1433,7 +1433,7 @@ static int memory_equal_display_error(const char* const a, const char* const b,
         const char r = b[i];
         if (l != r) {
             if (differences < 16) {
-                cm_print_error("difference at offset %" PRIdS " 0x%02x 0x%02x\n",
+                cmocka_print_error("difference at offset %" PRIdS " 0x%02x 0x%02x\n",
                                i, l, r);
             }
             differences ++;
@@ -1441,9 +1441,9 @@ static int memory_equal_display_error(const char* const a, const char* const b,
     }
     if (differences > 0) {
         if (differences >= 16) {
-            cm_print_error("...\n");
+            cmocka_print_error("...\n");
         }
-        cm_print_error("%"PRIdS " bytes of %p and %p differ\n",
+        cmocka_print_error("%"PRIdS " bytes of %p and %p differ\n",
                        differences, (void *)a, (void *)b);
         return 0;
     }
@@ -1468,7 +1468,7 @@ static int memory_not_equal_display_error(
         }
     }
     if (same == size) {
-        cm_print_error("%"PRIdS "bytes of %p and %p the same\n",
+        cmocka_print_error("%"PRIdS "bytes of %p and %p the same\n",
                        same, (void *)a, (void *)b);
         return 0;
     }
@@ -1783,7 +1783,7 @@ void _check_expected(
             free(check);
         }
         if (!check_succeeded) {
-            cm_print_error(SOURCE_LOCATION_FORMAT
+            cmocka_print_error(SOURCE_LOCATION_FORMAT
                            ": error: Check of parameter %s, function %s failed\n"
                            SOURCE_LOCATION_FORMAT
                            ": note: Expected parameter declared here\n",
@@ -1794,16 +1794,16 @@ void _check_expected(
             _fail(file, line);
         }
     } else {
-        cm_print_error(SOURCE_LOCATION_FORMAT ": error: Could not get value "
+        cmocka_print_error(SOURCE_LOCATION_FORMAT ": error: Could not get value "
                     "to check parameter %s of function %s\n", file, line,
                     parameter_name, function_name);
         if (source_location_is_set(&global_last_parameter_location)) {
-            cm_print_error(SOURCE_LOCATION_FORMAT
+            cmocka_print_error(SOURCE_LOCATION_FORMAT
                         ": note: Previously declared parameter value was declared here\n",
                         global_last_parameter_location.file,
                         global_last_parameter_location.line);
         } else {
-            cm_print_error("There were no previously declared parameter values "
+            cmocka_print_error("There were no previously declared parameter values "
                         "for this test.\n");
         }
         exit_test(1);
@@ -1819,7 +1819,7 @@ void mock_assert(const int result, const char* const expression,
             global_last_failed_assert = expression;
             longjmp(global_expect_assert_env, result);
         } else {
-            cm_print_error("ASSERT: %s\n", expression);
+            cmocka_print_error("ASSERT: %s\n", expression);
             _fail(file, line);
         }
     }
@@ -1830,7 +1830,7 @@ void _assert_true(const uintmax_t result,
                   const char * const expression,
                   const char * const file, const int line) {
     if (!result) {
-        cm_print_error("%s\n", expression);
+        cmocka_print_error("%s\n", expression);
         _fail(file, line);
     }
 }
@@ -1843,12 +1843,12 @@ void _assert_return_code(const intmax_t result,
 {
     if (result < 0) {
         if (error > 0) {
-            cm_print_error("%s < 0, errno(%d): %s\n",
+            cmocka_print_error("%s < 0, errno(%d): %s\n",
                            expression,
                            error,
                            strerror(error));
         } else {
-            cm_print_error("%s < 0\n", expression);
+            cmocka_print_error("%s < 0\n", expression);
         }
         _fail(file, line);
     }
@@ -2021,13 +2021,13 @@ static void *libc_realloc(void *ptr, size_t size)
 #define realloc test_realloc
 }
 
-static void vcm_print_error(const char* const format,
+static void vcmocka_print_error(const char* const format,
                             va_list args) CMOCKA_PRINTF_ATTRIBUTE(1, 0);
 
 /* It's important to use the libc malloc and free here otherwise
  * the automatic free of leaked blocks can reap the error messages
  */
-static void vcm_print_error(const char* const format, va_list args)
+static void vcmocka_print_error(const char* const format, va_list args)
 {
     char buffer[1024];
     size_t msg_len = 0;
@@ -2151,7 +2151,7 @@ void _test_free(void* const ptr, const char* file, const int line) {
             for (j = 0; j < MALLOC_GUARD_SIZE; j++) {
                 const char diff = guard[j] - MALLOC_GUARD_PATTERN;
                 if (diff) {
-                    cm_print_error(SOURCE_LOCATION_FORMAT
+                    cmocka_print_error(SOURCE_LOCATION_FORMAT
                                    ": error: Guard block of %p size=%lu is corrupt\n"
                                    SOURCE_LOCATION_FORMAT ": note: allocated here at %p\n",
                                    file,
@@ -2237,9 +2237,9 @@ static size_t display_allocated_blocks(const ListNode * const check_point) {
         assert_non_null(block_info.ptr);
 
         if (allocated_blocks == 0) {
-            cm_print_error("Blocks allocated...\n");
+            cmocka_print_error("Blocks allocated...\n");
         }
-        cm_print_error(SOURCE_LOCATION_FORMAT ": note: block %p allocated here\n",
+        cmocka_print_error(SOURCE_LOCATION_FORMAT ": note: block %p allocated here\n",
                        block_info.data->location.file,
                        block_info.data->location.line,
                        block_info.data->block);
@@ -2276,7 +2276,7 @@ static void fail_if_blocks_allocated(const ListNode * const check_point,
     const size_t allocated_blocks = display_allocated_blocks(check_point);
     if (allocated_blocks > 0) {
         free_allocated_blocks(check_point);
-        cm_print_error("ERROR: %s leaked %zu block(s)\n", test_name,
+        cmocka_print_error("ERROR: %s leaked %zu block(s)\n", test_name,
                        allocated_blocks);
         exit_test(1);
     }
@@ -2287,13 +2287,13 @@ void _fail(const char * const file, const int line) {
     uint32_t output = cm_get_output();
 
     if (output & CM_OUTPUT_STANDARD) {
-        cm_print_error("[   LINE   ] --- " SOURCE_LOCATION_FORMAT
+        cmocka_print_error("[   LINE   ] --- " SOURCE_LOCATION_FORMAT
                        ": error: Failure!",
                        file, line);
     }
     if ((output & CM_OUTPUT_SUBUNIT) || (output & CM_OUTPUT_TAP) ||
         (output & CM_OUTPUT_XML)) {
-        cm_print_error(SOURCE_LOCATION_FORMAT ": error: Failure!", file, line);
+        cmocka_print_error(SOURCE_LOCATION_FORMAT ": error: Failure!", file, line);
     }
     exit_test(1);
 
@@ -2310,7 +2310,7 @@ CMOCKA_NORETURN static void exception_handler(int sig) {
     sig_strerror = strsignal(sig);
 #endif
 
-    cm_print_error("Test failed with exception: %s(%d)",
+    cmocka_print_error("Test failed with exception: %s(%d)",
                    sig_strerror, sig);
     exit_test(1);
 
@@ -2330,10 +2330,10 @@ static LONG WINAPI exception_filter(EXCEPTION_POINTERS *exception_pointers) {
         if (code == code_info->code) {
             static int shown_debug_message = 0;
             fflush(stdout);
-            cm_print_error("%s occurred at %p.\n", code_info->description,
+            cmocka_print_error("%s occurred at %p.\n", code_info->description,
                         exception_record->ExceptionAddress);
             if (!shown_debug_message) {
-                cm_print_error(
+                cmocka_print_error(
                     "\n"
                     "To debug in Visual Studio...\n"
                     "1. Select menu item File->Open Project\n"
@@ -2355,12 +2355,12 @@ static LONG WINAPI exception_filter(EXCEPTION_POINTERS *exception_pointers) {
 }
 #endif /* !_WIN32 */
 
-void cm_print_error(const char * const format, ...)
+void cmocka_print_error(const char * const format, ...)
 {
     va_list args;
     va_start(args, format);
     if (cm_error_message_enabled) {
-        vcm_print_error(format, args);
+        vcmocka_print_error(format, args);
     } else {
         vprint_error(format, args);
     }
@@ -3055,7 +3055,7 @@ static int cmocka_run_one_tests(struct CMUnitTestState *test_state)
                                             test_state->check_point);
         if (rc != 0) {
             test_state->status = CM_TEST_ERROR;
-            cm_print_error("Test setup failed");
+            cmocka_print_error("Test setup failed");
         }
     }
 
@@ -3101,7 +3101,7 @@ static int cmocka_run_one_tests(struct CMUnitTestState *test_state)
                                             test_state->check_point);
         if (rc != 0) {
             test_state->status = CM_TEST_ERROR;
-            cm_print_error("Test teardown failed");
+            cmocka_print_error("Test teardown failed");
         }
     }
 
