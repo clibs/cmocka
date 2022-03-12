@@ -109,19 +109,6 @@
 # define cm_longjmp(env, val)   longjmp(env, val)
 #endif
 
-/* Printf format used to display uintmax_t as a decimal. */
-#ifndef UintMaxTypePrintfFormatDecimal
-# ifdef _WIN32
-#  define UintMaxTypePrintfFormatDecimal "%I64u"
-# else
-#  if __WORDSIZE == 64
-#   define UintMaxTypePrintfFormatDecimal "%lu"
-#  else
-#   define UintMaxTypePrintfFormatDecimal "%llu"
-#  endif
-# endif /* _WIN32 */
-#endif /* UintMaxTypePrintfFormat */
-
 #ifndef FloatPrintfFormat
 # define FloatPrintfFormat "%f"
 #endif /* FloatPrintfFormat */
@@ -1319,8 +1306,7 @@ static int value_in_set_display_error(
         if (succeeded) {
             return 1;
         }
-        cmocka_print_error(UintMaxTypePrintfFormatDecimal
-                       " is %sin the set (",
+        cmocka_print_error("%ju is %sin the set (",
                        value, invert ? "" : "not ");
         for (i = 0; i < size_of_set; i++) {
             cmocka_print_error("%#jx, ", set[i]);
@@ -1342,11 +1328,10 @@ static int integer_in_range_display_error(
     if (value >= range_min && value <= range_max) {
         return 1;
     }
-    cmocka_print_error(UintMaxTypePrintfFormatDecimal
-                   " is not within the range "
-                   UintMaxTypePrintfFormatDecimal "-"
-                   UintMaxTypePrintfFormatDecimal "\n",
-                   value, range_min, range_max);
+    cmocka_print_error("%ju is not within the range %ju-%ju\n",
+                       value,
+                       range_min,
+                       range_max);
     return 0;
 }
 
@@ -1362,11 +1347,10 @@ static int integer_not_in_range_display_error(
     if (value < range_min || value > range_max) {
         return 1;
     }
-    cmocka_print_error(UintMaxTypePrintfFormatDecimal
-                   " is within the range "
-                   UintMaxTypePrintfFormatDecimal "-"
-                   UintMaxTypePrintfFormatDecimal "\n",
-                   value, range_min, range_max);
+    cmocka_print_error("%ju is within the range %ju-%ju\n",
+                       value,
+                       range_min,
+                       range_max);
     return 0;
 }
 
