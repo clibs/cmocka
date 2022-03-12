@@ -56,6 +56,10 @@ int __stdcall IsDebuggerPresent();
  * @{
  */
 
+/* Perform an signed cast to intmax_t. */
+#define cast_to_intmax_type(value) \
+    ((intmax_t)(value))
+
 /* Perform an unsigned cast to uintmax_t. */
 #define cast_to_uintmax_type(value) \
     ((uintmax_t)(value))
@@ -1179,11 +1183,11 @@ void assert_ptr_not_equal(void *a, void *b);
  *
  * @param[in]  b  The integer to compare against the first one.
  */
-void assert_int_equal(int a, int b);
+void assert_int_equal(intmax_t a, intmax_t b);
 #else
 #define assert_int_equal(a, b) \
-    _assert_int_equal(cast_to_uintmax_type(a), \
-                      cast_to_uintmax_type(b), \
+    _assert_int_equal(cast_to_intmax_type(a), \
+                      cast_to_intmax_type(b), \
                       __FILE__, __LINE__)
 #endif
 
@@ -2279,9 +2283,10 @@ void _assert_double_equal(const double a, const double n,
 void _assert_double_not_equal(const double a, const double n,
 		const double epsilon, const char* const file,
 		const int line);
-void _assert_int_equal(
-    const uintmax_t a, const uintmax_t b,
-    const char * const file, const int line);
+void _assert_int_equal(const intmax_t a,
+                       const intmax_t b,
+                       const char * const file,
+                       const int line);
 void _assert_int_not_equal(
     const uintmax_t a, const uintmax_t b,
     const char * const file, const int line);
