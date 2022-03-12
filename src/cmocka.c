@@ -109,10 +109,6 @@
 # define cm_longjmp(env, val)   longjmp(env, val)
 #endif
 
-#ifndef FloatPrintfFormat
-# define FloatPrintfFormat "%f"
-#endif /* FloatPrintfFormat */
-
 #ifndef DoublePrintfFormat
 # define DoublePrintfFormat "%f"
 #endif /* DoublePrintfFormat */
@@ -1161,8 +1157,7 @@ static int float_values_equal_display_error(const float left,
                                             const float epsilon) {
     const int equal = float_compare(left, right, epsilon);
     if (!equal) {
-        cmocka_print_error(FloatPrintfFormat " != "
-                   FloatPrintfFormat "\n", left, right);
+        cmocka_print_error("%f != %f\n", left, right);
     }
     return equal;
 }
@@ -1174,8 +1169,7 @@ static int float_values_not_equal_display_error(const float left,
                                                 const float epsilon) {
     const int not_equal = (float_compare(left, right, epsilon) == 0);
     if (!not_equal) {
-        cmocka_print_error(FloatPrintfFormat " == "
-                   FloatPrintfFormat "\n", left, right);
+        cmocka_print_error("%f == %f\n", left, right);
     }
     return not_equal;
 }
