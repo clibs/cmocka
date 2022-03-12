@@ -1237,9 +1237,10 @@ static int double_values_not_equal_display_error(const double left,
 
 /* Returns 1 if the specified values are equal.  If the values are not equal
  * an error is displayed and 0 is returned. */
-static int values_equal_display_error(const uintmax_t left,
-                                       const uintmax_t right) {
-    const int equal = left == right;
+static bool uint_values_equal_display_error(const uintmax_t left,
+                                            const uintmax_t right)
+{
+    const bool equal = left == right;
     if (!equal) {
         cmocka_print_error("%ju (%#jx) != %ju (%#jx)\n",
                            left,
@@ -1560,7 +1561,7 @@ void _expect_not_in_range(
  * expected value. */
 static int check_value(const uintmax_t value,
                        const uintmax_t check_value_data) {
-    return values_equal_display_error(value, check_value_data);
+    return uint_values_equal_display_error(value, check_value_data);
 }
 
 
@@ -1850,7 +1851,7 @@ void _assert_double_not_equal(const double a,
 void _assert_int_equal(
         const uintmax_t a, const uintmax_t b,
         const char * const file, const int line) {
-    if (!values_equal_display_error(a, b)) {
+    if (!uint_values_equal_display_error(a, b)) {
         _fail(file, line);
     }
 }
