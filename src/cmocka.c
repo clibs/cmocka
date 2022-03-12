@@ -109,19 +109,6 @@
 # define cm_longjmp(env, val)   longjmp(env, val)
 #endif
 
-/* Printf format used to display uintmax_t as a hexidecimal. */
-#ifndef UintMaxTypePrintfFormat
-# ifdef _WIN32
-#  define UintMaxTypePrintfFormat "0x%I64x"
-# else
-#  if __WORDSIZE == 64
-#   define UintMaxTypePrintfFormat "%#lx"
-#  else
-#   define UintMaxTypePrintfFormat "%#llx"
-#  endif
-# endif /* _WIN32 */
-#endif /* UintMaxTypePrintfFormat */
-
 /* Printf format used to display uintmax_t as a decimal. */
 #ifndef UintMaxTypePrintfFormatDecimal
 # ifdef _WIN32
@@ -1276,11 +1263,14 @@ static int double_values_not_equal_display_error(const double left,
 /* Returns 1 if the specified values are equal.  If the values are not equal
  * an error is displayed and 0 is returned. */
 static int values_equal_display_error(const uintmax_t left,
-                                      const uintmax_t right) {
+                                       const uintmax_t right) {
     const int equal = left == right;
     if (!equal) {
-        cmocka_print_error(UintMaxTypePrintfFormat " != "
-                       UintMaxTypePrintfFormat "\n", left, right);
+        cmocka_print_error("%ju (%#jx) != %ju (%#jx)\n",
+                           left,
+                           left,
+                           right,
+                           right);
     }
     return equal;
 }
@@ -1292,8 +1282,11 @@ static int values_not_equal_display_error(const uintmax_t left,
                                           const uintmax_t right) {
     const int not_equal = left != right;
     if (!not_equal) {
-        cmocka_print_error(UintMaxTypePrintfFormat " == "
-                       UintMaxTypePrintfFormat "\n", left, right);
+        cmocka_print_error("%ju (%#jx) == %ju (%#jx)\n",
+                           left,
+                           left,
+                           right,
+                           right);
     }
     return not_equal;
 }
@@ -1330,7 +1323,7 @@ static int value_in_set_display_error(
                        " is %sin the set (",
                        value, invert ? "" : "not ");
         for (i = 0; i < size_of_set; i++) {
-            cmocka_print_error(UintMaxTypePrintfFormat ", ", set[i]);
+            cmocka_print_error("%#jx, ", set[i]);
         }
         cmocka_print_error(")\n");
     }
