@@ -109,10 +109,6 @@
 # define cm_longjmp(env, val)   longjmp(env, val)
 #endif
 
-#ifndef DoublePrintfFormat
-# define DoublePrintfFormat "%f"
-#endif /* DoublePrintfFormat */
-
 /*
  * Declare and initialize a uintmax_t variable name
  * with value the conversion of ptr.
@@ -1217,8 +1213,7 @@ static int double_values_equal_display_error(const double left,
     const int equal = double_compare(left, right, epsilon);
 
     if (!equal) {
-        cmocka_print_error(DoublePrintfFormat " != "
-                   DoublePrintfFormat "\n", left, right);
+        cmocka_print_error("%f != %f\n", left, right);
     }
 
     return equal;
@@ -1234,8 +1229,7 @@ static int double_values_not_equal_display_error(const double left,
     const int not_equal = (double_compare(left, right, epsilon) == 0);
 
     if (!not_equal) {
-        cmocka_print_error(DoublePrintfFormat " == "
-                   DoublePrintfFormat "\n", left, right);
+        cmocka_print_error("%f == %f\n", left, right);
     }
 
     return not_equal;
