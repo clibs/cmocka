@@ -79,7 +79,7 @@ set_tests_properties(
     test_assert_u_int_fail
         PROPERTIES
         PASS_REGULAR_EXPRESSION
-        "\\[  FAILED  \\] integer_tests: 2 test"
+        "\\[  FAILED  \\] integer_tests: 3 test"
 )
 
 # test_expect_check_fail
