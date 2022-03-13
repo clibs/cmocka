@@ -1283,6 +1283,20 @@ static bool uint_values_not_equal_display_error(const uintmax_t left,
 
 
 /*
+ * Returns 1 if the specified values are not equal.  If the values are equal
+ * an error is displayed and 0 is returned. */
+static bool int_values_not_equal_display_error(const intmax_t left,
+                                               const intmax_t right)
+{
+    const bool not_equal = left != right;
+    if (!not_equal) {
+        cmocka_print_error("%jd == %jd\n", left, right);
+    }
+    return not_equal;
+}
+
+
+/*
  * Determine whether value is contained within check_integer_set.
  * If invert is 0 and the value is in the set 1 is returned, otherwise 0 is
  * returned and an error is displayed.  If invert is 1 and the value is not
@@ -1873,10 +1887,12 @@ void _assert_int_equal(const intmax_t a,
 }
 
 
-void _assert_int_not_equal(
-        const uintmax_t a, const uintmax_t b,
-        const char * const file, const int line) {
-    if (!uint_values_not_equal_display_error(a, b)) {
+void _assert_int_not_equal(const intmax_t a,
+                           const intmax_t b,
+                           const char * const file,
+                           const int line)
+{
+    if (!int_values_not_equal_display_error(a, b)) {
         _fail(file, line);
     }
 }
