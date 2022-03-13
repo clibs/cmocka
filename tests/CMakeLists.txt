@@ -25,6 +25,7 @@ set(CMOCKA_TESTS
     test_double_macros
     test_assert_macros
     test_assert_macros_fail
+    test_assert_u_int
     test_basics
     test_skip
     test_stop
