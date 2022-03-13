@@ -31,7 +31,7 @@ centos7/x86_64:
     paths:
       - obj/
 
-fedora/x86_64:
+fedora/gcc/x86_64:
   stage: test
   image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
   script:
@@ -40,6 +40,26 @@ fedora/x86_64:
       -DPICKY_DEVELOPER=ON
       -DUNIT_TESTING=ON .. &&
       make -j$(nproc) && ctest --output-on-failure
+  tags:
+    - shared
+  except:
+    - tags
+  artifacts:
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - obj/
+
+fedora/build:
+  stage: build
+  image: $CI_REGISTRY/$BUILD_IMAGES_PROJECT:$FEDORA_BUILD
+  script:
+    - mkdir -p obj && cd obj && cmake
+      -DCMAKE_BUILD_TYPE=Release
+      -DCMAKE_INSTALL_PREFIX=/tmp/cmocka
+      -DPICKY_DEVELOPER=ON
+      .. &&
+      make -j$(nproc) && make install
   tags:
     - shared
   except:
