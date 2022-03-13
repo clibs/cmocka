@@ -16,9 +16,19 @@ static void test_assert_int_equal(void **state)
     assert_int_equal(INTMAX_MAX, INTMAX_MAX);
 }
 
+static void test_assert_int_not_equal(void **state)
+{
+    (void)state; /* unused */
+    assert_int_not_equal(0, 1);
+    assert_int_not_equal(-1, 1);
+    assert_int_not_equal(INTMAX_MIN, INTMAX_MAX);
+    assert_int_not_equal(INTMAX_MAX, INTMAX_MIN);
+}
+
 int main(void) {
     const struct CMUnitTest integer_tests[] = {
         cmocka_unit_test(test_assert_int_equal),
+        cmocka_unit_test(test_assert_int_not_equal),
     };
 
     return cmocka_run_group_tests(integer_tests, NULL, NULL);
