@@ -1233,6 +1233,25 @@ void assert_int_not_equal(intmax_t a, intmax_t b);
 
 #ifdef DOXYGEN
 /**
+ * @brief Assert that the two given unsinged integers are not equal.
+ *
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if the integers are not equal.
+ *
+ * @param[in]  a  The first unsigned integer to compare.
+ *
+ * @param[in]  b  The unsigned integer to compare against the first one.
+ */
+void assert_uint_not_equal(uintmax_t a, uintmax_t b);
+#else
+#define assert_uint_not_equal(a, b) \
+    _assert_uint_not_equal(cast_to_uintmax_type(a), \
+                           cast_to_uintmax_type(b), \
+                           __FILE__, __LINE__)
+#endif
+
+#ifdef DOXYGEN
+/**
  * @brief Assert that the two given float are equal given an epsilon.
  *
  * The function prints an error message to standard error and terminates the
@@ -2314,6 +2333,10 @@ void _assert_uint_equal(const uintmax_t a,
                         const uintmax_t b,
                         const char * const file,
                         const int line);
+void _assert_uint_not_equal(const uintmax_t a,
+                            const uintmax_t b,
+                            const char * const file,
+                            const int line);
 void _assert_string_equal(const char * const a, const char * const b,
                           const char * const file, const int line);
 void _assert_string_not_equal(const char * const a, const char * const b,

@@ -1909,6 +1909,17 @@ void _assert_uint_equal(const uintmax_t a,
 }
 
 
+void _assert_uint_not_equal(const uintmax_t a,
+                            const uintmax_t b,
+                            const char * const file,
+                            const int line)
+{
+    if (!uint_values_not_equal_display_error(a, b)) {
+        _fail(file, line);
+    }
+}
+
+
 void _assert_string_equal(const char * const a, const char * const b,
                           const char * const file, const int line) {
     if (!string_equal_display_error(a, b)) {
