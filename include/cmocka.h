@@ -1148,9 +1148,9 @@ __FILE__, __LINE__)
 void assert_ptr_equal(void *a, void *b);
 #else
 #define assert_ptr_equal(a, b) \
-    _assert_int_equal(cast_ptr_to_uintmax_type(a), \
-                      cast_ptr_to_uintmax_type(b), \
-                      __FILE__, __LINE__)
+    _assert_uint_equal(cast_ptr_to_uintmax_type(a), \
+                       cast_ptr_to_uintmax_type(b), \
+                       __FILE__, __LINE__)
 #endif
 
 #ifdef DOXYGEN
@@ -1167,9 +1167,9 @@ void assert_ptr_equal(void *a, void *b);
 void assert_ptr_not_equal(void *a, void *b);
 #else
 #define assert_ptr_not_equal(a, b) \
-    _assert_int_not_equal(cast_ptr_to_uintmax_type(a), \
-                          cast_ptr_to_uintmax_type(b), \
-                          __FILE__, __LINE__)
+    _assert_uint_not_equal(cast_ptr_to_uintmax_type(a), \
+                           cast_ptr_to_uintmax_type(b), \
+                           __FILE__, __LINE__)
 #endif
 
 #ifdef DOXYGEN
@@ -1202,7 +1202,7 @@ void assert_int_equal(intmax_t a, intmax_t b);
  *
  * @param[in]  b  The unsigned integer to compare against the first one.
  */
-void assert_uint_equal(int a, int b);
+void assert_uint_equal(uintmax_t a, uintmax_t b);
 #else
 #define assert_uint_equal(a, b) \
     _assert_uint_equal(cast_to_uintmax_type(a), \
