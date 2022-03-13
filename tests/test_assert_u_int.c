@@ -33,11 +33,19 @@ static void test_assert_uint_equal(void **state)
     assert_uint_equal(UINTMAX_MAX, UINTMAX_MAX);
 }
 
+static void test_assert_uint_not_equal(void **state)
+{
+    (void)state; /* unused */
+    assert_uint_not_equal(0, 1);
+    assert_uint_not_equal(0, UINTMAX_MAX);
+}
+
 int main(void) {
     const struct CMUnitTest integer_tests[] = {
         cmocka_unit_test(test_assert_int_equal),
         cmocka_unit_test(test_assert_int_not_equal),
         cmocka_unit_test(test_assert_uint_equal),
+        cmocka_unit_test(test_assert_uint_not_equal),
     };
 
     return cmocka_run_group_tests(integer_tests, NULL, NULL);
