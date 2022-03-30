@@ -387,7 +387,7 @@ static void exit_test(const int quit_application)
     } else if (global_running_test) {
         cm_longjmp(global_run_test_env, 1);
     } else if (quit_application) {
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -398,7 +398,7 @@ void _skip(const char * const file, const int line)
     exit_test(1);
 
     /* Unreachable */
-    exit(-1);
+    exit(EXIT_FAILURE);
 }
 
 void _stop(void)
@@ -407,7 +407,7 @@ void _stop(void)
     exit_test(1);
 
     /* Unreachable */
-    exit(-1);
+    exit(EXIT_FAILURE);
 }
 
 /* Initialize a SourceLocation structure. */
@@ -2307,7 +2307,7 @@ void _fail(const char * const file, const int line) {
     exit_test(1);
 
     /* Unreachable */
-    exit(-1);
+    exit(EXIT_FAILURE);
 }
 
 
@@ -2324,7 +2324,7 @@ CMOCKA_NORETURN static void exception_handler(int sig) {
     exit_test(1);
 
     /* Unreachable */
-    exit(-1);
+    exit(EXIT_FAILURE);
 }
 
 #else /* _WIN32 */
