@@ -379,9 +379,10 @@ static void exit_test(const int quit_application)
         abort_test = (env[0] == '1');
     }
 
-    if (global_skip_test == 0 &&
-        abort_test == 1) {
-        print_error("%s", cm_error_message);
+    if (global_skip_test == 0 && abort_test == 1) {
+        if (cm_error_message != NULL) {
+            print_error("%s", cm_error_message);
+        }
         abort();
     } else if (global_running_test) {
         cm_longjmp(global_run_test_env, 1);
