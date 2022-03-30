@@ -370,7 +370,7 @@ struct CMUnitTestState {
 };
 
 /* Exit the currently executing test. */
-static void exit_test(const int quit_application)
+static void exit_test(const bool quit_application)
 {
     const char *env = getenv("CMOCKA_TEST_ABORT");
     int abort_test = 0;
@@ -395,7 +395,7 @@ void _skip(const char * const file, const int line)
 {
     cmocka_print_error(SOURCE_LOCATION_FORMAT ": Skipped!\n", file, line);
     global_skip_test = 1;
-    exit_test(1);
+    exit_test(true);
 
     /* Unreachable */
     exit(EXIT_FAILURE);
@@ -404,7 +404,7 @@ void _skip(const char * const file, const int line)
 void _stop(void)
 {
     global_stop_test = 1;
-    exit_test(1);
+    exit_test(true);
 
     /* Unreachable */
     exit(EXIT_FAILURE);
@@ -571,7 +571,7 @@ static int has_leftover_values(const char *test_name) {
 
 static void fail_if_leftover_values(const char *test_name) {
     if (has_leftover_values(test_name) != 0) {
-        exit_test(1);
+        exit_test(true);
     }
 }
 
@@ -985,7 +985,7 @@ uintmax_t _mock(const char * const function, const char* const file,
             cmocka_print_error("There were no previously returned mock values for "
                            "this test.\n");
         }
-        exit_test(1);
+        exit_test(true);
     }
     return 0;
 }
@@ -1001,7 +1001,7 @@ void _function_called(const char *const function,
                        "invoked in %s\n",
                        file, line,
                        function);
-        exit_test(1);
+        exit_test(true);
     } else {
         const ListNode * const head = &global_call_ordering_head;
         ListNode *current = head->next;
@@ -1032,7 +1032,7 @@ void _function_called(const char *const function,
                            "called() invocation in %s\n",
                            file, line,
                            function);
-            exit_test(1);
+            exit_test(true);
         }
 
         if (found) {
@@ -1049,7 +1049,7 @@ void _function_called(const char *const function,
                            file, line,
                            expected_call->function,
                            function);
-            exit_test(1);
+            exit_test(true);
         }
     }
 }
@@ -1789,7 +1789,7 @@ void _check_expected(
             cmocka_print_error("There were no previously declared parameter values "
                         "for this test.\n");
         }
-        exit_test(1);
+        exit_test(true);
     }
 }
 
@@ -2287,7 +2287,7 @@ static void fail_if_blocks_allocated(const ListNode * const check_point,
         free_allocated_blocks(check_point);
         cmocka_print_error("ERROR: %s leaked %zu block(s)\n", test_name,
                        allocated_blocks);
-        exit_test(1);
+        exit_test(true);
     }
 }
 
@@ -2304,7 +2304,7 @@ void _fail(const char * const file, const int line) {
         (output & CM_OUTPUT_XML)) {
         cmocka_print_error(SOURCE_LOCATION_FORMAT ": error: Failure!", file, line);
     }
-    exit_test(1);
+    exit_test(true);
 
     /* Unreachable */
     exit(EXIT_FAILURE);
@@ -2321,7 +2321,7 @@ CMOCKA_NORETURN static void exception_handler(int sig) {
 
     cmocka_print_error("Test failed with exception: %s(%d)",
                    sig_strerror, sig);
-    exit_test(1);
+    exit_test(true);
 
     /* Unreachable */
     exit(EXIT_FAILURE);
@@ -2356,7 +2356,7 @@ static LONG WINAPI exception_filter(EXCEPTION_POINTERS *exception_pointers) {
                     "\n");
                 shown_debug_message = 1;
             }
-            exit_test(0);
+            exit_test(false);
             return EXCEPTION_EXECUTE_HANDLER;
         }
     }
