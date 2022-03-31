@@ -1047,7 +1047,8 @@ void _function_called(const char *const function,
                            ": error: Expected call to %s but received called() "
                            "in %s\n",
                            file, line,
-                           expected_call->function,
+                           expected_call != NULL ?
+                               expected_call->function : "(null)",
                            function);
             exit_test(true);
         }
