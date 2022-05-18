@@ -2163,6 +2163,14 @@ typedef void (*UnitTestFunction)(void **state);
 typedef int (*CheckParameterValue)(const uintmax_t value,
                                    const uintmax_t check_value_data);
 
+/* Function that determines whether a function parameter value is correct. */
+typedef int (*CheckIntParameterValue)(const intmax_t value,
+                                      const intmax_t check_value_data);
+
+/* Function that determines whether a function parameter value is correct. */
+typedef int (*CheckUintParameterValue)(const uintmax_t value,
+                                       const uintmax_t check_value_data);
+
 /* Type of the unit test function. */
 typedef enum UnitTestFunctionType {
     UNIT_TEST_FUNCTION_TYPE_TEST = 0,
