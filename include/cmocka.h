@@ -1419,6 +1419,29 @@ void assert_memory_not_equal(const void *a, const void *b, size_t size);
 
 #ifdef DOXYGEN
 /**
+ * @brief Assert that the specified integer value is not smaller than the
+ * minimum and and not greater than the maximum.
+ *
+ * The function prints an error message to standard error and terminates the
+ * test by calling fail() if value is not in range.
+ *
+ * @param[in]  value  The value to check.
+ *
+ * @param[in]  minimum  The minimum value allowed.
+ *
+ * @param[in]  maximum  The maximum value allowed.
+ */
+void assert_int_in_range(intmax_t value, intmax_t minimum, intmax_t maximum);
+#else
+#define assert_int_in_range(value, minimum, maximum) \
+    _assert_int_in_range( \
+        cast_to_intmax_type(value), \
+        cast_to_intmax_type(minimum), \
+        cast_to_intmax_type(maximum), __FILE__, __LINE__)
+#endif
+
+#ifdef DOXYGEN
+/**
  * @brief Assert that the specified value is not smaller than the minimum
  * and and not greater than the maximum.
  *
@@ -2355,6 +2378,11 @@ void _assert_memory_equal(const void * const a, const void * const b,
 void _assert_memory_not_equal(const void * const a, const void * const b,
                               const size_t size, const char* const file,
                               const int line);
+void _assert_int_in_range(const intmax_t value,
+                          const intmax_t minimum,
+                          const intmax_t maximum,
+                          const char* const file,
+                          const int line);
 void _assert_in_range(
     const uintmax_t value, const uintmax_t minimum,
     const uintmax_t maximum, const char* const file, const int line);

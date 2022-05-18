@@ -1357,6 +1357,26 @@ static bool uint_in_range_display_error(const uintmax_t value,
 
 
 /*
+ * Determine whether a value is within the specified range.
+ */
+static bool int_in_range_display_error(const intmax_t value,
+                                       const intmax_t range_min,
+                                       const intmax_t range_max)
+{
+    if (value >= range_min && value <= range_max) {
+        return true;
+    }
+
+    cmocka_print_error("%jd is not within the range [%jd, %jd]\n",
+                       value,
+                       range_min,
+                       range_max);
+
+    return false;
+}
+
+
+/*
  * Determine whether a value is within the specified range.  If the value
  * is not within the range 1 is returned.  If the value is within the
  * specified range an error is displayed and zero is returned.
@@ -1955,6 +1975,18 @@ void _assert_memory_not_equal(const void * const a, const void * const b,
                               const int line) {
     if (!memory_not_equal_display_error((const char*)a, (const char*)b,
                                         size)) {
+        _fail(file, line);
+    }
+}
+
+
+void _assert_int_in_range(const intmax_t value,
+                          const intmax_t minimum,
+                          const intmax_t maximum,
+                          const char* const file,
+                          const int line)
+{
+    if (!int_in_range_display_error(value, minimum, maximum)) {
         _fail(file, line);
     }
 }
