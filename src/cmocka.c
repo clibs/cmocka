@@ -1337,20 +1337,21 @@ static int value_in_set_display_error(
 
 
 /*
- * Determine whether a value is within the specified range.  If the value is
- * within the specified range 1 is returned.  If the value isn't within the
- * specified range an error is displayed and 0 is returned.
+ * Determine whether a value is within the specified range.
  */
-static bool integer_in_range_display_error(
-        const uintmax_t value, const uintmax_t range_min,
-        const uintmax_t range_max) {
+static bool uint_in_range_display_error(const uintmax_t value,
+                                        const uintmax_t range_min,
+                                        const uintmax_t range_max)
+{
     if (value >= range_min && value <= range_max) {
         return true;
     }
-    cmocka_print_error("%ju is not within the range %ju-%ju\n",
+
+    cmocka_print_error("%ju is not within the range [%ju, %ju]\n",
                        value,
                        range_min,
                        range_max);
+
     return false;
 }
 
@@ -1531,8 +1532,10 @@ static int check_in_range(const uintmax_t value,
         cast_uintmax_type_to_pointer(CheckIntegerRange*,
                                               check_value_data);
     assert_non_null(check_integer_range);
-    return integer_in_range_display_error(value, check_integer_range->minimum,
-                                          check_integer_range->maximum);
+
+    return uint_in_range_display_error(value,
+                                       check_integer_range->minimum,
+                                       check_integer_range->maximum);
 }
 
 
@@ -1961,7 +1964,7 @@ void _assert_in_range(
         const uintmax_t value, const uintmax_t minimum,
         const uintmax_t maximum, const char* const file,
         const int line) {
-    if (!integer_in_range_display_error(value, minimum, maximum)) {
+    if (!uint_in_range_display_error(value, minimum, maximum)) {
         _fail(file, line);
     }
 }
