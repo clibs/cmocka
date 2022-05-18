@@ -27,6 +27,7 @@ set(CMOCKA_TESTS
     test_assert_macros_fail
     test_assert_u_int
     test_assert_u_int_fail
+    test_assert_range
     test_basics
     test_skip
     test_stop
