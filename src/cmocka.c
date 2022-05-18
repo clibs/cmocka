@@ -1341,17 +1341,17 @@ static int value_in_set_display_error(
  * within the specified range 1 is returned.  If the value isn't within the
  * specified range an error is displayed and 0 is returned.
  */
-static int integer_in_range_display_error(
+static bool integer_in_range_display_error(
         const uintmax_t value, const uintmax_t range_min,
         const uintmax_t range_max) {
     if (value >= range_min && value <= range_max) {
-        return 1;
+        return true;
     }
     cmocka_print_error("%ju is not within the range %ju-%ju\n",
                        value,
                        range_min,
                        range_max);
-    return 0;
+    return false;
 }
 
 
