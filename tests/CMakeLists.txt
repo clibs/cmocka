@@ -28,6 +28,7 @@ set(CMOCKA_TESTS
     test_assert_u_int
     test_assert_u_int_fail
     test_assert_range
+    test_assert_range_fail
     test_basics
     test_skip
     test_stop
@@ -81,6 +82,13 @@ set_tests_properties(
         PROPERTIES
         PASS_REGULAR_EXPRESSION
         "\\[  FAILED  \\] integer_tests: 4 test"
+)
+
+set_tests_properties(
+    test_assert_range_fail
+        PROPERTIES
+        PASS_REGULAR_EXPRESSION
+        "\\[  FAILED  \\] range_fail_tests: 4 test"
 )
 
 # test_expect_check_fail
