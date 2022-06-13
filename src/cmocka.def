@@ -18,6 +18,7 @@ EXPORTS
     _assert_string_not_equal
     _assert_true
     _assert_uint_equal
+    _assert_uint_in_range
     _assert_uint_not_equal
     _check_expected
     _cmocka_run_group_tests

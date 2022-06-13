@@ -1992,6 +1992,18 @@ void _assert_int_in_range(const intmax_t value,
 }
 
 
+void _assert_uint_in_range(const uintmax_t value,
+                           const uintmax_t minimum,
+                           const uintmax_t maximum,
+                           const char* const file,
+                           const int line)
+{
+    if (!uint_in_range_display_error(value, minimum, maximum)) {
+        _fail(file, line);
+    }
+}
+
+
 void _assert_in_range(
         const uintmax_t value, const uintmax_t minimum,
         const uintmax_t maximum, const char* const file,
