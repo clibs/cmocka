@@ -16,9 +16,19 @@ static void test_assert_int_in_range(void **state)
     assert_int_in_range(0, INTMAX_MIN, INTMAX_MAX);
 }
 
+static void test_assert_uint_in_range(void **state)
+{
+    (void)state; /* unused */
+    assert_uint_in_range(0, 0, 1);
+    assert_uint_in_range(1, 0, 1);
+    assert_uint_in_range(1, 0, 1);
+    assert_uint_in_range(100, 0, UINTMAX_MAX);
+}
+
 int main(void) {
     const struct CMUnitTest range_tests[] = {
         cmocka_unit_test(test_assert_int_in_range),
+        cmocka_unit_test(test_assert_uint_in_range),
     };
 
     return cmocka_run_group_tests(range_tests, NULL, NULL);
