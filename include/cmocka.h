@@ -2462,7 +2462,7 @@ void cmocka_set_message_output(uint32_t output);
  *
  * This allows to filter tests and only run the ones matching the pattern. The
  * pattern can include two wildards. The first is '*', a wildcard that matches
- * zero or more characters, or ‘?’, a wildcard that matches exactly one
+ * zero or more characters, or '?', a wildcard that matches exactly one
  * character.
  *
  * @param[in]  pattern    The pattern to match, e.g. "test_wurst*"
@@ -2474,7 +2474,7 @@ void cmocka_set_test_filter(const char *pattern);
  *
  * This allows to filter tests and skip the ones matching the pattern. The
  * pattern can include two wildards. The first is '*', a wildcard that matches
- * zero or more characters, or ‘?’, a wildcard that matches exactly one
+ * zero or more characters, or '?', a wildcard that matches exactly one
  * character.
  *
  * @param[in]  pattern    The pattern to match, e.g. "test_wurst*"
