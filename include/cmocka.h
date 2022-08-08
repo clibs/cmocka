@@ -2451,6 +2451,7 @@ void vprint_error(const char* const format, va_list args) CMOCKA_PRINTF_ATTRIBUT
 
 enum cm_message_output {
     CM_OUTPUT_STANDARD = 1,
+    CM_OUTPUT_STDOUT = 1, /* API compatiblity */
     CM_OUTPUT_SUBUNIT = 2,
     CM_OUTPUT_TAP = 4,
     CM_OUTPUT_XML = 8,
