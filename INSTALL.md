@@ -23,10 +23,10 @@ GNU/Linux, MacOS X, MSYS/MinGW:
 
 On Windows you should choose a makefile gernerator with -G, for example:
 
-   cmake -G "Visual Studio 12 2013" -DCMAKE_BUILD_TYPE=Debug /path/to/source
+   cmake -G "Visual Studio 15 2017" -DCMAKE_BUILD_TYPE=Debug /path/to/source
 
 You can also use the CMake GUI which is shipped with CMake. It will list all
-available generators for MSVC on Windows. We only support Visual Studio 2013
+available generators for MSVC on Windows. We only support Visual Studio 2017
 or newer which supports C99.
 
 ### CMake standard options
