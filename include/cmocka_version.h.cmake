@@ -18,20 +18,20 @@
 #define _CMOCKA_VERSION_H
 
 /* cmocka version macros */
-#define CMOCKA_VERSION_INT(a, b, c) ((a) << 16 | (b) << 8 | (c))
-#define CMOCKA_VERSION_DOT(a, b, c) a ##.## b ##.## c
-#define CMOCKA_VERSION(a, b, c) CMOCKA_VERSION_DOT(a, b, c)
+#define CM_VERSION_INT(a, b, c) ((a) << 16 | (b) << 8 | (c))
+#define CM_VERSION_DOT(a, b, c) a ##.## b ##.## c
+#define CM_VERSION(a, b, c) CMOCKA_VERSION_DOT(a, b, c)
 
 /* cmocka version */
 #define CMOCKA_VERSION_MAJOR  @cmocka_VERSION_MAJOR@
 #define CMOCKA_VERSION_MINOR  @cmocka_VERSION_MINOR@
 #define CMOCKA_VERSION_MICRO  @cmocka_VERSION_PATCH@
 
-#define CMOCKA_VERSION_INT CMOCKA_VERSION_INT(CMOCKA_VERSION_MAJOR, \
-                                           CMOCKA_VERSION_MINOR, \
-                                           CMOCKA_VERSION_MICRO)
-#define CMOCKA_VERSION     CMOCKA_VERSION(CMOCKA_VERSION_MAJOR, \
-                                       CMOCKA_VERSION_MINOR, \
-                                       CMOCKA_VERSION_MICRO)
+#define CMOCKA_VERSION_INT CM_VERSION_INT(CMOCKA_VERSION_MAJOR, \
+                                          CMOCKA_VERSION_MINOR, \
+                                          CMOCKA_VERSION_MICRO)
+#define CMOCKA_VERSION     CM_VERSION(CMOCKA_VERSION_MAJOR, \
+                                      CMOCKA_VERSION_MINOR, \
+                                      CMOCKA_VERSION_MICRO)
 
 #endif /* _CMOCKA_VERSION_H */
