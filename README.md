@@ -1,7 +1,7 @@
 CMOCKA
 =======
 
-Mirror of [git://git.cryptomilk.org/projects/cmocka.git](git://git.cryptomilk.org/projects/cmocka.git)
+Mirror of [https://gitlab.com/cmocka/cmocka](https://gitlab.com/cmocka/cmocka)
 
 INSTALLATION
 ------------
