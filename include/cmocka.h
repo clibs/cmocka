@@ -102,7 +102,7 @@ typedef uintmax_t LargestIntegralType;
     ((LargestIntegralType)(value))
 
 /* Smallest integral type capable of holding a pointer. */
-#if !defined(_UINTPTR_T) && !defined(_UINTPTR_T_DEFINED)
+#if !defined(_UINTPTR_T) && !defined(_UINTPTR_T_DEFINED) && !defined(__DEFINED_uintptr_t)
 # if defined(_WIN32)
     /* WIN32 is an ILP32 platform */
     typedef unsigned int uintptr_t;
@@ -128,6 +128,8 @@ typedef uintmax_t LargestIntegralType;
 
 # define _UINTPTR_T
 # define _UINTPTR_T_DEFINED
+# define __DEFINED_uintptr_t
+
 #endif /* !defined(_UINTPTR_T) || !defined(_UINTPTR_T_DEFINED) */
 
 /* Perform an unsigned cast to uintptr_t. */
