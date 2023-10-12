@@ -269,6 +269,7 @@ int global_expecting_assert = 0;
 const char *global_last_failed_assert = NULL;
 static int global_skip_test;
 static int global_stop_test;
+static int global_list_test;
 
 /* Keeps a map of the values that functions will have to return to provide */
 /* mocked interfaces. */
@@ -2910,6 +2911,11 @@ void cmocka_set_skip_filter(const char *pattern)
     global_skip_filter_pattern = pattern;
 }
 
+void cmocka_set_list_test(int list_test)
+{
+    global_list_test = list_test;
+}
+
 /****************************************************************************
  * TIME CALCULATIONS
  ****************************************************************************/
@@ -3189,6 +3195,21 @@ int _cmocka_run_group_tests(const char *group_name,
 
     /* Make sure uintmax_t is at least the size of a pointer. */
     assert_true(sizeof(uintmax_t) >= sizeof(void*));
+
+    /* Display name of testcase/testsuite but not run */
+    if (global_list_test) {
+        print_message("%s\n", group_name);
+        for (i = 0; i < num_tests; i++) {
+            if (tests[i].name != NULL &&
+                (tests[i].test_func != NULL
+                || tests[i].setup_func != NULL
+                || tests[i].teardown_func != NULL)) {
+                print_message("%4s%s\n", "", tests[i].name);
+            };
+        }
+
+        return 0;
+    }
 
     cm_tests = libc_calloc(1, sizeof(struct CMUnitTestState) * num_tests);
     if (cm_tests == NULL) {
